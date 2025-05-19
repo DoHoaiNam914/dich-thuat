@@ -258,11 +258,13 @@
                 <div class="row">
                   <div class="col">
                     <h5 class="mb-3">Dịch thuật</h5>
-                    <div class="dropdown mb-3">
+                    <div class="dropdown mb-3 translator-toggle">
                       <button class="align-items-center btn btn-primary dropdown-toggle d-flex" id="translator" type="button" data-bs-toggle="dropdown">Chuyển đổi trình dịch</button>
                       <ul class="dropdown-menu dropdown-menu-end shadow">
-                        <li><button class="align-items-center d-flex dropdown-item active" type="button" data-translator-value="googleGenaiTranslate">Google Gen AI Dịch</button></li>
-                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-translator-value="openaiTranslator">Trình dịch OpenAI</button></li>
+                        <li><button class="align-items-center d-flex dropdown-item active" type="button" data-translator-value="googleGenaiTranslate">Google Gen AI Dịch
+                          <svg class="bi ms-auto d-none" aria-hidden="true"><use href="#check2"></use></svg></button></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-translator-value="openaiTranslator">Trình dịch OpenAI
+                          <svg class="bi ms-auto d-none" aria-hidden="true"><use href="#check2"></use></svg></button></li>
                       </ul>
                     </div>
                     <div class="accordion accordion-flush mb-3" id="translator-accordion">
