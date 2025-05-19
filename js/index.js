@@ -2,12 +2,15 @@
 /* global $ */
 import * as Reader from './Reader.js';
 import Translation from './Translation.js';
+const $apiKeyTexts = $('.api-key-text');
 const $copyButtons = $('.copy-button');
 const $fontFamilyText = $('#font-family-text');
 const $googleGenaiModelSelect = $('#google-genai-model-select');
 const $inputTextarea = $('#input-textarea');
+const $modelSelects = $('.model-select');
 const $openaiModelSelect = $('#openai-model-select');
 const $outputTextarea = $('#output-textarea');
+const $systemInstructionSelect = $('#system-instruction-select');
 const $translators = $('[data-translator-value]');
 const MODELS = {
     GOOGLE_GENAI: {
@@ -37,12 +40,8 @@ const MODELS = {
                 modelId: 'gemini-1.5-flash',
                 modelName: 'Gemini 1.5 Flash'
             },
-            {
-                modelId: 'gemini-1.5-flash-001'
-            },
-            {
-                modelId: 'gemini-1.5-flash-002'
-            },
+            'gemini-1.5-flash-001',
+            'gemini-1.5-flash-002',
             {
                 modelId: 'gemini-1.5-flash-8b',
                 modelName: 'Gemini 1.5 Flash-8B'
@@ -51,9 +50,7 @@ const MODELS = {
                 modelId: 'gemini-1.5-pro',
                 modelName: 'Gemini 1.5 Pro'
             },
-            {
-                modelId: 'gemini-1.5-pro-001'
-            }
+            'gemini-1.5-pro-001'
         ],
         Gemma: [
             {
@@ -86,7 +83,10 @@ const MODELS = {
     },
     OPENAI: {
         'GPT-4.1': [
-            'gpt-4.1',
+            {
+                modelId: 'gpt-4.1',
+                selected: true
+            },
             'gpt-4.1-mini',
             'gpt-4.1-nano',
             'gpt-4.1-nano-2025-04-14',
@@ -140,6 +140,7 @@ const MODELS = {
         ]
     }
 };
+const translationStorage = { translator: 'googleGenaiTranslate', googleGenaiModel: Object.values(MODELS.GOOGLE_GENAI).flat().find(element => element.selected)?.modelId, openaiModel: Object.values(MODELS.OPENAI).flat().find(element => element.selected)?.modelId, systemInstruction: 'gpt4oMini', ...JSON.parse(window.localStorage.getItem('translation') ?? '{}') };
 let textareaTranslation = null;
 function appendTranslatedTextIntoOutputTextarea(translatedText, text, options) {
     const $outputTextarea = $('#output-textarea');
@@ -189,22 +190,33 @@ $(window).on('unload', () => {
 });
 $(document).ready(() => {
     Reader.loadReaderThemesOptions();
+    const preferredReaderTheme = Reader.getPreferredReaderTheme();
+    Reader.setReaderTheme(preferredReaderTheme);
+    Reader.showActiveReaderTheme(preferredReaderTheme);
     const $readerThemes = $('[data-reader-theme-value]');
     $readerThemes.on('click', function () {
-        const theme = $(this).data('reader-theme-value');
-        Reader.setReaderTheme($readerThemes.filter('.active').data('reader-theme-value'), theme);
-        Reader.showActiveReaderTheme(theme, true);
+        const readerTheme = $(this).data('reader-theme-value');
+        window.localStorage.setItem('readerTheme', readerTheme);
+        Reader.setReaderTheme(readerTheme, $readerThemes.filter('.active').data('reader-theme-value'));
+        Reader.showActiveReaderTheme(readerTheme, true);
     });
+    showActiveTranslator(translationStorage.translator);
     $googleGenaiModelSelect.empty();
     Object.entries(MODELS.GOOGLE_GENAI).forEach(([first, second]) => {
         const optgroup = document.createElement('optgroup');
         $(optgroup).prop('label', first);
-        second.forEach(({ modelId, modelName, selected }) => {
+        second.forEach(element => {
             const option = document.createElement('option');
-            if (modelName != null)
-                $(option).val(modelId);
-            $(option).text(modelName ?? modelId);
-            $(option).prop('selected', selected);
+            if (typeof element === 'object') {
+                const { modelId, modelName, selected } = element;
+                if (modelName != null)
+                    $(option).val(modelId);
+                $(option).text(modelName ?? modelId);
+                $(option).prop('selected', selected);
+            }
+            else {
+                $(option).text(element);
+            }
             $(optgroup).append(option);
         });
         $googleGenaiModelSelect.append(optgroup);
@@ -215,11 +227,27 @@ $(document).ready(() => {
         $(optgroup).prop('label', first);
         second.forEach(element => {
             const option = document.createElement('option');
-            $(option).text(element);
+            if (typeof element === 'object') {
+                const { modelId, modelName, selected } = element;
+                if (modelName != null)
+                    $(option).val(modelId);
+                $(option).text(modelName ?? modelId);
+                $(option).prop('selected', selected);
+            }
+            else {
+                $(option).text(element);
+            }
             $(optgroup).append(option);
         });
         $openaiModelSelect.append(optgroup);
     });
+    $modelSelects.each((_index, element) => {
+        $(element).val(translationStorage[$(element).prop('id').split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')]);
+    });
+    $apiKeyTexts.each((_index, element) => {
+        $(element).val(window.localStorage.getItem($(element).prop('id').split('-').slice(0, -1).join('_').toUpperCase()) ?? '');
+    });
+    $systemInstructionSelect.val(translationStorage.systemInstruction);
 });
 $inputTextarea.on('input', function () {
     $('#character-count-number').text($(this).val().length);
@@ -314,5 +342,17 @@ $('#justify-text-switch').on('change', function () {
     $(document.body).css('--reader-text-align', $(this).prop('checked') ? 'justify' : '');
 });
 $translators.on('click', function () {
-    showActiveTranslator($(this).data('translator-value'), true);
+    const translator = $(this).data('translator-value');
+    window.localStorage.setItem('translation', JSON.stringify({ ...translationStorage, translator }));
+    showActiveTranslator(translator, true);
+});
+$modelSelects.on('change', function () {
+    translationStorage[$(this).prop('id').split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')] = $(this).val();
+    window.localStorage.setItem('translation', JSON.stringify(translationStorage));
+});
+$apiKeyTexts.on('change', function () {
+    window.localStorage.setItem($(this).prop('id').split('-').slice(0, -1).join('_').toUpperCase(), $(this).val());
+});
+$systemInstructionSelect.on('change', function () {
+    window.localStorage.setItem('translation', JSON.stringify({ ...translationStorage, systemInstruction: $(this).val() }));
 });

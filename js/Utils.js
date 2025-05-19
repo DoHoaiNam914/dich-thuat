@@ -1,7 +1,4 @@
 'use strict';
-function escapeRegExp(text) {
-    return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
 function isValidJson(string) {
     try {
         JSON.parse(string);
@@ -11,4 +8,4 @@ function isValidJson(string) {
         return false;
     }
 }
-export { escapeRegExp, isValidJson };
+export { isValidJson };
