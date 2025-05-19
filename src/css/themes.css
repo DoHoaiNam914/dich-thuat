@@ -1,0 +1,232 @@
+.com-amazon-kindle-white, .jp-co-amazon-kindle-white {
+  --reader-color: #000;
+  --reader-hyperlink-color: #00f;
+  background-color: #fff;
+}
+
+.com-amazon-kindle-sepia {
+  --reader-color: #5f4b32;
+  --reader-hyperlink-color: #05a;
+  background-color: #fbf0d9;
+}
+
+.jp-co-amazon-kindle-sepia {
+  --reader-color: #5f4b32;
+  --reader-hyperlink-color: #00f;
+  background-color: #fbf0d9;
+}
+
+.com-amazon-kindle-green {
+  --reader-color: #3a4b4e;
+  --reader-hyperlink-color: #05a;
+  background-color: #c5e7ce;
+}
+
+.jp-co-amazon-kindle-green {
+  --reader-color: #3a4b4e;
+  --reader-hyperlink-color: #00f;
+  background-color: #c5e7ce;
+}
+
+.com-amazon-kindle-black {
+  --reader-color: #acacac;
+  --reader-hyperlink-color: #8fc0e9;
+  background-color: #000;
+}
+
+.jp-co-amazon-kindle-black {
+  --reader-color: #acacac;
+  --reader-hyperlink-color: #8787ff;
+  background-color: #000;
+}
+
+[data-bs-theme="light"] .apple-books-original {
+  --reader-color: #000;
+  --reader-hyperlink-color: #007aff;
+  background-color: #fff;
+}
+
+[data-bs-theme="dark"] .apple-books-original {
+  --reader-color: #fff;
+  --reader-hyperlink-color: #009cdb;
+  background-color: #000;
+}
+
+[data-bs-theme="light"] .apple-books-quiet {
+  --opt-color: #ebebf5;
+  --opt-hyperlink-color: #009ddc;
+  background-color: #4a4a4d;
+}
+
+[data-bs-theme="dark"] .apple-books-quiet {
+  --reader-color: #8d8d92;
+  --reader-hyperlink-color: #009cdb;
+  background-color: #000;
+}
+
+[data-bs-theme="light"] .apple-books-paper {
+  --reader-color: #1e1a1a;
+  --reader-hyperlink-color: #0071ed;
+  background-color: #eeeded;
+}
+
+[data-bs-theme="dark"] .apple-books-paper {
+  --reader-color: #f2f2f0;
+  --reader-hyperlink-color: #009ddc;
+  background-color: #1c1c1e;
+}
+
+[data-bs-theme="light"] .apple-books-bold {
+  --reader-color: #1c1c1e;
+  --reader-hyperlink-color: #007aff;
+  background-color: #fff;
+}
+
+[data-bs-theme="dark"] .apple-books-bold {
+  --reader-color: #efeff1;
+  --reader-hyperlink-color: #009cdb;
+  background-color: #000;
+}
+
+[data-bs-theme="light"] .apple-books-calm {
+  --reader-color: #34281c;
+  --reader-hyperlink-color: #b48128;
+  background-color: #f1e2c9;
+}
+
+[data-bs-theme="dark"] .apple-books-calm {
+  --reader-color: #f9ecdb;
+  --reader-hyperlink-color: #009ddc;
+  background-color: #423b30;
+}
+
+[data-bs-theme="light"] .apple-books-focus {
+  --reader-color: #141200;
+  --reader-hyperlink-color: #bf902e;
+  background-color: #fefcf3;
+}
+
+[data-bs-theme="dark"] .apple-books-focus {
+  --reader-color: #fff9eb;
+  --reader-hyperlink-color: #009ddc;
+  background-color: #18160c;
+}
+
+.calibre-black {
+  --reader-color: #ffffff;
+  background-color: #000000;
+  --reader-hyperlink-color: #4f81bd;
+}
+
+.calibre-sepia-dark {
+  --reader-color: #F6F3E9;
+  background-color: #39322B;
+  --reader-hyperlink-color: #4f81bd;
+}
+
+.calibre-sepia-light {
+  --reader-color: #39322B;
+  background-color: #F6F3E9;
+}
+
+[data-bs-theme="light"] .calibre-system {
+  --reader-color: #000000;
+  background-color: #ffffff;
+}
+
+[data-bs-theme="dark"] .calibre-system {
+  --reader-color: #ddd;
+  background-color: #111;
+  background-color: #121212;
+  --reader-hyperlink-color: #6cb4ee;
+}
+
+.calibre-white {
+  --reader-color: #000000;
+  background-color: #ffffff;
+}
+
+.google-play-books-light {
+  --reader-color: #000;
+  --reader-hyperlink-color: #00f;
+  background-color: #fff;
+}
+
+.google-play-books-dark {
+  --reader-color: #ccc;
+  --reader-hyperlink-color: #4747b2;
+  background-color: #000;
+}
+
+.google-play-books-sepia {
+  --reader-color: #2b0d00;
+  --reader-hyperlink-color: #09c;
+  background-color: #fffced;
+}
+
+.rakuten-kobo-light {
+  --reader-color: #000;
+  --reader-hyperlink-color: #007aff;
+  background-color: #fff;
+}
+
+.rakuten-kobo-sepia {
+  --reader-color: #000;
+  --reader-hyperlink-color: #000;
+  background-color: #eaddc7;
+}
+
+.rakuten-kobo-dark {
+  --reader-color: #7a7a7a;
+  --reader-hyperlink-color: #7a7a7a;
+  background-color: #000;
+}
+
+.rakuten-kobo-charcoal {
+  --reader-color: #9d9d9d;
+  --reader-hyperlink-color: #9d9d9d;
+  background-color: #333;
+}
+
+.readium-day {
+  --reader-color: #121212;
+  background-color: #FFFFFF;
+}
+
+.readium-night {
+  --reader-color: #FEFEFE;
+  background-color: #000000;
+  --reader-hyperlink-color: #63caff;
+  --reader-visited-hyperlink-color: #0099E5;
+}
+
+.readium-sepia {
+  --reader-color: #121212;
+  background-color: #faf4e8;
+  --reader-hyperlink-color: #0000EE;
+  --reader-visited-hyperlink-color: #551A8B;
+}
+
+.waka-white {
+  --reader-color: #231f20;
+  --reader-hyperlink-color: #231f20;
+  background-color: #fff;
+}
+
+.waka-gray {
+  --reader-color: #d2d3d5;
+  --reader-hyperlink-color: #d2d3d5;
+  background-color: #525355;
+}
+
+.waka-sepia {
+  --reader-color: #5b4635;
+  --reader-hyperlink-color: #5b4635;
+  background-color: #f4ebd8;
+}
+
+.waka-black {
+  --reader-color: #f9f9f9;
+  --reader-hyperlink-color: #f9f9f9;
+  background-color: #231f20;
+}

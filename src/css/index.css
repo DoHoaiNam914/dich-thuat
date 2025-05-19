@@ -1,0 +1,85 @@
+:root {
+  --system-font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantrell, "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+  --oldStyleTf:"Iowan Old Style", "Sitka Text", palatino, "Book Antiqua", serif;
+  --modernTf:athelas, constantia, georgia, serif;
+  --sansTf:-apple-system, system-ui, blinkmacsystemfont, "Segoe UI", roboto, "Helvetica Neue", arial, sans-serif;
+  --humanistTf:seravek, calibri, roboto, arial, sans-serif;
+  --monospaceTf:"Andale Mono", consolas, monospace;
+
+  --japaneseFontFamily:yugothic, "Hiragino Maru Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Meiryo UI", "MS Gothic", roboto, noto, "Noto Sans CJK JP", sans-serif;
+  --serif-ja:"Hiragino Mincho ProN", "Hiragino Mincho Pro", "YuMincho", "BIZ UDPMincho", "Yu Mincho", "ＭＳ Ｐ明朝", "MS PMincho", serif;
+  --sans-serif-ja:"Hiragino Sans", "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ W3", "YuGothic", "Yu Gothic Medium", "BIZ UDPGothic", "Yu Gothic", "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+  --serif-ja-v:"Hiragino Mincho ProN", "Hiragino Mincho Pro", "YuMincho", "BIZ UDMincho", "Yu Mincho", "ＭＳ明朝", "MS Mincho", serif;
+  --sans-serif-ja-v:"Hiragino Sans", "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ W3", "YuGothic", "Yu Gothic Medium", "BIZ UDGothic", "Yu Gothic", "ＭＳゴシック", "MS Gothic", sans-serif;
+
+  --chineseFontFamily:"方体", "PingFang SC", "黑体", "Heiti SC", "Microsoft JhengHei UI", "Microsoft JhengHei", roboto, noto, "Noto Sans CJK SC", sans-serif;
+  --taiwanFontFamily:"方體", "PingFang TC", "黑體", "Heiti TC", "Microsoft JhengHei UI", "Microsoft JhengHei", roboto, noto, "Noto Sans CJK TC", sans-serif;
+  --hongkongFontFamily:"方體", "PingFang HK", "方體", "PingFang TC", "黑體", "Heiti TC", "Microsoft JhengHei UI", "Microsoft JhengHei", roboto, noto, "Noto Sans CJK TC", sans-serif;
+
+  --lineHeightCompensation:1;
+  --readiumLineHeight:calc((1em + (2ex - 1ch) - ((1rem - 16px) * 0.1667)) * var(--lineHeightCompensation));
+  --reader-font-family: serif;
+  --reader-font-size: 1em;
+  --reader-font-weight: normal;
+  --reader-line-height: 1.2em;
+  --viewport-width: 1000px;
+  overflow: hidden;
+}
+
+.viewport {
+  max-width: var(--viewport-width);
+}
+
+.textarea > .form-control {
+  height: 100vh;
+  font: normal normal var(--reader-font-weight) normal var(--reader-font-size)/var(--reader-line-height) var(--reader-font-family);
+  overflow-y: auto;
+  padding: 10px 10px 5.55rem;
+  width: 100vw;
+}
+
+body:not(.bg-body) .textarea > .form-control, body:not(.bg-body) .textarea > .form-control::placeholder {
+  color: var(--reader-color);
+}
+
+.textarea > .form-control > p {
+  margin-bottom: 0;
+}
+
+.combined-navbar {
+  bottom: 0.4rem;
+  box-shadow: rgba(0, 0, 0, 0.075) 0 0 0.25rem 0.125rem;
+  left: 0.4rem;
+  right: 0.4rem;
+}
+
+.navbar-scroller .row {
+  -webkit-flex-wrap: nowrap;
+  flex-wrap: nowrap !important;
+  scrollbar-width: none;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
+.smaller-navbar .row {
+  height: 1.375em;
+}
+
+.language-select-col {
+  --bs-gutter-x: 0.75rem;
+}
+
+.translate-button-col {
+  --bs-gutter-x: 0.75rem;
+  max-width: 4.044em;
+}
+
+.reader-theme-toggle .bi {
+  width: 1em;
+  height: 1em;
+}
+
+.reader-theme-toggle .dropdown-menu .active .bi {
+  display: block !important;
+}

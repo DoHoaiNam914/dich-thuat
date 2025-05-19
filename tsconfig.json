@@ -1,0 +1,10 @@
+{
+  "include": ["src/ts/**/*.ts"],
+  "compilerOptions": {
+    "strictNullChecks": true,
+    "module": "esnext",
+    "outDir": "src/js",
+    "lib": ["ESNext", "DOM"],
+    "target": "esnext"
+  }
+}

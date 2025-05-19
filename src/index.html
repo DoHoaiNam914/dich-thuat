@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="vi" data-bs-theme="auto">
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport">
+    <title>Dịch thuật</title>
+    <link crossorigin="anonymous" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta content="#712cf9" name="theme-color">
+
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .b-example-divider {
+        width: 100%;
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+      .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+      }
+
+      .nav-scroller {
+        position: relative;
+        z-index: 2;
+        height: 2.75rem;
+        overflow-y: hidden;
+      }
+
+      .nav-scroller .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .btn-bd-primary {
+        --bd-violet-bg: #712cf9;
+        --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+        --bs-btn-font-weight: 600;
+        --bs-btn-color: var(--bs-white);
+        --bs-btn-bg: var(--bd-violet-bg);
+        --bs-btn-border-color: var(--bd-violet-bg);
+        --bs-btn-hover-color: var(--bs-white);
+        --bs-btn-hover-bg: #6528e0;
+        --bs-btn-hover-border-color: #6528e0;
+        --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+        --bs-btn-active-color: var(--bs-btn-hover-color);
+        --bs-btn-active-bg: #5a23c8;
+        --bs-btn-active-border-color: #5a23c8;
+      }
+
+      .bd-mode-toggle .bi {
+        width: 1em;
+        height: 1em;
+      }
+
+      .bd-mode-toggle .dropdown-menu .active .bi {
+        display: block !important;
+      }
+    </style>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('js/service-worker.js').then(registration => {
+          console.log('Service worker registration successful:', registration)
+        }, error => {
+          console.error(`Service worker registration failed: ${error as string}`)
+        })
+      }
+    </script>
+    <link href="manifest.json" rel="manifest">
+    <link href="css/themes.css" rel="stylesheet">
+    <link href="css/atkinson-hyperligible.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Lora'rel='stylesheet'>
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet"> -->
+    <link href="css/Roboto.css" rel="stylesheet">
+    <link crossorigin="anonymous" href="https://raw.githubusercontent.com" rel="preconnect">
+    <link href="css/fonts.css" rel="stylesheet">
+    <link href="css/index.css" rel="stylesheet">
+    <script>
+      ;(function () {
+        'use strict'
+        if (!Boolean(new URLSearchParams(window.location.search).get('debug'))) return
+        const src = '//cdn.jsdelivr.net/npm/eruda'
+        document.write(`<script src="${src}"><\/script>`)
+        document.write(`<script>\neruda.init();\n<\/script>`)
+      }())
+    </script>
+    <script crossorigin="anonymous" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  </head>
+  <body class="bg-body">
+    <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+  <symbol id="check2" viewBox="0 0 16 16">
+    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"></path>
+  </symbol>
+  <symbol id="circle-half" viewBox="0 0 16 16">
+    <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"></path>
+  </symbol>
+  <symbol id="moon-stars-fill" viewBox="0 0 16 16">
+    <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"></path>
+    <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"></path>
+  </symbol>
+  <symbol id="sun-fill" viewBox="0 0 16 16">
+    <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"></path>
+  </symbol>
+</svg>
+
+
+    <div class="container p-0">
+      <div class="viewport">
+        <div class="textarea">
+          <textarea class="bg-transparent border-0 form-control" id="input-textarea"  placeholder="Nhập văn bản của bạn ở đây..." spellcheck="false"></textarea>
+          <div class="bg-transparent border-0 form-control" id="output-textarea" inputmode="none" spellcheck="false" style="display: none;"></div>
+        </div>
+        <div class="bg-body-tertiary combined-navbar opacity-75 position-fixed rounded shadow-sm">
+          <nav class="bg-transparent fix-bottom navbar navbar-scroller py-0 smaller-navbar" style="backdrop-filter: blur(10px); border-top-left-radius: var(--bs-border-radius); border-top-right-radius: var(--bs-border-radius); box-shadow: rgba(0, 0, 0, 0.075) 0 -0.125rem 0.25rem inset;">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col">Số lượng kí tự: <span id="character-count-number">0</span></div>
+                <div class="col"><button class="bg-transparent border-0 btn d-block p-0 copy-button" type="button" data-target="#input-textarea">Sao chép</button></div>
+                <div class="col"><button class="bg-transparent border-0 btn d-block p-0 paste-button" type="button" data-target="#input-textarea">Dán</button></div>
+                <!-- <div class="col"><button class="bg-transparent border-0 btn d-block p-0" type="button">Từ điển của tôi</button></div> -->
+                <div class="col"><button class="bg-transparent border-0 btn d-block p-0" type="button" data-bs-target="#options-modal" data-bs-toggle="modal">Tuỳ chọn</button></div>
+              </div>
+            </div>
+          </nav>
+          <nav class="bg-transparent fix-bottom navbar" style="backdrop-filter: blur(10px); border-bottom-left-radius: var(--bs-border-radius); border-bottom-right-radius: var(--bs-border-radius);">
+            <div class="container-fluid">
+              <div class="m-auto row w-100">
+                <div class="col language-select-col ps-0">
+                  <select class="form-select language-select" id="original-language-select">
+                    <option value="null" selected>Phát hiện ngôn ngữ</option>
+                    <option value="en">Tiếng Anh</option>
+                    <option value="vi">Tiếng Việt</option>
+                    <option value="ja">Tiếng Nhật</option>
+                    <option value="zh-cn">Tiếng Trung (giản thể)</option>
+                    <option value="zh-tw">Tiếng Trung (phồn thể)</option>
+                  </select>
+                </div>
+                <div class="col language-select-col">
+                  <select class="form-select language-select" id="destination-language-select">
+                    <option value="en">Tiếng Anh</option>
+                    <option value="vi" selected>Tiếng Việt</option>
+                    <option value="ja">Tiếng Nhật</option>
+                    <option value="zh-cn">Tiếng Trung (giản thể)</option>
+                    <option value="zh-tw">Tiếng Trung (phồn thể)</option>
+                  </select>
+                </div>
+                <div class="col pe-0 translate-button-col">
+                  <button class="btn btn-primary" id="translate-button" type="button">Dịch</button>
+                </div>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+      <div class="modal fade" id="options-modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content" style="min-height: 492px;">
+            <div class="modal-header">
+              <h5 class="modal-title">Tuỳ chọn</h5>
+              <button class="btn-close" aria-label="Đóng" type="button" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col">
+                    <h5 class="mb-3">Giao diện</h5>
+                    <div class="dropdown bd-mode-toggle mb-3">
+                      <button class="btn btn-bd-primary dropdown-toggle d-flex align-items-center"
+                        id="bd-theme"
+                        type="button"
+                        aria-expanded="false"
+                        data-bs-toggle="dropdown"
+
+                        aria-label="Thay đổi chủ đề Bootstrap 5 (auto)">
+  <svg class="bi my-1 me-2 theme-icon-active" aria-hidden="true"><use href="#circle-half"></use></svg>
+  <span class="visually-hidden" id="bd-theme-text">Thay đổi chủ đề Bootstrap 5</span>
+</button>
+<ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
+  <li>
+    <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
+      <svg class="bi me-2 opacity-50" aria-hidden="true"><use href="#sun-fill"></use></svg>
+      Sáng
+      <svg class="bi ms-auto d-none" aria-hidden="true"><use href="#check2"></use></svg>
+    </button>
+  </li>
+  <li>
+    <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">
+      <svg class="bi me-2 opacity-50" aria-hidden="true"><use href="#moon-stars-fill"></use></svg>
+      Tối
+      <svg class="bi ms-auto d-none" aria-hidden="true"><use href="#check2"></use></svg>
+    </button>
+  </li>
+  <li>
+    <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto" aria-pressed="true">
+      <svg class="bi me-2 opacity-50" aria-hidden="true"><use href="#circle-half"></use></svg>
+      Tự động
+      <svg class="bi ms-auto d-none" aria-hidden="true"><use href="#check2"></use></svg>
+    </button>
+  </li>
+</ul>
+
+                </div>
+
+    
+                    <div class="mb-3">
+                      <label class="form-label" for="font-family-text">Họ phông chữ:</label>
+                      <input class="form-control" id="font-family-text" placeholder="system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Noto Sans, Liberation Sans, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji" type="text">
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label" for="font-size-text">Kích thước phông chữ:</label>
+                      <input class="form-control" id="font-size-text" max="3.5" min="0.6" placeholder="1" step="0.1" type="number" value="1">
+                    </div>
+                    <div class="dropdown mb-3 reader-theme-toggle">
+                      <button class="align-items-center btn btn-secondary dropdown-toggle d-flex" id="reader-theme" type="button" data-bs-toggle="dropdown">Chuyển đổi chủ đề trình đọc</button><ul class="dropdown-menu dropdown-menu-end shadow"><li><button class="align-items-center d-flex dropdown-item active" type="button" data-reader-theme-value="bg-body">Bootstrap 5</button></li></ul>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label" for="line-height-text">Chiều cao dòng:</label>
+                      <input class="form-control" id="line-height-text" max="2.5" min="0.8" placeholder="1.2" step="0.05" type="number" value="1.2">
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                      <input class="form-check-input" id="bold-text-switch" type="checkbox" role="switch">
+                      <label class="form-check-label" for="bold-text-switch">In đậm văn bản</label>
+                    </div>
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" id="justify-text-switch" type="checkbox" role="switch">
+                      <label class="form-check-label" for="justify-text-switch">Sắp văn bản cho lề đều nhau</label>
+                    </div>
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col">
+                    <h5 class="mb-3">Dịch thuật</h5>
+                    <div class="dropdown mb-3">
+                      <button class="align-items-center btn btn-primary dropdown-toggle d-flex" id="translator" type="button" data-bs-toggle="dropdown">Chuyển đổi trình dịch</button>
+                      <ul class="dropdown-menu dropdown-menu-end shadow">
+                        <li><button class="align-items-center d-flex dropdown-item active" type="button" data-translator-value="googleGenaiTranslate">Google Gen AI Dịch</button></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-translator-value="openaiTranslator">Trình dịch OpenAI</button></li>
+                      </ul>
+                    </div>
+                    <div class="accordion accordion-flush mb-3" id="translator-accordion">
+                      <div class="accordion-item">
+                        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#google-genai-collapse">Google GenAI</button></h2>
+                        <div class="accordion-collapse collapse" id="google-genai-collapse" data-bs-parent="#translator-accordion">
+                          <div class="accordion-body">
+                            <div class="mb-3">
+                              <label class="form-check-label" for="google-genai-model-select">Mô hình:</label>
+                              <select class="form-select mb-3" id="google-genai-model-select"><option value="gemini-2.5-pro-preview-05-06" selected>Gemini 2.5 Pro Preview 05-06</option></select>
+                            </div>
+                            <div class="form-check form-switch mb-3">
+                              <input class="form-check-input" id="thinking-mode-switch" type="checkbox" role="switch" checked>
+                              <label class="form-check-label" for="thinking-mode-switch">Chế độ suy nghĩ (Gemini 2.5 Flash Preview 04-17)</label>
+                            </div>
+                            <!-- <div class="form-check form-switch mb-3">
+                              <input class="form-check-input" id="grounding-with-google-search-switch" type="checkbox" role="switch">
+                              <label class="form-check-label" for="grounding-with-google-search-switch">Sự truyền thụ kiến thức vững vàng với Google Tìm kiếm</label>
+                            </div> -->
+                            <div>
+                              <label class="form-label" for="google-api-key-text">Google API Key:</label>
+                              <input class="form-control" id="google-api-key-text" placeholder="AIzaSy..." type="text">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="accordion-item">
+                        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#openai-collapse">OpenAI</button></h2>
+                        <div class="accordion-collapse collapse" id="openai-collapse" data-bs-parent="#translator-accordion">
+                          <div class="accordion-body">
+                            <div>
+                              <label class="form-check-label" for="openai-model-select">Mô hình:</label>
+                              <select class="form-select mb-3" id="openai-model-select"><option selected>gpt-4.1</option></select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                      <input class="form-check-input" id="bilingual-switch" type="checkbox" role="switch">
+                      <label class="form-check-label" for="bilingual-switch">Song ngữ</label>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-check-label" for="system-instruction-select">Lời chỉ dẫn hệ thống:</label>
+                        <select class="form-select" id="system-instruction-select">
+                        <option value="gpt4oMini" selected>GPT-4o mini</option>
+                        <option value="coccocEdu">Cốc Cốc Học tập</option>
+                        <option value="doctranslateIo">Doctranslate.io</option>
+                      </select>
+                    </div>
+                    <hr>
+                    <h6 class="mb-3">Doctranslate.io</h6>
+                    <div class="mb-3">
+                      <label class="form-check-label" for="tone-select">Phong cách:</label>
+                      <select class="form-select" id="tone-select">
+                        <option value="None">AI tự nhận diện (Nghiêm túc)</option>
+                        <option value="Serious" selected>Nghiêm túc</option>
+                        <option value="Friendly">Thân thiện</option>
+                        <option value="Humorous">Hài hước</option>
+                        <option value="Formal">Trang trọng</option>
+                        <option value="Romantic">Lãng mạn</option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-check-label" for="domain-select">Chuyên ngành:</label>
+                      <select class="form-select" id="domain-select">
+                        <optgroup label="Kinh tế - Tài chính">
+                          <option value="Banking">Ngân hàng</option>
+                          <option value="Accounting">Kế toán</option>
+                          <option value="Management">Quản trị</option>
+                          <option value="Law">Luật</option>
+                          <option value="Logistics">Logistic</option>
+                          <option>Marketing</option>
+                          <option value="Securities - Investment">Chứng khoán & đầu tư</option>
+                          <option value="Insurance">Bảo hiểm</option>
+                          <option value="Real Estate">Bất động sản</option>
+                        </optgroup>
+                        <optgroup label="Văn học - Nghệ thuật">
+                          <option value="Music">Âm nhạc</option>
+                          <option value="Painting">Hội hoạ</option>
+                          <option value="Theater - Cinema">Sân khấu - Điện ảnh</option>
+                          <option value="Poetry">Thơ</option>
+                          <option value="Epic">Sử thi</option>
+                          <option value="Children's Stories">Truyện thiếu nhi</option>
+                          <option value="Historical Stories">Truyện cổ trang</option>
+                          <option value="Fiction">Truyện hư cấu</option>
+                          <option value="Short Stories">Truyện ngắn</option>
+                        </optgroup>
+                        <optgroup label="Khoa học - Công nghệ">
+                          <option value="Physics">Vật lí</option>
+                          <option value="Chemistry">Hoá học</option>
+                          <option value="Informatics">Tin học</option>
+                          <option value="Electronics">Điện tử</option>
+                          <option value="Medicine">Y học</option>
+                          <option value="Mechanics">Cơ khí</option>
+                          <option value="Meteorology - Hydrology">Khí tượng - Thuỷ văn</option>
+                          <option value="Agriculture">Nông nghiệp</option>
+                        </optgroup>
+                        <optgroup label="Văn bản hành chính">
+                          <option value="Legal Documents">Văn bản Pháp luật</option>
+                          <option value="Internal Documents">Văn bản nội bộ</option>
+                          <option>Email</option>
+                        </optgroup>
+                        <optgroup label="Đời sống">
+                          <option value="Health">Sức khoẻ</option>
+                          <option value="Sports">Thể thao</option>
+                          <option value="Culture - Tourism">Văn hoá - Du lịch</option>
+                          <option value="Press">Báo chí</option>
+                          <option value="Animals">Động vật</option>
+                        </optgroup>
+                        <optgroup label="Khác">
+                          <option value="None" selected>AI tự nhận diện (Đời sống)</option>
+                        </optgroup>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="form-check-label" for="custom-prompt-textarea">Tuỳ chỉnh thông minh:</label>
+                      <textarea class="form-control" id="custom-prompt-textarea" placeholder="Đối với mỗi thuật ngữ, hãy đặt thuật ngữ gốc vào dấu ngoặc. Ví dụ: thuật ngữ đã dịch (thuật ngữ gốc)" rows="8"></textarea>
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                      <label class="form-check-label" for="temperature-text">Temperature:</label>
+                      <input class="form-control" id="temperature-text" max="2" min="-1" placeholder="1" step="0.05" type="number" value="0.1">
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-check-label" for="top-p-text">Top P:</label>
+                      <input class="form-control" id="top-p-text" max="1" min="-1" placeholder="1" step="0.05" type="number" value="0.95">
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-check-label" for="top-k-text">Top K:</label>
+                      <input class="form-control" id="top-k-text" max="64" min="-1" placeholder="50" step="1" type="number" value="-1">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer"><p class="text-body-secondary">Phát triển bởi <button class="bg-transparent border-0 btn p-0 copy-button" type="button" onclick="window.location.replace('?debug=true')">Đỗ Hoài Nam</button></p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script crossorigin="anonymous" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/color-modes.js" type="module"></script>
+    <script src="js/index.js" type="module"></script>
+  </body>
+</html>
