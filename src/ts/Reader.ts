@@ -1,6 +1,5 @@
 'use strict'
 /* global $ */
-import * as Utils from './Utils.js'
 const THEMES: Array<{ [key: string]: any }> = [
   {
     name: 'Bootstrap 5',
@@ -297,15 +296,16 @@ function loadReaderThemesOptions (): void {
 function fontMapper (fontFamily): string {
   return fontFamily?.replaceAll(/['"]/g, '').split(/, */).filter(element => element.length > 0).map(element => element.length >= 3 && FONT_MAP.some(([first, second]) => first === element || second === element) ? FONT_MAP.find(([first, second]) => first === element || second === element)?.[1] : element).join(', ')
 }
-function setReaderTheme (prevReaderTheme: string, readerTheme: string): void {
-  $(document.body).removeClass(prevReaderTheme)
+function getPreferredReaderTheme (): string {
+  return window.localStorage.getItem('readerTheme') ?? THEMES[0].value
+}
+function setReaderTheme (readerTheme: string, prevReaderTheme = null): void {
+  $(document.body).removeClass(prevReaderTheme ?? getPreferredReaderTheme())
   $(document.body).addClass(readerTheme)
   const $readerTheme = $(`[data-reader-theme-value="${readerTheme}"]`)
-  const $prevTheme = $(`[data-reader-theme-value="${prevReaderTheme}"]`)
   const fontFamily = $readerTheme.data('reader-theme-font-family')
   const $fontFamilyText = $('#font-family-text')
-  const prevThemeFontFamily = fontMapper($prevTheme.data('font-family'))
-  if (fontFamily != null && (($('#font-family-text').val() as string).length === 0 || prevThemeFontFamily == null || (new RegExp(`^${Utils.escapeRegExp(prevThemeFontFamily)}(?:,|$)`)).test($fontFamilyText.val() as string))) $fontFamilyText.val(fontFamily).change()
+  if (fontFamily != null && ($('#font-family-text').val() as string).length === 0) $fontFamilyText.val(fontFamily).change()
   $('#font-size-text').val($readerTheme.data('reader-theme-font-size') ?? 1).change()
   const lineHeight = $readerTheme.data('reader-theme-line-height')
   const $lineHeightText = $('#line-height-text')
@@ -320,12 +320,12 @@ function setReaderTheme (prevReaderTheme: string, readerTheme: string): void {
   $('#bold-text-switch').prop('checked', $readerTheme.data('reader-theme-bold-text')).change()
   $('#justify-text-switch').prop('checked', $readerTheme.data('reader-theme-justify-text')).change()
 }
-function showActiveReaderTheme (theme: string, focus = false): void {
+function showActiveReaderTheme (readerTheme: string, focus = false): void {
   const $themeSwitcher = $('#reader-theme')
   if ($themeSwitcher == null) return
   const $readerThemes = $('[data-reader-theme-value]')
   $readerThemes.removeClass('active')
-  $readerThemes.filter(`[data-reader-theme-value="${theme}"]`).addClass('active')
+  $readerThemes.filter(`[data-reader-theme-value="${readerTheme}"]`).addClass('active')
   if (focus) $themeSwitcher.focus()
 }
-export { loadReaderThemesOptions, fontMapper, setReaderTheme, showActiveReaderTheme }
+export { loadReaderThemesOptions, fontMapper, getPreferredReaderTheme, setReaderTheme, showActiveReaderTheme }

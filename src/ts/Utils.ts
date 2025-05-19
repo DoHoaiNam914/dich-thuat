@@ -1,7 +1,4 @@
 'use strict'
-function escapeRegExp (text): string {
-  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-}
 function isValidJson (string): boolean {
   try {
     JSON.parse(string)
@@ -10,4 +7,4 @@ function isValidJson (string): boolean {
     return false
   }
 }
-export { escapeRegExp, isValidJson }
+export { isValidJson }
