@@ -177,7 +177,7 @@ function showActiveTranslator (translator: string, focus = false): void {
   if (focus) $translatorSwitcher.focus()
 }
 $(window).on('unload', () => {
-  Object.keys(window.localStorage).filter((element) => element.includes('eruda') || element.startsWith('vConsole')).forEach((element) => {
+  Object.keys(window.localStorage).filter((element) => element.includes('eruda')).forEach((element) => {
     window.localStorage.removeItem(element)
   })
 })
