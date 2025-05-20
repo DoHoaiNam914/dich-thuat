@@ -150,7 +150,7 @@ const MODELS: { [key: string]: { [key: string]: any[] } } = {
   }
 }
 const translationStorage = { translator: 'googleGenaiTranslate', googleGenaiModel: Object.values(MODELS.GOOGLE_GENAI).flat().find(element => element.selected)?.modelId, openaiModel: Object.values(MODELS.OPENAI).flat().find(element => element.selected)?.modelId, systemInstruction: 'gpt4oMini', ...JSON.parse(window.localStorage.getItem('translation') ?? '{}') }
-let customDictionary = JSON.parse(window.localStorage.getItem('customDictionary') ?? '[]')
+let customDictionary: Array<{ [key: string]: string }> = []
 let textareaTranslation: Translation | null = null
 function showActiveTranslator (translator: string, focus = false): void {
   const $translatorSwitcher = $('#translator')
@@ -159,7 +159,8 @@ function showActiveTranslator (translator: string, focus = false): void {
   $translators.filter(`[data-translator-value="${translator}"]`).addClass('active')
   if (focus) $translatorSwitcher.focus()
 }
-function setStoredCustomDictionary (customDictionary): void {
+function setStoredCustomDictionaryAndReloadCounter (customDictionary): void {
+  $('#custom-dictionary-count-number').text(customDictionary.length)
   if (customDictionary.length > 0) window.localStorage.setItem('customDictionary', JSON.stringify(customDictionary))
   else window.localStorage.removeItem('customDictionary')
 }
@@ -252,6 +253,8 @@ $(document).ready(() => {
     $(element).val(window.localStorage.getItem($(element).prop('id').split('-').slice(0, -1).join('_').toUpperCase()) ?? '')
   })
   $systemInstructionSelect.val(translationStorage.systemInstruction)
+  customDictionary = JSON.parse(window.localStorage.getItem('customDictionary') ?? '[]')
+  setStoredCustomDictionaryAndReloadCounter(customDictionary)
 })
 $fontFamilyText.on('change', function () {
   const fontFamily = Reader.fontMapper($(this).val())
@@ -303,15 +306,16 @@ $('#custom-dictionary-input').on('change', function () {
     }
     const row = {}
     Object.keys(COLUMN_NAME_MAP).forEach(b => {
-      row[COLUMN_NAME_MAP[b]] = a
+      row[COLUMN_NAME_MAP[b]] = a[b]
     })
     return row
   }) ?? []
-  setStoredCustomDictionary(customDictionary)
+  $(this).val('')
+  setStoredCustomDictionaryAndReloadCounter(customDictionary)
 })
 $('#delete-all-button').on('click', function () {
   customDictionary = []
-  setStoredCustomDictionary(customDictionary)
+  setStoredCustomDictionaryAndReloadCounter(customDictionary)
 })
 $translationTranslators.on('click', function () {
   if (($sourceText.val() as string).length === 0) return
@@ -327,15 +331,15 @@ $translationTranslators.on('click', function () {
     openaiModelId: $('#dictionary-openai-model-select').val(),
     canWebSearch: $('#web-search-switch').prop('checked'),
     systemInstruction: $('#dictionary-system-instruction-select').val(),
+    temperature: parseFloat($('#dictionary-temperature-text').val() as string),
+    topP: parseFloat($('#dictionary-top-p-text').val() as string),
+    topK: parseFloat($('#dictionary-top-k-text').val() as string),
     tone: $('#dictionary-tone-select').val(),
     domain: $('#dictionary-domain-select').val(),
     customDictionaryEnabled: $customDictionarySwitch.prop('checked'),
     customDictionary,
     customPromptEnabled: $('#dictionary-custom-prompt-switch').prop('checked'),
-    customPrompt: $('#dictionary-custom-prompt-textarea').val(),
-    temperature: parseFloat($('#dictionary-temperature-text').val() as string),
-    topP: parseFloat($('#dictionary-top-p-text').val() as string),
-    topK: parseFloat($('#dictionary-top-k-text').val() as string)
+    customPrompt: $('#dictionary-custom-prompt-textarea').val()
   }).translateText(translatedText => {
     $targetText.val(translatedText)
   }).finally(() => {
@@ -350,16 +354,19 @@ $('[data-define-url]').on('click', function () {
   window.open($(this).data('define-url').replace('%l', ($sourceTextLanguageSelect.val() as string).split('-')[0]).replace('%s', $sourceText.val()), '_blank', 'width=1000,height=577')
 })
 $sourceText.on('input', function () {
-  $targetText.val(customDictionary.find(({ originalLanguage, destinationLanguage, originalWord }) => originalLanguage === $sourceTextLanguageSelect.val() && destinationLanguage === $targetTextLanguageSelect.val() && originalWord === $(this).val()).destinationWord ?? $targetText.val())
+  $targetText.val(customDictionary.find(({ originalLanguage, destinationLanguage, originalWord }) => originalLanguage === $sourceTextLanguageSelect.val() && destinationLanguage === $targetTextLanguageSelect.val() && originalWord === $(this).val())?.destinationWord ?? ($targetText.val() as string))
 })
 $addWordButton.on('click', () => {
-  if (($sourceText.val() as string).length === 0 || ($targetText.val() as string).length === 0) return
+  const originalWord = $sourceText.val() as string
+  const destinationWord = $targetText.val() as string
+  if (originalWord.length === 0 || destinationWord.length === 0) return
   customDictionary.push({
-    originalLanguage: $sourceTextLanguageSelect.val(),
-    destinationLanguage: $targetTextLanguageSelect.val(),
-    originalWord: $sourceText.val(),
-    destinationWord: $targetText.val()
+    originalLanguage: $sourceTextLanguageSelect.val() as string,
+    destinationLanguage: $targetTextLanguageSelect.val() as string,
+    originalWord,
+    destinationWord
   })
+  setStoredCustomDictionaryAndReloadCounter(customDictionary)
 })
 $copyButtons.on('click', function () {
   const target = $(this).data('target')
@@ -398,15 +405,15 @@ $('#translate-button').on('click', function () {
         openaiModelId: $openaiModelSelect.val(),
         bilingualEnabled: $('#bilingual-switch').prop('checked'),
         systemInstruction: $('#system-instruction-select').val(),
+        temperature: parseFloat($('#temperature-text').val() as string),
+        topP: parseFloat($('#top-p-text').val() as string),
+        topK: parseFloat($('#top-k-text').val() as string),
         tone: $('#tone-select').val(),
         domain: $('#domain-select').val(),
         customDictionaryEnabled: $customDictionarySwitch.prop('checked'),
         customDictionary,
         customPromptEnabled: $('#custom-prompt-switch').prop('checked'),
-        customPrompt: $('#custom-prompt-textarea').val(),
-        temperature: parseFloat($('#temperature-text').val() as string),
-        topP: parseFloat($('#top-p-text').val() as string),
-        topK: parseFloat($('#top-k-text').val() as string)
+        customPrompt: $('#custom-prompt-textarea').val()
       })
       textareaTranslation.translateText(appendTranslatedTextIntoOutputTextarea).finally(() => {
         $(this).text('Sửa')
