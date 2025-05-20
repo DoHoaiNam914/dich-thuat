@@ -112,6 +112,7 @@
       }())
     </script>
     <script crossorigin="anonymous" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="js/papaparse.min.js"></script>
   </head>
   <body class="bg-body">
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
@@ -132,56 +133,10 @@
 
 
     <div class="container p-0">
-      <div class="viewport">
-        <div class="textarea">
-          <textarea class="bg-transparent border-0 form-control" id="input-textarea"  placeholder="Nhập văn bản của bạn ở đây..." spellcheck="false"></textarea>
-          <div class="bg-transparent border-0 form-control" id="output-textarea" inputmode="none" spellcheck="false" style="display: none;"></div>
-        </div>
-        <div class="bg-body-tertiary combined-navbar opacity-75 position-fixed rounded shadow-sm">
-          <nav class="bg-transparent fix-bottom navbar navbar-scroller py-0 smaller-navbar" style="backdrop-filter: blur(10px); border-top-left-radius: var(--bs-border-radius); border-top-right-radius: var(--bs-border-radius); box-shadow: rgba(0, 0, 0, 0.075) 0 -0.125rem 0.25rem inset;">
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col">Số lượng kí tự: <span id="character-count-number">0</span></div>
-                <div class="col"><button class="bg-transparent border-0 btn d-block p-0 copy-button" type="button" data-target="#input-textarea">Sao chép</button></div>
-                <div class="col"><button class="bg-transparent border-0 btn d-block p-0 paste-button" type="button" data-target="#input-textarea">Dán</button></div>
-                <!-- <div class="col"><button class="bg-transparent border-0 btn d-block p-0" type="button">Từ điển của tôi</button></div> -->
-                <div class="col"><button class="bg-transparent border-0 btn d-block p-0" type="button" data-bs-target="#options-modal" data-bs-toggle="modal">Tuỳ chọn</button></div>
-              </div>
-            </div>
-          </nav>
-          <nav class="bg-transparent fix-bottom navbar" style="backdrop-filter: blur(10px); border-bottom-left-radius: var(--bs-border-radius); border-bottom-right-radius: var(--bs-border-radius);">
-            <div class="container-fluid">
-              <div class="m-auto row w-100">
-                <div class="col language-select-col ps-0">
-                  <select class="form-select language-select" id="original-language-select">
-                    <option value="null" selected>Phát hiện ngôn ngữ</option>
-                    <option value="en">Tiếng Anh</option>
-                    <option value="vi">Tiếng Việt</option>
-                    <option value="ja">Tiếng Nhật</option>
-                    <option value="zh-cn">Tiếng Trung (giản thể)</option>
-                    <option value="zh-tw">Tiếng Trung (phồn thể)</option>
-                  </select>
-                </div>
-                <div class="col language-select-col">
-                  <select class="form-select language-select" id="destination-language-select">
-                    <option value="en">Tiếng Anh</option>
-                    <option value="vi" selected>Tiếng Việt</option>
-                    <option value="ja">Tiếng Nhật</option>
-                    <option value="zh-cn">Tiếng Trung (giản thể)</option>
-                    <option value="zh-tw">Tiếng Trung (phồn thể)</option>
-                  </select>
-                </div>
-                <div class="col pe-0 translate-button-col">
-                  <button class="btn btn-primary" id="translate-button" type="button">Dịch</button>
-                </div>
-              </div>
-            </div>
-          </nav>
-        </div>
-      </div>
-      <div class="modal fade" id="options-modal" tabindex="-1">
+      
+      <div class="modal fade" id="options-modal" tabindex="-1" style="--bs-body-bg: rgba(var(--bs-body-bg-rgb), 0.5);">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-          <div class="modal-content" style="min-height: 492px;">
+          <div class="modal-content" style="backdrop-filter: blur(1px); min-height: 492px;">
             <div class="modal-header">
               <h5 class="modal-title">Tuỳ chọn</h5>
               <button class="btn-close" aria-label="Đóng" type="button" data-bs-dismiss="modal"></button>
@@ -261,15 +216,19 @@
                     <div class="dropdown mb-3 translator-toggle">
                       <button class="align-items-center btn btn-primary dropdown-toggle d-flex" id="translator" type="button" data-bs-toggle="dropdown">Chuyển đổi trình dịch</button>
                       <ul class="dropdown-menu dropdown-menu-end shadow">
-                        <li><button class="align-items-center d-flex dropdown-item active" type="button" data-translator-value="googleGenaiTranslate">Google Gen AI Dịch
-                          <svg class="bi ms-auto d-none" aria-hidden="true"><use href="#check2"></use></svg></button></li>
-                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-translator-value="openaiTranslator">Trình dịch OpenAI
-                          <svg class="bi ms-auto d-none" aria-hidden="true"><use href="#check2"></use></svg></button></li>
+                        <li><button class="align-items-center d-flex dropdown-item active" type="button" data-translator-value="googleGenaiTranslate">
+                          Google Gen AI Dịch
+                          <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
+                        </button></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-translator-value="openaiTranslator">
+                          Trình dịch OpenAI
+                          <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
+                        </button></li>
                       </ul>
                     </div>
                     <div class="accordion accordion-flush mb-3" id="translator-accordion">
                       <div class="accordion-item">
-                        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#google-genai-collapse">Google GenAI</button></h2>
+                        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-target="#google-genai-collapse" data-bs-toggle="collapse">Google GenAI</button></h2>
                         <div class="accordion-collapse collapse" id="google-genai-collapse" data-bs-parent="#translator-accordion">
                           <div class="accordion-body">
                             <div class="mb-3">
@@ -280,10 +239,6 @@
                               <input class="form-check-input" id="thinking-mode-switch" type="checkbox" role="switch" checked>
                               <label class="form-check-label" for="thinking-mode-switch">Chế độ suy nghĩ (Gemini 2.5 Flash Preview 04-17)</label>
                             </div>
-                            <!-- <div class="form-check form-switch mb-3">
-                              <input class="form-check-input" id="grounding-with-google-search-switch" type="checkbox" role="switch">
-                              <label class="form-check-label" for="grounding-with-google-search-switch">Sự truyền thụ kiến thức vững vàng với Google Tìm kiếm</label>
-                            </div> -->
                             <div>
                               <label class="form-label" for="google-api-key-text">Google API Key:</label>
                               <input class="form-control api-key-text" id="google-api-key-text" placeholder="AIzaSy..." type="text">
@@ -292,7 +247,7 @@
                         </div>
                       </div>
                       <div class="accordion-item">
-                        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#openai-collapse">OpenAI</button></h2>
+                        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-target="#openai-collapse" data-bs-toggle="collapse">OpenAI</button></h2>
                         <div class="accordion-collapse collapse" id="openai-collapse" data-bs-parent="#translator-accordion">
                           <div class="accordion-body">
                             <div>
@@ -380,8 +335,9 @@
                         </optgroup>
                       </select>
                     </div>
-                    <div>
-                      <label class="form-check-label" for="custom-prompt-textarea">Tuỳ chỉnh thông minh:</label>
+                    <div class="form-check form-switch mb-3">
+                      <input class="form-check-input" id="custom-prompt-switch" type="checkbox" role="switch">
+                      <label class="form-check-label" for="custom-prompt-switch">Tuỳ chỉnh thông minh</label>
                       <textarea class="form-control" id="custom-prompt-textarea" placeholder="Đối với mỗi thuật ngữ, hãy đặt thuật ngữ gốc vào dấu ngoặc. Ví dụ: thuật ngữ đã dịch (thuật ngữ gốc)" rows="8"></textarea>
                     </div>
                     <hr>
@@ -401,8 +357,265 @@
                 </div>
               </div>
             </div>
-            <div class="modal-footer"><p class="text-body-secondary">Phát triển bởi <button class="bg-transparent border-0 btn p-0 copy-button" type="button" onclick="window.location.replace('?debug=true')">Đỗ Hoài Nam</button></p></div>
+            <div class="modal-footer"><p class="text-body-secondary"><div>Phát triển bởi</div><button class="bg-transparent border-0 btn p-0 copy-button" type="button" onclick="window.location.replace('?debug=true')">Đỗ Hoài Nam</button></p></div>
           </div>
+        </div>
+      </div>
+      <div class="modal fade" id="dictionary-modal" tabindex="-1" style="--bs-body-bg: rgba(var(--bs-body-bg-rgb), 0.5);">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content" style="backdrop-filter: blur(1px); min-height: 492px;">
+            <div class="modal-header">
+              <h5 class="modal-title">Từ điển của tôi (Doctranslate.io)</h5>
+              <button class="btn-close" aria-label="Đóng" type="button" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col">
+                    <div class="form-check form-switch mb-3">
+                      <input class="form-check-input" id="custom-dictionary-switch" type="checkbox" role="switch">
+                      <label class="form-check-label" for="custom-dictionary-switch">Từ điển của tôi</label>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label" for="custom-dictionary-input">Nhập từ điển:</label>
+                      <input class="form-control" id="custom-dictionary-input" accept="text/csv" type="file">
+                    </div>
+                    <button class="btn btn btn-outline-danger" id="delete-all-button" type="button">Xoá tất cả</button>
+                    <div class="dropdown d-inline-block">
+                      <button class="align-items-center btn btn-primary dropdown-toggle d-flex" type="button" data-bs-toggle="dropdown">Hành động</button>
+                      <ul class="dropdown-menu dropdown-menu-end shadow">
+                        <li><h6 class="align-items-center d-flex dropdown-header">Dịch với...</h6></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-translation-translator-value="googleGenaiTranslate">Google Gen AI Dịch</button></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-translation-translator-value="openaiTranslator">Trình dịch OpenAI</button></li>
+                        <li><h6 class="align-items-center d-flex dropdown-header">Tìm kiếm trên...</h6></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="https://www.google.com/search?q=%s">Google</button></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="http://%l.wikipedia.org/wiki/Special:Search?search=%s">Wikipedia</button></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="https://www.baidu.com/s?word=%s">Baidu</button></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="https://baike.baidu.com/item/%s">Baidu Baike</button></li>
+                        <li><h6 class="align-items-center d-flex dropdown-header">Tra cứu trên...</h6></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="http://vdict.com/%s,1,0,0.html">VDict</button></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="https://www.oed.com/search/dictionary/?scope=Entries&q=%s">Oxford English Dictionary</button></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="https://dictionary.cambridge.org/vi/dictionary/english-vietnamese/%s">Cambridge Dictionary</button></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="https://hanzii.net/search/word/%s?hl=vi">Hanzii</button></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="https://nomfoundation.org/nom-tools/Nom-Lookup-Tool/Nom-Lookup-Tool?uiLang=vn&inputText=%s">Tra cứu chữ Nôm</button></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="https://hvdic.thivien.net/whv/%s">Từ điển Hán Nôm</button></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="https://www.mdbg.net/chinese/dictionary?page=worddict&wdqb=%s">CC-CEDICT</button></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="https://www.zdic.net/hans/%s">ZDIC</button></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="https://mazii.net/vi-VN/search/word/javi/%s">Mazii</button></li>
+                      </ul>
+                    </div>
+                    <div class="mb-3">
+                      <div class="mb-2">
+                        <label class="form-label" for="source-text">Văn bản gốc:</label>
+                        <select class="form-select mb-1" id="source-text-language-select">
+                          <option value="vi">Tiếng Việt</option>
+                          <option value="en" selected>Tiếng Anh</option>
+                          <option value="ja">Tiếng Nhật</option>
+                          <option value="zh-cn">Tiếng Trung (giản thể)</option>
+                          <option value="zh-tw">Tiếng Trung (phồn thể)</option>
+                        </select>
+                        <input class="form-control" id="source-text" placeholder="Đầu vào" type="text">
+                      </div>
+                      <div>
+                        <label class="form-label" for="target-text">Văn bản đích:</label>
+                        <select class="form-select mb-1" id="target-text-language-select">
+                          <option value="vi" selected>Tiếng Việt</option>
+                          <option value="en">Tiếng Anh</option>
+                          <option value="ja">Tiếng Nhật</option>
+                          <option value="zh-cn">Tiếng Trung (giản thể)</option>
+                          <option value="zh-tw">Tiếng Trung (phồn thể)</option>
+                        </select>
+                        <input class="form-control" id="target-text" placeholder="Đầu vào" type="text">
+                      </div>
+                    </div>
+                    <button class="btn btn-success" id="add-word-button" type="button">Thêm từ</button>
+                    <button class="btn btn-danger" id="delete-button" type="button">Xoá</button>
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col">
+                    <h5 class="mb-3">Dịch thuật</h5>
+                    <div class="accordion accordion-flush mb-3" id="dictionary-translator-accordion">
+                      <div class="accordion-item">
+                        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-target="#dictionary-google-genai-collapse" data-bs-toggle="collapse">Google GenAI</button></h2>
+                        <div class="accordion-collapse collapse" id="dictionary-google-genai-collapse" data-bs-parent="#dictionary-translator-accordion">
+                          <div class="accordion-body">
+                            <div class="mb-3">
+                              <label class="form-check-label" for="dictionary-google-genai-model-select">Mô hình:</label>
+                              <select class="form-select mb-3" id="dictionary-google-genai-model-select"><option value="gemini-2.5-pro-preview-05-06" selected>Gemini 2.5 Pro Preview 05-06</option></select>
+                            </div>
+                            <div class="form-check form-switch mb-3">
+                              <input class="form-check-input" id="dictionary-thinking-mode-switch" type="checkbox" role="switch" checked>
+                              <label class="form-check-label" for="dictionary-thinking-mode-switch">Chế độ suy nghĩ (Gemini 2.5 Flash Preview 04-17)</label>
+                            </div>
+                            <div class="form-check form-switch mb-3">
+                              <input class="form-check-input" id="grounding-with-google-search-switch" type="checkbox" role="switch">
+                              <label class="form-check-label" for="grounding-with-google-search-switch">Sự truyền thụ kiến thức vững vàng với Google Tìm kiếm</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="accordion-item">
+                        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-target="#dictionary-openai-collapse" data-bs-toggle="collapse">OpenAI</button></h2>
+                        <div class="accordion-collapse collapse" id="dictionary-openai-collapse" data-bs-parent="#dictionary-translator-accordion">
+                          <div class="accordion-body">
+                            <div>
+                              <label class="form-check-label" for="dictionary-openai-model-select">Mô hình:</label>
+                              <select class="form-select mb-3" id="dictionary-openai-model-select"><option selected>gpt-4.1</option></select>
+                            </div>
+                            <div class="form-check form-switch mb-3">
+                              <input class="form-check-input" id="web-search-switch" type="checkbox" role="switch">
+                              <label class="form-check-label" for="web-search-switch">Tìm kiếm mạng</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-check-label" for="dictionary-system-instruction-select">Lời chỉ dẫn hệ thống:</label>
+                        <select class="form-select" id="dictionary-system-instruction-select">
+                        <option value="gpt4oMini" selected>GPT-4o mini</option>
+                        <option value="coccocEdu">Cốc Cốc Học tập</option>
+                        <option value="doctranslateIo">Doctranslate.io</option>
+                      </select>
+                    </div>
+                    <hr>
+                    <h6 class="mb-3">Doctranslate.io</h6>
+                    <div class="mb-3">
+                      <label class="form-check-label" for="dictionary-tone-select">Phong cách:</label>
+                      <select class="form-select" id="dictionary-tone-select">
+                        <option value="None">AI tự nhận diện (Nghiêm túc)</option>
+                        <option value="Serious" selected>Nghiêm túc</option>
+                        <option value="Friendly">Thân thiện</option>
+                        <option value="Humorous">Hài hước</option>
+                        <option value="Formal">Trang trọng</option>
+                        <option value="Romantic">Lãng mạn</option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-check-label" for="dictionary-domain-select">Chuyên ngành:</label>
+                      <select class="form-select" id="dictionary-domain-select">
+                        <optgroup label="Kinh tế - Tài chính">
+                          <option value="Banking">Ngân hàng</option>
+                          <option value="Accounting">Kế toán</option>
+                          <option value="Management">Quản trị</option>
+                          <option value="Law">Luật</option>
+                          <option value="Logistics">Logistic</option>
+                          <option>Marketing</option>
+                          <option value="Securities - Investment">Chứng khoán & đầu tư</option>
+                          <option value="Insurance">Bảo hiểm</option>
+                          <option value="Real Estate">Bất động sản</option>
+                        </optgroup>
+                        <optgroup label="Văn học - Nghệ thuật">
+                          <option value="Music">Âm nhạc</option>
+                          <option value="Painting">Hội hoạ</option>
+                          <option value="Theater - Cinema">Sân khấu - Điện ảnh</option>
+                          <option value="Poetry">Thơ</option>
+                          <option value="Epic">Sử thi</option>
+                          <option value="Children's Stories">Truyện thiếu nhi</option>
+                          <option value="Historical Stories">Truyện cổ trang</option>
+                          <option value="Fiction">Truyện hư cấu</option>
+                          <option value="Short Stories">Truyện ngắn</option>
+                        </optgroup>
+                        <optgroup label="Khoa học - Công nghệ">
+                          <option value="Physics">Vật lí</option>
+                          <option value="Chemistry">Hoá học</option>
+                          <option value="Informatics">Tin học</option>
+                          <option value="Electronics">Điện tử</option>
+                          <option value="Medicine">Y học</option>
+                          <option value="Mechanics">Cơ khí</option>
+                          <option value="Meteorology - Hydrology">Khí tượng - Thuỷ văn</option>
+                          <option value="Agriculture">Nông nghiệp</option>
+                        </optgroup>
+                        <optgroup label="Văn bản hành chính">
+                          <option value="Legal Documents">Văn bản Pháp luật</option>
+                          <option value="Internal Documents">Văn bản nội bộ</option>
+                          <option>Email</option>
+                        </optgroup>
+                        <optgroup label="Đời sống">
+                          <option value="Health">Sức khoẻ</option>
+                          <option value="Sports">Thể thao</option>
+                          <option value="Culture - Tourism">Văn hoá - Du lịch</option>
+                          <option value="Press">Báo chí</option>
+                          <option value="Animals">Động vật</option>
+                        </optgroup>
+                        <optgroup label="Khác">
+                          <option value="None" selected>AI tự nhận diện (Đời sống)</option>
+                        </optgroup>
+                      </select>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                      <input class="form-check-input" id="dictionary-custom-prompt-switch" type="checkbox" role="switch">
+                      <label class="form-check-label" for="dictionary-custom-prompt-switch">Tuỳ chỉnh thông minh</label>
+                      <textarea class="form-control" id="dictionary-custom-prompt-textarea" placeholder="Đối với mỗi thuật ngữ, hãy đặt thuật ngữ gốc vào dấu ngoặc. Ví dụ: thuật ngữ đã dịch (thuật ngữ gốc)" rows="8"></textarea>
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                      <label class="form-check-label" for="dictionary-temperature-text">Temperature:</label>
+                      <input class="form-control" id="dictionary-temperature-text" max="2" min="-1" placeholder="1" step="0.05" type="number" value="0.1">
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-check-label" for="dictionary-top-p-text">Top P:</label>
+                      <input class="form-control" id="dictionary-top-p-text" max="1" min="-1" placeholder="1" step="0.05" type="number" value="0.95">
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-check-label" for="dictionary-top-k-text">Top K:</label>
+                      <input class="form-control" id="dictionary-top-k-text" max="64" min="-1" placeholder="50" step="1" type="number" value="-1">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer"><p class="text-body-secondary"><div>Phát triển bởi</div><button class="bg-transparent border-0 btn p-0 copy-button" type="button" onclick="window.location.replace('?debug=true')">Đỗ Hoài Nam</button></p></div>
+          </div>
+        </div>
+      </div>
+      <div class="viewport">
+        <div class="bg-body-tertiary combined-navbar position-fixed rounded shadow-sm" style="--bs-bg-opacity: 0.1; --bs-body-bg: rgba(var(--bs-body-bg-rgb), 0.5); backdrop-filter: blur(1px);">
+          <nav class="bg-transparent fix-bottom navbar navbar-scroller py-0 smaller-navbar" style="border-top-left-radius: var(--bs-border-radius); border-top-right-radius: var(--bs-border-radius); box-shadow: rgba(0, 0, 0, 0.075) 0 -0.125rem 0.25rem inset;">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col">Số lượng kí tự: <span id="character-count-number">0</span></div>
+                <div class="col"><button class="bg-transparent border-0 btn d-block p-0 copy-button" type="button" data-target="#input-textarea">Sao chép</button></div>
+                <div class="col"><button class="bg-transparent border-0 btn d-block p-0 paste-button" type="button" data-target="#input-textarea">Dán</button></div>
+                <div class="col"><button class="bg-transparent border-0 btn d-block p-0" type="button" data-bs-target="#dictionary-modal" data-bs-toggle="modal">Từ điển của tôi</button></div>
+                <div class="col"><button class="bg-transparent border-0 btn d-block p-0" type="button" data-bs-target="#options-modal" data-bs-toggle="modal">Tuỳ chọn</button></div>
+              </div>
+            </div>
+          </nav>
+          <nav class="bg-transparent fix-bottom navbar" style="border-bottom-left-radius: var(--bs-border-radius); border-bottom-right-radius: var(--bs-border-radius);">
+            <div class="container-fluid">
+              <div class="m-auto row w-100">
+                <div class="col language-select-col ps-0">
+                  <select class="form-select language-select" id="original-language-select">
+                    <option value="null" selected>Phát hiện ngôn ngữ</option>
+                    <option value="vi">Tiếng Việt</option>
+                    <option value="en">Tiếng Anh</option>
+                    <option value="ja">Tiếng Nhật</option>
+                    <option value="zh-cn">Tiếng Trung (giản thể)</option>
+                    <option value="zh-tw">Tiếng Trung (phồn thể)</option>
+                  </select>
+                </div>
+                <div class="col language-select-col">
+                  <select class="form-select language-select" id="destination-language-select">
+                    <option value="vi" selected>Tiếng Việt</option>
+                    <option value="en">Tiếng Anh</option>
+                    <option value="ja">Tiếng Nhật</option>
+                    <option value="zh-cn">Tiếng Trung (giản thể)</option>
+                    <option value="zh-tw">Tiếng Trung (phồn thể)</option>
+                  </select>
+                </div>
+                <div class="col pe-0 translate-button-col">
+                  <button class="btn btn-primary" id="translate-button" type="button">Dịch</button>
+                </div>
+              </div>
+            </div>
+          </nav>
+        </div>
+        <div class="textarea">
+          <textarea class="bg-transparent border-0 form-control" id="input-textarea"  placeholder="Nhập văn bản của bạn ở đây..." spellcheck="false"></textarea>
+          <div class="bg-transparent border-0 form-control" id="output-textarea" inputmode="none" spellcheck="false" style="display: none;"></div>
         </div>
       </div>
     </div>
