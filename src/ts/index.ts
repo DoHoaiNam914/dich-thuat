@@ -297,7 +297,10 @@ $systemInstructionSelect.on('change', function () {
 })
 $('#custom-dictionary-input').on('change', function () {
   // @ts-expect-error
-  customDictionary = Papa.parse($(this).prop('files')[0], { header: true, skipEmptyLines: true }).result.data.map(a => {
+  customDictionary = Papa.parse($(this).prop('files')[0], {
+    header: true,
+    skipEmptyLines: true
+  }).data.map(a => {
     const COLUMN_NAME_MAP = {
       'Original language': 'originalLanguage',
       'Destination language': 'destinationLanguage',
