@@ -308,23 +308,27 @@ $systemInstructionSelect.on('change', function () {
     window.localStorage.setItem('translation', JSON.stringify({ ...translationStorage, systemInstruction: $(this).val() }));
 });
 $('#custom-dictionary-input').on('change', function () {
-    // @ts-expect-error
-    customDictionary = Papa.parse($(this).prop('files')[0], {
-        header: true,
-        skipEmptyLines: true
-    }).data.map(a => {
-        const COLUMN_NAME_MAP = {
-            'Original language': 'originalLanguage',
-            'Destination language': 'destinationLanguage',
-            'Original word': 'originalWord',
-            'Destination word': 'destinationWord'
-        };
-        const row = {};
-        Object.keys(COLUMN_NAME_MAP).forEach(b => {
-            row[COLUMN_NAME_MAP[b]] = a[b];
-        });
-        return row;
-    }) ?? [];
+    const fileReader = new FileReader();
+    $(fileReader).on('load', function () {
+        // @ts-expect-error
+        customDictionary = Papa.parse($(this).prop('result'), {
+            header: true,
+            skipEmptyLines: true
+        }).data.map(a => {
+            const COLUMN_NAME_MAP = {
+                'Original language': 'originalLanguage',
+                'Destination language': 'destinationLanguage',
+                'Original word': 'originalWord',
+                'Destination word': 'destinationWord'
+            };
+            const row = {};
+            Object.keys(COLUMN_NAME_MAP).forEach(b => {
+                row[COLUMN_NAME_MAP[b]] = a[b];
+            });
+            return row;
+        }) ?? [];
+    });
+    fileReader.readAsText($(this).prop('files')[0]);
     $(this).val('');
     setStoredCustomDictionaryAndReloadCounter(customDictionary);
 });
