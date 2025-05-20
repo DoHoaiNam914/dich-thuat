@@ -8,11 +8,9 @@ const $copyButtons = $('.copy-button');
 const $customDictionarySwitch = $('#custom-dictionary-switch');
 // const $deleteButton = $('#delete-button')
 const $fontFamilyText = $('#font-family-text');
-const $googleApiKeyText = $('#google-api-key-text');
-const $googleGenaiModelSelect = $('#google-genai-model-select');
+const $geminiApiKeyText = $('#gemini-api-key-text');
 const $inputTextarea = $('#input-textarea');
 const $modelSelects = $('.model-select');
-const $openaiModelSelect = $('#openai-model-select');
 const $outputTextarea = $('#output-textarea');
 const $sourceText = $('#source-text');
 const $sourceTextLanguageSelect = $('#source-text-language-select');
@@ -218,7 +216,8 @@ $(document).ready(() => {
         Reader.showActiveReaderTheme(readerTheme, true);
     });
     showActiveTranslator(translationStorage.translator);
-    $googleGenaiModelSelect.empty();
+    const $googleGenaiModelSelects = $('#google-genai-model-select, #dictionary-google-genai-model-select');
+    $googleGenaiModelSelects.empty();
     Object.entries(MODELS.GOOGLE_GENAI).forEach(([first, second]) => {
         const optgroup = document.createElement('optgroup');
         $(optgroup).prop('label', first);
@@ -236,9 +235,10 @@ $(document).ready(() => {
             }
             $(optgroup).append(option);
         });
-        $googleGenaiModelSelect.append(optgroup);
+        $googleGenaiModelSelects.append(optgroup);
     });
-    $openaiModelSelect.empty();
+    const $openaiModelSelects = $('#openai-model-select, #dictionary-openai-model-select');
+    $openaiModelSelects.empty();
     Object.entries(MODELS.OPENAI).forEach(([first, second]) => {
         const optgroup = document.createElement('optgroup');
         $(optgroup).prop('label', first);
@@ -256,7 +256,7 @@ $(document).ready(() => {
             }
             $(optgroup).append(option);
         });
-        $openaiModelSelect.append(optgroup);
+        $openaiModelSelects.append(optgroup);
     });
     $modelSelects.each((_index, element) => {
         $(element).val(translationStorage[$(element).prop('id').split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')]);
@@ -341,13 +341,14 @@ $translationTranslators.on('click', function () {
         return;
     $sourceText.prop('readOnly', true);
     $targetText.prop('readOnly', true);
+    $addWordButton.addClass('disabled');
     $translationTranslators.addClass('disabled');
     new Translation($sourceText.val(), $targetTextLanguageSelect.val(), $sourceTextLanguageSelect.val(), {
         translatorId: $(this).data('translation-translator-value'),
         googleGenaiModelId: $('#dictionary-google-genai-model-select').val(),
         thinkingModeEnabled: $('#dictionary-thinking-mode-switch').prop('checked'),
         groundingWithGoogleSearchEnabled: $('#grounding-with-google-search-switch').prop('checked'),
-        GOOGLE_API_KEY: $googleApiKeyText.val(),
+        GEMINI_API_KEY: $geminiApiKeyText.val(),
         openaiModelId: $('#dictionary-openai-model-select').val(),
         canWebSearch: $('#web-search-switch').prop('checked'),
         systemInstruction: $('#dictionary-system-instruction-select').val(),
@@ -427,10 +428,10 @@ $('#translate-button').on('click', function () {
             $(this).text('Huỷ');
             textareaTranslation = new Translation(inputText, $('#destination-language-select').val(), $('#original-language-select').val(), {
                 translatorId: $('[data-translator-value]').filter('.active').data('translator-value'),
-                googleGenaiModelId: $googleGenaiModelSelect.val(),
+                googleGenaiModelId: $('#google-genai-model-select').val(),
                 thinkingModeEnabled: $('#thinking-mode-switch').prop('checked'),
-                GOOGLE_API_KEY: $googleApiKeyText.val(),
-                openaiModelId: $openaiModelSelect.val(),
+                GEMINI_API_KEY: $geminiApiKeyText.val(),
+                openaiModelId: $('#openai-model-select').val(),
                 bilingualEnabled: $('#bilingual-switch').prop('checked'),
                 systemInstruction: $('#system-instruction-select').val(),
                 temperature: parseFloat($('#temperature-text').val()),
