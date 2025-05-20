@@ -300,7 +300,7 @@ function getPreferredReaderTheme (): string {
   return window.localStorage.getItem('readerTheme') ?? THEMES[0].value
 }
 function setReaderTheme (readerTheme: string, prevReaderTheme = null): void {
-  $(document.body).removeClass(prevReaderTheme ?? getPreferredReaderTheme())
+  $(document.body).removeClass(prevReaderTheme ?? THEMES[0].value)
   $(document.body).addClass(readerTheme)
   const $readerTheme = $(`[data-reader-theme-value="${readerTheme}"]`)
   const fontFamily = $readerTheme.data('reader-theme-font-family')
