@@ -1,155 +1,30 @@
 'use strict';
 /* global $, Papa */
 import * as Reader from './Reader.js';
-import Translation from './Translation.js';
+import { MODELS, SystemInstructions, Translation, Translators } from './Translation.js';
 const $addWordButton = $('#add-word-button');
 const $apiKeyTexts = $('.api-key-text');
 const $copyButtons = $('.copy-button');
 const $customDictionarySwitch = $('#custom-dictionary-switch');
-// const $deleteButton = $('#delete-button')
+const $deleteButton = $('#delete-button');
 const $fontFamilyText = $('#font-family-text');
 const $geminiApiKeyText = $('#gemini-api-key-text');
 const $inputTextarea = $('#input-textarea');
 const $modelSelects = $('.model-select');
 const $outputTextarea = $('#output-textarea');
+const $retranslateButton = $('#retranslate-button');
 const $sourceText = $('#source-text');
 const $sourceTextLanguageSelect = $('#source-text-language-select');
 const $systemInstructionSelect = $('#system-instruction-select');
 const $targetText = $('#target-text');
 const $targetTextLanguageSelect = $('#target-text-language-select');
+const $translateButton = $('#translate-button');
 const $translationTranslators = $('[data-translation-translator-value]');
 const $translators = $('[data-translator-value]');
-const MODELS = {
-    GOOGLE_GENAI: {
-        'Gemini 2.5': [
-            {
-                modelId: 'gemini-2.5-flash-preview-04-17',
-                modelName: 'Gemini 2.5 Flash Preview 04-17'
-            },
-            {
-                modelId: 'gemini-2.5-pro-preview-05-06',
-                modelName: 'Gemini 2.5 Pro Preview 05-06',
-                selected: true
-            }
-        ],
-        'Gemini 2.0': [
-            {
-                modelId: 'gemini-2.0-flash',
-                modelName: 'Gemini 2.0 Flash'
-            },
-            {
-                modelId: 'gemini-2.0-flash-lite',
-                modelName: 'Gemini 2.0 Flash-Lite'
-            }
-        ],
-        'Gemini 1.5': [
-            {
-                modelId: 'gemini-1.5-flash',
-                modelName: 'Gemini 1.5 Flash'
-            },
-            'gemini-1.5-flash-001',
-            'gemini-1.5-flash-002',
-            {
-                modelId: 'gemini-1.5-flash-8b',
-                modelName: 'Gemini 1.5 Flash-8B'
-            },
-            {
-                modelId: 'gemini-1.5-pro',
-                modelName: 'Gemini 1.5 Pro'
-            },
-            'gemini-1.5-pro-001'
-        ],
-        Gemma: [
-            {
-                modelId: 'gemma-3-1b-it',
-                modelName: 'Gemma 3 1B'
-            },
-            {
-                modelId: 'gemma-3-4b-it',
-                modelName: 'Gemma 3 4B'
-            },
-            {
-                modelId: 'gemma-3-12b-it',
-                modelName: 'Gemma 3 12B'
-            },
-            {
-                modelId: 'gemma-3-27b-it',
-                modelName: 'Gemma 3 27B'
-            }
-        ],
-        Other: [
-            {
-                modelId: 'learnlm-1.5-pro-experimental',
-                modelName: 'LearnLM 1.5 Pro Experimental'
-            },
-            {
-                modelId: 'learnlm-2.0-flash-experimental',
-                modelName: 'LearnLM 2.0 Flash Experimental'
-            }
-        ]
-    },
-    OPENAI: {
-        'GPT-4.1': [
-            {
-                modelId: 'gpt-4.1',
-                selected: true
-            },
-            'gpt-4.1-mini',
-            'gpt-4.1-nano',
-            'gpt-4.1-nano-2025-04-14',
-            'gpt-4.1-mini-2025-04-14',
-            'gpt-4.1-2025-04-14'
-        ],
-        Reasoning: [
-            'o3',
-            'o4-mini',
-            'o1-pro',
-            'o1',
-            'o1-2024-12-17',
-            'o1-mini',
-            'o1-mini-2024-09-12',
-            'o1-preview',
-            'o1-preview-2024-09-12',
-            'o3-2025-04-16',
-            'o3-mini',
-            'o3-mini-2025-01-31',
-            'o4-mini-2025-04-16'
-        ],
-        'GPT-4o': [
-            'gpt-4o',
-            'gpt-4o-mini',
-            'gpt-4o-mini-2024-07-18',
-            'gpt-4o-2024-11-20',
-            'gpt-4o-2024-08-06',
-            'gpt-4o-2024-05-13'
-        ],
-        'GPT-4.5': [
-            'gpt-4.5-preview-2025-02-27',
-            'gpt-4.5-preview'
-        ],
-        'GPT-4': [
-            'gpt-4-turbo-preview',
-            'gpt-4-turbo-2024-04-09',
-            'gpt-4-turbo',
-            'gpt-4-1106-preview',
-            'gpt-4-0613',
-            'gpt-4-0125-preview',
-            'gpt-4'
-        ],
-        'GPT-3.5': [
-            'gpt-3.5-turbo-16k',
-            'gpt-3.5-turbo-1106',
-            'gpt-3.5-turbo-0125',
-            'gpt-3.5-turbo'
-        ],
-        Other: [
-            'chatgpt-4o-latest'
-        ]
-    }
-};
-const translationStorage = { translator: 'googleGenaiTranslate', googleGenaiModel: Object.values(MODELS.GOOGLE_GENAI).flat().find(element => element.selected)?.modelId, openaiModel: Object.values(MODELS.OPENAI).flat().find(element => element.selected)?.modelId, systemInstruction: 'gpt4oMini', ...JSON.parse(window.localStorage.getItem('translation') ?? '{}') };
+const translationStorage = { translator: Translators.GOOGLE_GENAI_TRANSLATE, googleGenaiModel: Object.values(MODELS.GOOGLE_GENAI).flat().find(element => element.selected).modelId, openaiModel: Object.values(MODELS.OPENAI).flat().find(element => element.selected).modelId, systemInstruction: SystemInstructions.GPT4OMINI, ...JSON.parse(window.localStorage.getItem('translation') ?? '{}') };
 let customDictionary = [];
 let textareaTranslation = null;
+let dictionaryTranslation = null;
 function showActiveTranslator(translator, focus = false) {
     const $translatorSwitcher = $('#translator');
     if ($translatorSwitcher == null)
@@ -307,11 +182,16 @@ $apiKeyTexts.on('change', function () {
 $systemInstructionSelect.on('change', function () {
     window.localStorage.setItem('translation', JSON.stringify({ ...translationStorage, systemInstruction: $(this).val() }));
 });
+$('#dictionary-modal').on('hide.bs.modal', () => {
+    if (dictionaryTranslation != null)
+        dictionaryTranslation.abortController.abort();
+    $('#source-text, #target-text').val('');
+});
 $('#custom-dictionary-input').on('change', function () {
     const fileReader = new FileReader();
-    $(fileReader).on('load', function () {
+    fileReader.onload = () => {
         // @ts-expect-error
-        customDictionary = Papa.parse($(this).prop('result'), {
+        customDictionary = Papa.parse(fileReader.result, {
             header: true,
             skipEmptyLines: true
         }).data.map(a => {
@@ -326,13 +206,16 @@ $('#custom-dictionary-input').on('change', function () {
                 row[COLUMN_NAME_MAP[b]] = a[b];
             });
             return row;
-        }) ?? [];
-    });
+        }).toSorted((a, b) => Boolean(a.originalWord.split(/(?:)/u).length - b.originalWord.split(/(?:)/u).length) || Boolean(a.destinationWord.localeCompare(b.destinationWord, 'vi', { ignorePunctuation: true })) || Boolean(a.originalWord.localeCompare(b.originalWord, 'vi', { ignorePunctuation: true }))) ?? [];
+        setStoredCustomDictionaryAndReloadCounter(customDictionary);
+        $sourceText.trigger('input');
+        $(this).val('');
+    };
     fileReader.readAsText($(this).prop('files')[0]);
-    $(this).val('');
-    setStoredCustomDictionaryAndReloadCounter(customDictionary);
 });
 $('#delete-all-button').on('click', function () {
+    if (!window.confirm('Bạn có chắc chắn muốn xoá tất cả từ trong từ điển?'))
+        return;
     customDictionary = [];
     setStoredCustomDictionaryAndReloadCounter(customDictionary);
 });
@@ -343,7 +226,7 @@ $translationTranslators.on('click', function () {
     $targetText.prop('readOnly', true);
     $addWordButton.addClass('disabled');
     $translationTranslators.addClass('disabled');
-    new Translation($sourceText.val(), $targetTextLanguageSelect.val(), $sourceTextLanguageSelect.val(), {
+    dictionaryTranslation = new Translation($sourceText.val(), $targetTextLanguageSelect.val(), $sourceTextLanguageSelect.val(), {
         translatorId: $(this).data('translation-translator-value'),
         googleGenaiModelId: $('#dictionary-google-genai-model-select').val(),
         thinkingModeEnabled: $('#dictionary-thinking-mode-switch').prop('checked'),
@@ -361,7 +244,8 @@ $translationTranslators.on('click', function () {
         customDictionary,
         customPromptEnabled: $('#dictionary-custom-prompt-switch').prop('checked'),
         customPrompt: $('#dictionary-custom-prompt-textarea').val()
-    }).translateText(translatedText => {
+    });
+    dictionaryTranslation.translateText(translatedText => {
         $targetText.val(translatedText);
     }).finally(() => {
         $sourceText.prop('readOnly', false);
@@ -391,6 +275,13 @@ $addWordButton.on('click', () => {
     });
     setStoredCustomDictionaryAndReloadCounter(customDictionary);
 });
+$deleteButton.on('click', () => {
+    const wordIndex = customDictionary.findIndex(({ originalLanguage, destinationLanguage, originalWord }) => originalLanguage === $sourceTextLanguageSelect.val() && destinationLanguage === $targetTextLanguageSelect.val() && originalWord === $sourceText.val());
+    if (wordIndex === -1 || !window.confirm('Bạn có chắc chắn muốn xoá từ này?'))
+        return;
+    customDictionary.splice(wordIndex, 1);
+    setStoredCustomDictionaryAndReloadCounter(customDictionary);
+});
 $copyButtons.on('click', function () {
     const target = $(this).data('target');
     const $target = $(target);
@@ -411,11 +302,19 @@ $('.paste-button').on('click', function () {
     if ($target.length === 0)
         return;
     void navigator.clipboard.readText().then(value => {
-        if ($target.val().length === 0 || window.confirm('Bạn có chắc chắn muốn thay thế văn bản hiện tại?'))
+        if ($target.val().length === 0 || window.confirm('Bạn có chắc chắn muốn thay thế văn bản hiện tại?')) {
             $target.val(value).trigger('input');
+        }
+    }).finally(() => {
+        if ($target.prop('id') === $inputTextarea.prop('id') && $translateButton.text() === 'Sửa')
+            $translateButton.click().click();
     });
 });
-$('#translate-button').on('click', function () {
+$retranslateButton.on('click', () => {
+    if (window.confirm('Bạn có chắc chắn muốn dịch lại?'))
+        $translateButton.click().click();
+});
+$translateButton.on('click', function () {
     const $textareaCopyButton = $copyButtons.filter(`[data-target="#${$inputTextarea.prop('id')}"]`);
     switch ($(this).text()) {
         case 'Dịch': {
@@ -446,6 +345,7 @@ $('#translate-button').on('click', function () {
             });
             textareaTranslation.translateText(appendTranslatedTextIntoOutputTextarea).finally(() => {
                 $(this).text('Sửa');
+                $retranslateButton.removeClass('disabled');
                 $textareaCopyButton.data('target', 'textareaTranslation');
             });
             break;
@@ -461,6 +361,7 @@ $('#translate-button').on('click', function () {
             $outputTextarea.hide();
             $inputTextarea.show();
             $(this).text('Dịch');
+            $retranslateButton.addClass('disabled');
     }
 });
 $inputTextarea.on('input', function () {

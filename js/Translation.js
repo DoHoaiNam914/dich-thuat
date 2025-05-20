@@ -14,9 +14,137 @@ var Translators;
     Translators["OPENAI_TRANSLATOR"] = "openaiTranslator";
     Translators["PAPAGO"] = "papago";
 })(Translators || (Translators = {}));
+const MODELS = {
+    GOOGLE_GENAI: {
+        'Gemini 2.5': [
+            {
+                modelId: 'gemini-2.5-flash-preview-04-17',
+                modelName: 'Gemini 2.5 Flash Preview 04-17'
+            },
+            {
+                modelId: 'gemini-2.5-pro-preview-05-06',
+                modelName: 'Gemini 2.5 Pro Preview 05-06',
+                selected: true
+            }
+        ],
+        'Gemini 2.0': [
+            {
+                modelId: 'gemini-2.0-flash',
+                modelName: 'Gemini 2.0 Flash'
+            },
+            {
+                modelId: 'gemini-2.0-flash-lite',
+                modelName: 'Gemini 2.0 Flash-Lite'
+            }
+        ],
+        'Gemini 1.5': [
+            {
+                modelId: 'gemini-1.5-flash',
+                modelName: 'Gemini 1.5 Flash'
+            },
+            'gemini-1.5-flash-001',
+            'gemini-1.5-flash-002',
+            {
+                modelId: 'gemini-1.5-flash-8b',
+                modelName: 'Gemini 1.5 Flash-8B'
+            },
+            {
+                modelId: 'gemini-1.5-pro',
+                modelName: 'Gemini 1.5 Pro'
+            },
+            'gemini-1.5-pro-001'
+        ],
+        Gemma: [
+            {
+                modelId: 'gemma-3-1b-it',
+                modelName: 'Gemma 3 1B'
+            },
+            {
+                modelId: 'gemma-3-4b-it',
+                modelName: 'Gemma 3 4B'
+            },
+            {
+                modelId: 'gemma-3-12b-it',
+                modelName: 'Gemma 3 12B'
+            },
+            {
+                modelId: 'gemma-3-27b-it',
+                modelName: 'Gemma 3 27B'
+            }
+        ],
+        Other: [
+            {
+                modelId: 'learnlm-1.5-pro-experimental',
+                modelName: 'LearnLM 1.5 Pro Experimental'
+            },
+            {
+                modelId: 'learnlm-2.0-flash-experimental',
+                modelName: 'LearnLM 2.0 Flash Experimental'
+            }
+        ]
+    },
+    OPENAI: {
+        'GPT-4.1': [
+            {
+                modelId: 'gpt-4.1',
+                selected: true
+            },
+            'gpt-4.1-mini',
+            'gpt-4.1-nano',
+            'gpt-4.1-nano-2025-04-14',
+            'gpt-4.1-mini-2025-04-14',
+            'gpt-4.1-2025-04-14'
+        ],
+        Reasoning: [
+            'o3',
+            'o4-mini',
+            'o1-pro',
+            'o1',
+            'o1-2024-12-17',
+            'o1-mini',
+            'o1-mini-2024-09-12',
+            'o1-preview',
+            'o1-preview-2024-09-12',
+            'o3-2025-04-16',
+            'o3-mini',
+            'o3-mini-2025-01-31',
+            'o4-mini-2025-04-16'
+        ],
+        'GPT-4o': [
+            'gpt-4o',
+            'gpt-4o-mini',
+            'gpt-4o-mini-2024-07-18',
+            'gpt-4o-2024-11-20',
+            'gpt-4o-2024-08-06',
+            'gpt-4o-2024-05-13'
+        ],
+        'GPT-4.5': [
+            'gpt-4.5-preview-2025-02-27',
+            'gpt-4.5-preview'
+        ],
+        'GPT-4': [
+            'gpt-4-turbo-preview',
+            'gpt-4-turbo-2024-04-09',
+            'gpt-4-turbo',
+            'gpt-4-1106-preview',
+            'gpt-4-0613',
+            'gpt-4-0125-preview',
+            'gpt-4'
+        ],
+        'GPT-3.5': [
+            'gpt-3.5-turbo-16k',
+            'gpt-3.5-turbo-1106',
+            'gpt-3.5-turbo-0125',
+            'gpt-3.5-turbo'
+        ],
+        Other: [
+            'chatgpt-4o-latest'
+        ]
+    }
+};
 var SystemInstructions;
 (function (SystemInstructions) {
-    SystemInstructions["GPT_4O_MINI"] = "gpt4oMini";
+    SystemInstructions["GPT4OMINI"] = "gpt-4o-mini";
     SystemInstructions["COCCOC_EDU"] = "coccocEdu";
     SystemInstructions["DOCTRANSLATE_IO"] = "doctranslateIo";
 })(SystemInstructions || (SystemInstructions = {}));
@@ -67,7 +195,7 @@ var Domains;
     Domains["ANIMALS"] = "Animals";
     Domains["NONE"] = "None";
 })(Domains || (Domains = {}));
-export default class Translation {
+class Translation {
     text;
     originalLanguage;
     destinationLanguage;
@@ -81,13 +209,13 @@ export default class Translation {
         this.abortController = new AbortController();
         options = {
             translatorId: Translators.GOOGLE_GENAI_TRANSLATE,
-            googleGenaiModelId: 'gemini-2.5-pro-preview-05-06',
+            googleGenaiModelId: Object.values(MODELS.GOOGLE_GENAI).flat().find(element => element.selected).modelId,
             thinkingModeEnabled: true,
             canGroundingWithGoogleSearch: false,
-            openaiModelId: 'gpt-4.1',
+            openaiModelId: Object.values(MODELS.OPENAI).flat().find(element => element.selected)?.modelId,
             canWebSearch: false,
             bilingualEnabled: false,
-            systemInstruction: SystemInstructions.GPT_4O_MINI,
+            systemInstruction: SystemInstructions.GPT4OMINI,
             temperature: 0.1,
             topP: 0.95,
             topK: -1,
@@ -312,7 +440,7 @@ export default class Translation {
                 systemInstructions.push(`### ROLE:\nYou are a translation professional with many years of experience, able to translate accurately and naturally between languages. You have a good understanding of the grammar, vocabulary and style of both ${originalLang} and ${destLang}. You also know how to maintain the original meaning and emotion of the text when translating.\n\n### INSTRUCTION:\n- Translate the following paragraphs into ${destLang}, ensuring each sentence is fully understood and free from confusion.\n- Avoid adding any new information, explaining or changing the meaning of the original text.\n- Each translated text segment must have a UUID that exactly matches the UUID of the original text segment.\n- The UUIDs must exactly correspond to the UUIDs in the original text. Do not make up your own UUIDs or confuse the UUIDs of one text with those of another.\n- Only translated into ${destLang} language, not into any other language other than ${destLang}\n- The only priority is translation, do not arbitrarily add your own thoughts and explanations that are not in the original text.\n- Do not insert additional notes or explanations with the words in the translation.\n- Spaces and line breaks must be kept intact, not changed or replaced with /t /n\n- If UUID not have text to translate, just return ""\n- Follow the instruction for translate with domain ${domain}:\n${DOMAIN_INSTRUCTION_MAP[[Domains.BANKING, Domains.ACCOUNTING, Domains.MANAGEMENT, Domains.LAW, Domains.LOGISTICS, Domains.MARKETING, Domains.SECURITIES_AND_INVESTMENT, Domains.INSURANCE, Domains.REAL_ESTATE].some(element => domain === element) ? 'Economics - Finance' : ([Domains.MUSIC, Domains.PAINTING, Domains.THEATER_AND_CINEMA, Domains.POETRY, Domains.EPIC, Domains.CHILDRENS_STORIES, Domains.HISTORICAL_STORIES, Domains.FICTION, Domains.SHORT_STORIES].some(element => domain === element) ? 'Literature - Arts' : ([Domains.PHYSICS, Domains.CHEMISTRY, Domains.INFORMATICS, Domains.ELECTRONICS, Domains.MEDICINE, Domains.MECHANICS, Domains.METEOROLOGY_AND_HYDROLOGY, Domains.AGRICULTURE].some(element => domain === element) ? 'Science - Technology' : ([Domains.LEGAL_DOCUMENTS, Domains.INTERNAL_DOCUMENTS, Domains.EMAIL].some(element => domain === element) ? 'Administrative documents' : 'Lifestyle')))]}\n- Handle special case:\n+ Numbers: Maintain the original numeric values, but adapt formats if necessary (e.g., decimal separators, digit grouping).\n+ Currencies: Convert currency symbols or codes as appropriate for the target language and region.\n+ Dates: Adjust date formats to match the conventions of the target language and culture.\n+ Proper nouns: Generally, do not translate names of people, places, or organizations unless there's a widely accepted equivalent in the target language.\n+ Units of measurement: if they cannot be translated into ${destLang}, convert the unit of measurement to an equivalent system in ${destLang}, but precise calculations are required when converting units and detailed\n### CHAIN OF THOUGHT: Lets thinks step by step to translate but only return the translation:\n1.  Depend on the Input text, find the context and insight of the text by answer all the question below:\n- What is this document about, what is its purpose, who is it for, what is the domain of this document\n- What should be noted when translating this document from ${originalLang} to ${destLang} to ensure the translation is accurate. Especially the technical parameters, measurement units, acronym, technical standards, unit standards are different between ${originalLang} and ${destLang}\n- What is ${originalLang} abbreviations in the context of the document should be understood correctly and translated accurately into ${destLang}. It is necessary to clearly understand the meaning of the abbreviation and not to mistake a ${originalLang} abbreviation for an ${destLang} word.\n- Always make sure that users of the language ${destLang} do not find it difficult to understand when reading\n2. Based on the instructions and rules in INSTRUCTION and what you learned in step 1, proceed to translate the text.\n3. Acting as a reader, give comments on the translation based on the following criteria:\n- Do you understand what the translation is talking about\n- Does the translation follow the rules given in the INSTRUCTION\n- Is the translation really good, perfect? \u200b\u200bIf not good, what is not good, what needs improvement?\n4. Based on the comments in step 3, revise the translation (if necessary).\n### STYLE INSTRUCTION:\n\n        The style of the output must be ${tone}:\n        -${TONE_INSTRUCTION_MAP[tone]}\n\n\n### ADVANCED MISSION (HIGHEST PRIORITY):\n${customDictionaryEnabled ? customDictionary.filter(element => element.originalLanguage === originalLanguage && element.destinationLanguage === destinationLanguage && text.includes(element.originalWord)).map(({ originalWord, destinationWord }) => `Must translate: ${originalWord} into ${destinationWord}`).join('\n') : ''}\n- Follow the instruction below when translate:\n${customPromptEnabled ? customPrompt : ''}\n### OUTPUT FORMAT MUST BE IN JSON:\n{\n"insight": "[In-depth understanding of the text from the analysis step]",\n"rule": "[Rules followed during translation]",\n"translated_string": "uuid: ${destLang} translation of the sentence when using rule\\n  uuid: ${destLang.replace(/E$/, 'e')} translation of the sentence when using rule\\n  .."\n}`);
                 break;
             }
-            case SystemInstructions.GPT_4O_MINI:
+            case SystemInstructions.GPT4OMINI:
             default: {
                 const LANGUAGE_MAP = {
                     'zh-cn': 'Chinese',
@@ -355,3 +483,4 @@ export default class Translation {
         return '';
     }
 }
+export { MODELS, SystemInstructions, Translation, Translators };
