@@ -87,15 +87,15 @@ export default class Translation {
       canWebSearch: false,
       bilingualEnabled: false,
       systemInstruction: SystemInstructions.GPT_4O_MINI,
+      temperature: 0.1,
+      topP: 0.95,
+      topK: -1,
       tone: Tones.SERIOUS,
       domain: Domains.NONE,
       customDictionaryEnabled: false,
       customDictionary: [],
       customPromptEnabled: false,
       customPrompt: '',
-      temperature: 0.1,
-      topP: 0.95,
-      topK: -1,
       ...options
     }
     switch (options.translatorId) {
