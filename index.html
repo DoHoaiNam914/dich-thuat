@@ -264,11 +264,23 @@
                     </div>
                     <div class="mb-3">
                       <label class="form-check-label" for="system-instruction-select">Lời chỉ dẫn hệ thống:</label>
-                        <select class="form-select" id="system-instruction-select">
+                      <select class="form-select" id="system-instruction-select">
                         <option value="gpt4oMini" selected>GPT-4o mini</option>
                         <option value="coccocEdu">Cốc Cốc Học tập</option>
                         <option value="doctranslateIo">Doctranslate.io</option>
                       </select>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-check-label" for="temperature-text">Temperature:</label>
+                      <input class="form-control" id="temperature-text" max="2" min="-1" placeholder="1" step="0.05" type="number" value="0.1">
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-check-label" for="top-p-text">Top P:</label>
+                      <input class="form-control" id="top-p-text" max="1" min="-1" placeholder="1" step="0.05" type="number" value="0.95">
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-check-label" for="top-k-text">Top K:</label>
+                      <input class="form-control" id="top-k-text" max="64" min="-1" placeholder="50" step="1" type="number" value="-1">
                     </div>
                     <hr>
                     <h6 class="mb-3">Doctranslate.io</h6>
@@ -335,24 +347,11 @@
                         </optgroup>
                       </select>
                     </div>
-                    <div class="form-check form-switch mb-3">
+                    <div class="form-check form-switch">
                       <input class="form-check-input" id="custom-prompt-switch" type="checkbox" role="switch">
                       <label class="form-check-label" for="custom-prompt-switch">Tuỳ chỉnh thông minh</label>
-                      <textarea class="form-control" id="custom-prompt-textarea" placeholder="Đối với mỗi thuật ngữ, hãy đặt thuật ngữ gốc vào dấu ngoặc. Ví dụ: thuật ngữ đã dịch (thuật ngữ gốc)" rows="8"></textarea>
                     </div>
-                    <hr>
-                    <div class="mb-3">
-                      <label class="form-check-label" for="temperature-text">Temperature:</label>
-                      <input class="form-control" id="temperature-text" max="2" min="-1" placeholder="1" step="0.05" type="number" value="0.1">
-                    </div>
-                    <div class="mb-3">
-                      <label class="form-check-label" for="top-p-text">Top P:</label>
-                      <input class="form-control" id="top-p-text" max="1" min="-1" placeholder="1" step="0.05" type="number" value="0.95">
-                    </div>
-                    <div class="mb-3">
-                      <label class="form-check-label" for="top-k-text">Top K:</label>
-                      <input class="form-control" id="top-k-text" max="64" min="-1" placeholder="50" step="1" type="number" value="-1">
-                    </div>
+                    <textarea class="form-control" id="custom-prompt-textarea" placeholder="Đối với mỗi thuật ngữ, hãy đặt thuật ngữ gốc vào dấu ngoặc. Ví dụ: thuật ngữ đã dịch (thuật ngữ gốc)" rows="8"></textarea>
                   </div>
                 </div>
               </div>
@@ -374,7 +373,7 @@
                   <div class="col">
                     <div class="form-check form-switch mb-3">
                       <input class="form-check-input" id="custom-dictionary-switch" type="checkbox" role="switch">
-                      <label class="form-check-label" for="custom-dictionary-switch">Từ điển của tôi</label>
+                      <label class="form-check-label" for="custom-dictionary-switch">Từ điển của tôi (<span id="custom-dictionary-count-number">0</span>)</label>
                     </div>
                     <div class="mb-3">
                       <label class="form-label" for="custom-dictionary-input">Nhập từ điển:</label>
@@ -474,11 +473,23 @@
                     </div>
                     <div class="mb-3">
                       <label class="form-check-label" for="dictionary-system-instruction-select">Lời chỉ dẫn hệ thống:</label>
-                        <select class="form-select" id="dictionary-system-instruction-select">
+                      <select class="form-select" id="dictionary-system-instruction-select">
                         <option value="gpt4oMini" selected>GPT-4o mini</option>
                         <option value="coccocEdu">Cốc Cốc Học tập</option>
                         <option value="doctranslateIo">Doctranslate.io</option>
                       </select>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-check-label" for="dictionary-temperature-text">Temperature:</label>
+                      <input class="form-control" id="dictionary-temperature-text" max="2" min="-1" placeholder="1" step="0.05" type="number" value="0.1">
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-check-label" for="dictionary-top-p-text">Top P:</label>
+                      <input class="form-control" id="dictionary-top-p-text" max="1" min="-1" placeholder="1" step="0.05" type="number" value="0.95">
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-check-label" for="dictionary-top-k-text">Top K:</label>
+                      <input class="form-control" id="dictionary-top-k-text" max="64" min="-1" placeholder="50" step="1" type="number" value="-1">
                     </div>
                     <hr>
                     <h6 class="mb-3">Doctranslate.io</h6>
@@ -545,24 +556,11 @@
                         </optgroup>
                       </select>
                     </div>
-                    <div class="form-check form-switch mb-3">
+                    <div class="form-check form-switch">
                       <input class="form-check-input" id="dictionary-custom-prompt-switch" type="checkbox" role="switch">
                       <label class="form-check-label" for="dictionary-custom-prompt-switch">Tuỳ chỉnh thông minh</label>
-                      <textarea class="form-control" id="dictionary-custom-prompt-textarea" placeholder="Đối với mỗi thuật ngữ, hãy đặt thuật ngữ gốc vào dấu ngoặc. Ví dụ: thuật ngữ đã dịch (thuật ngữ gốc)" rows="8"></textarea>
                     </div>
-                    <hr>
-                    <div class="mb-3">
-                      <label class="form-check-label" for="dictionary-temperature-text">Temperature:</label>
-                      <input class="form-control" id="dictionary-temperature-text" max="2" min="-1" placeholder="1" step="0.05" type="number" value="0.1">
-                    </div>
-                    <div class="mb-3">
-                      <label class="form-check-label" for="dictionary-top-p-text">Top P:</label>
-                      <input class="form-control" id="dictionary-top-p-text" max="1" min="-1" placeholder="1" step="0.05" type="number" value="0.95">
-                    </div>
-                    <div class="mb-3">
-                      <label class="form-check-label" for="dictionary-top-k-text">Top K:</label>
-                      <input class="form-control" id="dictionary-top-k-text" max="64" min="-1" placeholder="50" step="1" type="number" value="-1">
-                    </div>
+                    <textarea class="form-control" id="dictionary-custom-prompt-textarea" placeholder="Đối với mỗi thuật ngữ, hãy đặt thuật ngữ gốc vào dấu ngoặc. Ví dụ: thuật ngữ đã dịch (thuật ngữ gốc)" rows="8"></textarea>
                   </div>
                 </div>
               </div>
