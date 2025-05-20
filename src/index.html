@@ -134,9 +134,9 @@
 
     <div class="container p-0">
       
-      <div class="modal fade" id="options-modal" tabindex="-1" style="--bs-body-bg: rgba(var(--bs-body-bg-rgb), 0.5);">
+      <div class="modal fade" id="options-modal" tabindex="-1" style="--bs-body-bg: rgba(var(--bs-body-bg-rgb), 0.25);">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-          <div class="modal-content" style="backdrop-filter: blur(1px); min-height: 492px;">
+          <div class="modal-content" style="backdrop-filter: blur(8px); min-height: 492px;">
             <div class="modal-header">
               <h5 class="modal-title">Tuỳ chọn</h5>
               <button class="btn-close" aria-label="Đóng" type="button" data-bs-dismiss="modal"></button>
@@ -157,7 +157,7 @@
   <svg class="bi my-1 me-2 theme-icon-active" aria-hidden="true"><use href="#circle-half"></use></svg>
   <span class="visually-hidden" id="bd-theme-text">Thay đổi chủ đề Bootstrap 5</span>
 </button>
-<ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
+<ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text" style="backdrop-filter: blur(8px);">
   <li>
     <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
       <svg class="bi me-2 opacity-50" aria-hidden="true"><use href="#sun-fill"></use></svg>
@@ -193,7 +193,8 @@
                       <input class="form-control" id="font-size-text" max="3.5" min="0.6" placeholder="1" step="0.1" type="number" value="1">
                     </div>
                     <div class="dropdown mb-3 reader-theme-toggle">
-                      <button class="align-items-center btn btn-secondary dropdown-toggle d-flex" id="reader-theme" type="button" data-bs-toggle="dropdown">Chuyển đổi chủ đề trình đọc</button><ul class="dropdown-menu dropdown-menu-end shadow"><li><button class="align-items-center d-flex dropdown-item active" type="button" data-reader-theme-value="bg-body">Bootstrap 5</button></li></ul>
+                      <button class="align-items-center btn btn-secondary dropdown-toggle d-flex" id="reader-theme" type="button" data-bs-toggle="dropdown">Chuyển đổi chủ đề trình đọc</button>
+                      <ul class="dropdown-menu dropdown-menu-end shadow" style="backdrop-filter: blur(8px);"><li><button class="align-items-center d-flex dropdown-item active" type="button" data-reader-theme-value="bg-body">Bootstrap 5</button></li></ul>
                     </div>
                     <div class="mb-3">
                       <label class="form-label" for="line-height-text">Chiều cao dòng:</label>
@@ -215,7 +216,7 @@
                     <h5 class="mb-3">Dịch thuật</h5>
                     <div class="dropdown mb-3 translator-toggle">
                       <button class="align-items-center btn btn-primary dropdown-toggle d-flex" id="translator" type="button" data-bs-toggle="dropdown">Chuyển đổi trình dịch</button>
-                      <ul class="dropdown-menu dropdown-menu-end shadow">
+                      <ul class="dropdown-menu dropdown-menu-end shadow" style="backdrop-filter: blur(8px);">
                         <li><button class="align-items-center d-flex dropdown-item active" type="button" data-translator-value="googleGenaiTranslate">
                           Google Gen AI Dịch
                           <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
@@ -265,7 +266,7 @@
                     <div class="mb-3">
                       <label class="form-check-label" for="system-instruction-select">Lời chỉ dẫn hệ thống:</label>
                       <select class="form-select" id="system-instruction-select">
-                        <option value="gpt4oMini" selected>GPT-4o mini</option>
+                        <option value="gpt-4o-mini" selected>GPT-4o mini</option>
                         <option value="coccocEdu">Cốc Cốc Học tập</option>
                         <option value="doctranslateIo">Doctranslate.io</option>
                       </select>
@@ -360,9 +361,9 @@
           </div>
         </div>
       </div>
-      <div class="modal fade" id="dictionary-modal" tabindex="-1" style="--bs-body-bg: rgba(var(--bs-body-bg-rgb), 0.5);">
+      <div class="modal fade" id="dictionary-modal" tabindex="-1" style="--bs-body-bg: rgba(var(--bs-body-bg-rgb), 0.25);">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-          <div class="modal-content" style="backdrop-filter: blur(1px); min-height: 492px;">
+          <div class="modal-content" style="backdrop-filter: blur(8px); min-height: 492px;">
             <div class="modal-header">
               <h5 class="modal-title">Từ điển của tôi (Doctranslate.io)</h5>
               <button class="btn-close" aria-label="Đóng" type="button" data-bs-dismiss="modal"></button>
@@ -382,7 +383,7 @@
                     <button class="btn btn btn-outline-danger" id="delete-all-button" type="button">Xoá tất cả</button>
                     <div class="dropdown d-inline-block">
                       <button class="align-items-center btn btn-primary dropdown-toggle d-flex" type="button" data-bs-toggle="dropdown">Hành động</button>
-                      <ul class="dropdown-menu dropdown-menu-end shadow">
+                      <ul class="dropdown-menu dropdown-menu-end shadow" style="backdrop-filter: blur(8px);">
                         <li><h6 class="align-items-center d-flex dropdown-header">Dịch với...</h6></li>
                         <li><button class="align-items-center d-flex dropdown-item" type="button" data-translation-translator-value="googleGenaiTranslate">Google Gen AI Dịch</button></li>
                         <li><button class="align-items-center d-flex dropdown-item" type="button" data-translation-translator-value="openaiTranslator">Trình dịch OpenAI</button></li>
@@ -474,7 +475,7 @@
                     <div class="mb-3">
                       <label class="form-check-label" for="dictionary-system-instruction-select">Lời chỉ dẫn hệ thống:</label>
                       <select class="form-select" id="dictionary-system-instruction-select">
-                        <option value="gpt4oMini" selected>GPT-4o mini</option>
+                        <option value="gpt-4o-mini" selected>GPT-4o mini</option>
                         <option value="coccocEdu">Cốc Cốc Học tập</option>
                         <option value="doctranslateIo">Doctranslate.io</option>
                       </select>
@@ -570,13 +571,14 @@
         </div>
       </div>
       <div class="viewport">
-        <div class="bg-body-tertiary combined-navbar position-fixed rounded shadow-sm" style="--bs-bg-opacity: 0.1; --bs-body-bg: rgba(var(--bs-body-bg-rgb), 0.5); backdrop-filter: blur(1px);">
+        <div class="bg-body-tertiary combined-navbar position-fixed rounded shadow-sm" style="--bs-bg-opacity: 0.2; --bs-body-bg: rgba(var(--bs-body-bg-rgb), 0.25); backdrop-filter: blur(8px);">
           <nav class="bg-transparent fix-bottom navbar navbar-scroller py-0 smaller-navbar" style="border-top-left-radius: var(--bs-border-radius); border-top-right-radius: var(--bs-border-radius); box-shadow: rgba(0, 0, 0, 0.075) 0 -0.125rem 0.25rem inset;">
             <div class="container-fluid">
               <div class="row">
                 <div class="col">Số lượng kí tự: <span id="character-count-number">0</span></div>
                 <div class="col"><button class="bg-transparent border-0 btn d-block p-0 copy-button" type="button" data-target="#input-textarea">Sao chép</button></div>
                 <div class="col"><button class="bg-transparent border-0 btn d-block p-0 paste-button" type="button" data-target="#input-textarea">Dán</button></div>
+                <div class="col"><button class="bg-transparent border-0 btn d-block p-0 disabled" id="retranslate-button" type="button">Dịch lại</button></div>
                 <div class="col"><button class="bg-transparent border-0 btn d-block p-0" type="button" data-bs-target="#dictionary-modal" data-bs-toggle="modal">Từ điển của tôi</button></div>
                 <div class="col"><button class="bg-transparent border-0 btn d-block p-0" type="button" data-bs-target="#options-modal" data-bs-toggle="modal">Tuỳ chọn</button></div>
               </div>
