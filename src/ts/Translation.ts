@@ -174,9 +174,9 @@ export default class Translation {
       case Translators.GOOGLE_GENAI_TRANSLATE:
       default: {
         this.translateText = async (resolve = (translatedText: string, text: string, options) => console.log(`${JSON.stringify(options)}\n### TEXT SENTENCE:\n${text}\n### TRANSLATED TEXT:\n${translatedText}`)) => {
-          const { googleGenaiModelId, thinkingModeEnabled, canGroundingWithGoogleSearch, GOOGLE_API_KEY, systemInstruction, temperature, topP, topK } = options
+          const { googleGenaiModelId, thinkingModeEnabled, canGroundingWithGoogleSearch, GEMINI_API_KEY, systemInstruction, temperature, topP, topK } = options
           const ai = new GoogleGenAI({
-            apiKey: GOOGLE_API_KEY
+            apiKey: GEMINI_API_KEY
           })
           const tools: Array<{}> = []
           if (canGroundingWithGoogleSearch as boolean) tools.push({ googleSearch: {} })
