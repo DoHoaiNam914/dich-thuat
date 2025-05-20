@@ -150,7 +150,7 @@ const MODELS = {
     }
 };
 const translationStorage = { translator: 'googleGenaiTranslate', googleGenaiModel: Object.values(MODELS.GOOGLE_GENAI).flat().find(element => element.selected)?.modelId, openaiModel: Object.values(MODELS.OPENAI).flat().find(element => element.selected)?.modelId, systemInstruction: 'gpt4oMini', ...JSON.parse(window.localStorage.getItem('translation') ?? '{}') };
-let customDictionary = JSON.parse(window.localStorage.getItem('customDictionary') ?? '[]');
+let customDictionary = [];
 let textareaTranslation = null;
 function showActiveTranslator(translator, focus = false) {
     const $translatorSwitcher = $('#translator');
@@ -161,7 +161,8 @@ function showActiveTranslator(translator, focus = false) {
     if (focus)
         $translatorSwitcher.focus();
 }
-function setStoredCustomDictionary(customDictionary) {
+function setStoredCustomDictionaryAndReloadCounter(customDictionary) {
+    $('#custom-dictionary-count-number').text(customDictionary.length);
     if (customDictionary.length > 0)
         window.localStorage.setItem('customDictionary', JSON.stringify(customDictionary));
     else
@@ -264,6 +265,8 @@ $(document).ready(() => {
         $(element).val(window.localStorage.getItem($(element).prop('id').split('-').slice(0, -1).join('_').toUpperCase()) ?? '');
     });
     $systemInstructionSelect.val(translationStorage.systemInstruction);
+    customDictionary = JSON.parse(window.localStorage.getItem('customDictionary') ?? '[]');
+    setStoredCustomDictionaryAndReloadCounter(customDictionary);
 });
 $fontFamilyText.on('change', function () {
     const fontFamily = Reader.fontMapper($(this).val());
@@ -315,15 +318,16 @@ $('#custom-dictionary-input').on('change', function () {
         };
         const row = {};
         Object.keys(COLUMN_NAME_MAP).forEach(b => {
-            row[COLUMN_NAME_MAP[b]] = a;
+            row[COLUMN_NAME_MAP[b]] = a[b];
         });
         return row;
     }) ?? [];
-    setStoredCustomDictionary(customDictionary);
+    $(this).val('');
+    setStoredCustomDictionaryAndReloadCounter(customDictionary);
 });
 $('#delete-all-button').on('click', function () {
     customDictionary = [];
-    setStoredCustomDictionary(customDictionary);
+    setStoredCustomDictionaryAndReloadCounter(customDictionary);
 });
 $translationTranslators.on('click', function () {
     if ($sourceText.val().length === 0)
@@ -340,15 +344,15 @@ $translationTranslators.on('click', function () {
         openaiModelId: $('#dictionary-openai-model-select').val(),
         canWebSearch: $('#web-search-switch').prop('checked'),
         systemInstruction: $('#dictionary-system-instruction-select').val(),
+        temperature: parseFloat($('#dictionary-temperature-text').val()),
+        topP: parseFloat($('#dictionary-top-p-text').val()),
+        topK: parseFloat($('#dictionary-top-k-text').val()),
         tone: $('#dictionary-tone-select').val(),
         domain: $('#dictionary-domain-select').val(),
         customDictionaryEnabled: $customDictionarySwitch.prop('checked'),
         customDictionary,
         customPromptEnabled: $('#dictionary-custom-prompt-switch').prop('checked'),
-        customPrompt: $('#dictionary-custom-prompt-textarea').val(),
-        temperature: parseFloat($('#dictionary-temperature-text').val()),
-        topP: parseFloat($('#dictionary-top-p-text').val()),
-        topK: parseFloat($('#dictionary-top-k-text').val())
+        customPrompt: $('#dictionary-custom-prompt-textarea').val()
     }).translateText(translatedText => {
         $targetText.val(translatedText);
     }).finally(() => {
@@ -364,17 +368,20 @@ $('[data-define-url]').on('click', function () {
     window.open($(this).data('define-url').replace('%l', $sourceTextLanguageSelect.val().split('-')[0]).replace('%s', $sourceText.val()), '_blank', 'width=1000,height=577');
 });
 $sourceText.on('input', function () {
-    $targetText.val(customDictionary.find(({ originalLanguage, destinationLanguage, originalWord }) => originalLanguage === $sourceTextLanguageSelect.val() && destinationLanguage === $targetTextLanguageSelect.val() && originalWord === $(this).val()).destinationWord ?? $targetText.val());
+    $targetText.val(customDictionary.find(({ originalLanguage, destinationLanguage, originalWord }) => originalLanguage === $sourceTextLanguageSelect.val() && destinationLanguage === $targetTextLanguageSelect.val() && originalWord === $(this).val())?.destinationWord ?? $targetText.val());
 });
 $addWordButton.on('click', () => {
-    if ($sourceText.val().length === 0 || $targetText.val().length === 0)
+    const originalWord = $sourceText.val();
+    const destinationWord = $targetText.val();
+    if (originalWord.length === 0 || destinationWord.length === 0)
         return;
     customDictionary.push({
         originalLanguage: $sourceTextLanguageSelect.val(),
         destinationLanguage: $targetTextLanguageSelect.val(),
-        originalWord: $sourceText.val(),
-        destinationWord: $targetText.val()
+        originalWord,
+        destinationWord
     });
+    setStoredCustomDictionaryAndReloadCounter(customDictionary);
 });
 $copyButtons.on('click', function () {
     const target = $(this).data('target');
@@ -419,15 +426,15 @@ $('#translate-button').on('click', function () {
                 openaiModelId: $openaiModelSelect.val(),
                 bilingualEnabled: $('#bilingual-switch').prop('checked'),
                 systemInstruction: $('#system-instruction-select').val(),
+                temperature: parseFloat($('#temperature-text').val()),
+                topP: parseFloat($('#top-p-text').val()),
+                topK: parseFloat($('#top-k-text').val()),
                 tone: $('#tone-select').val(),
                 domain: $('#domain-select').val(),
                 customDictionaryEnabled: $customDictionarySwitch.prop('checked'),
                 customDictionary,
                 customPromptEnabled: $('#custom-prompt-switch').prop('checked'),
-                customPrompt: $('#custom-prompt-textarea').val(),
-                temperature: parseFloat($('#temperature-text').val()),
-                topP: parseFloat($('#top-p-text').val()),
-                topK: parseFloat($('#top-k-text').val())
+                customPrompt: $('#custom-prompt-textarea').val()
             });
             textareaTranslation.translateText(appendTranslatedTextIntoOutputTextarea).finally(() => {
                 $(this).text('Sửa');
