@@ -1,16 +1,25 @@
 'use strict'
-/* global $ */
+/* global $, Papa */
 import * as Reader from './Reader.js'
 import Translation from './Translation.js'
+const $addWordButton = $('#add-word-button')
 const $apiKeyTexts = $('.api-key-text')
 const $copyButtons = $('.copy-button')
+const $customDictionarySwitch = $('#custom-dictionary-switch')
+// const $deleteButton = $('#delete-button')
 const $fontFamilyText = $('#font-family-text')
+const $googleApiKeyText = $('#google-api-key-text')
 const $googleGenaiModelSelect = $('#google-genai-model-select')
 const $inputTextarea = $('#input-textarea')
 const $modelSelects = $('.model-select')
 const $openaiModelSelect = $('#openai-model-select')
 const $outputTextarea = $('#output-textarea')
+const $sourceText = $('#source-text')
+const $sourceTextLanguageSelect = $('#source-text-language-select')
 const $systemInstructionSelect = $('#system-instruction-select')
+const $targetText = $('#target-text')
+const $targetTextLanguageSelect = $('#target-text-language-select')
+const $translationTranslators = $('[data-translation-translator-value]')
 const $translators = $('[data-translator-value]')
 const MODELS: { [key: string]: { [key: string]: any[] } } = {
   GOOGLE_GENAI: {
@@ -141,7 +150,19 @@ const MODELS: { [key: string]: { [key: string]: any[] } } = {
   }
 }
 const translationStorage = { translator: 'googleGenaiTranslate', googleGenaiModel: Object.values(MODELS.GOOGLE_GENAI).flat().find(element => element.selected)?.modelId, openaiModel: Object.values(MODELS.OPENAI).flat().find(element => element.selected)?.modelId, systemInstruction: 'gpt4oMini', ...JSON.parse(window.localStorage.getItem('translation') ?? '{}') }
+let customDictionary = JSON.parse(window.localStorage.getItem('customDictionary') ?? '[]')
 let textareaTranslation: Translation | null = null
+function showActiveTranslator (translator: string, focus = false): void {
+  const $translatorSwitcher = $('#translator')
+  if ($translatorSwitcher == null) return
+  $translators.removeClass('active')
+  $translators.filter(`[data-translator-value="${translator}"]`).addClass('active')
+  if (focus) $translatorSwitcher.focus()
+}
+function setStoredCustomDictionary (customDictionary): void {
+  if (customDictionary.length > 0) window.localStorage.setItem('customDictionary', JSON.stringify(customDictionary))
+  else window.localStorage.removeItem('customDictionary')
+}
 function appendTranslatedTextIntoOutputTextarea (translatedText, text, options): void {
   const $outputTextarea = $('#output-textarea')
   $outputTextarea.empty()
@@ -169,13 +190,6 @@ function appendTranslatedTextIntoOutputTextarea (translatedText, text, options):
       $outputTextarea.append(paragraph)
     })
   }
-}
-function showActiveTranslator (translator: string, focus = false): void {
-  const $translatorSwitcher = $('#translator')
-  if ($translatorSwitcher == null) return
-  $translators.removeClass('active')
-  $translators.filter(`[data-translator-value="${translator}"]`).addClass('active')
-  if (focus) $translatorSwitcher.focus()
 }
 $(window).on('unload', () => {
   Object.keys(window.localStorage).filter((element) => element.includes('eruda')).forEach((element) => {
@@ -239,68 +253,6 @@ $(document).ready(() => {
   })
   $systemInstructionSelect.val(translationStorage.systemInstruction)
 })
-$inputTextarea.on('input', function () {
-  $('#character-count-number').text(($(this).val() as string).length)
-})
-$copyButtons.on('click', function () {
-  const target = $(this).data('target')
-  const $target = $(target)
-  let targetContent = ''
-  if ($target.length > 0) targetContent = $target.val()
-  else if (target === 'textareaTranslation' && textareaTranslation != null) targetContent = textareaTranslation.translatedText
-  void (async function () {
-    try {
-      await navigator.clipboard.writeText(targetContent)
-    } catch (_e) {}
-  }())
-})
-$('.paste-button').on('click', function () {
-  const $target = $($(this).data('target'))
-  if ($target.length === 0) return
-  void navigator.clipboard.readText().then(value => {
-    if ($target.val().length === 0 || window.confirm('Bạn có chắc chắn muốn thay thế văn bản hiện tại?')) $target.val(value).trigger('input')
-  })
-})
-$('#translate-button').on('click', function () {
-  const $textareaCopyButton = $copyButtons.filter(`[data-target="#${$inputTextarea.prop('id') as string}"]`)
-  switch ($(this).text()) {
-    case 'Dịch':
-      $outputTextarea.text('Đang dịch...')
-      $inputTextarea.hide()
-      $outputTextarea.show()
-      $(this).text('Huỷ')
-      textareaTranslation = new Translation($inputTextarea.val(), ($('#destination-language-select')).val(), $('#original-language-select').val(), {
-        translatorId: $('[data-translator-value]').filter('.active').data('translator-value'),
-        googleGenaiModelId: $googleGenaiModelSelect.val(),
-        thinkingModeEnabled: $('#thinking-mode-switch').prop('checked'),
-        GOOGLE_API_KEY: $('#google-api-key-text').val(),
-        openaiModelId: $openaiModelSelect.val(),
-        bilingualEnabled: $('#bilingual-switch').prop('checked'),
-        systemInstruction: $('#system-instruction-select').val(),
-        tone: $('#tone-select').val(),
-        domain: $('#domain-select').val(),
-        customPrompt: $('#custom-prompt-textarea').val(),
-        temperature: parseFloat($('#temperature-text').val() as string),
-        topP: parseFloat($('#top-p-text').val() as string),
-        topK: parseFloat($('#top-k-text').val() as string)
-      })
-      textareaTranslation.translateText(appendTranslatedTextIntoOutputTextarea).finally(() => {
-        $(this).text('Sửa')
-        $textareaCopyButton.data('target', 'textareaTranslation')
-      })
-      break
-    case 'Huỷ':
-      if (textareaTranslation != null) textareaTranslation.abortController.abort()
-      // fallthrough
-    case 'Sửa':
-      $textareaCopyButton.data('target', `#${$inputTextarea.prop('id') as string}`)
-      textareaTranslation = null
-      $outputTextarea.text('')
-      $outputTextarea.hide()
-      $inputTextarea.show()
-      $(this).text('Dịch')
-  }
-})
 $fontFamilyText.on('change', function () {
   const fontFamily = Reader.fontMapper($(this).val())
   $(this).val(fontFamily)
@@ -339,4 +291,141 @@ $apiKeyTexts.on('change', function () {
 })
 $systemInstructionSelect.on('change', function () {
   window.localStorage.setItem('translation', JSON.stringify({ ...translationStorage, systemInstruction: $(this).val() }))
+})
+$('#custom-dictionary-input').on('change', function () {
+  // @ts-expect-error
+  customDictionary = Papa.parse($(this).prop('files')[0], { header: true, skipEmptyLines: true }).result.data.map(a => {
+    const COLUMN_NAME_MAP = {
+      'Original language': 'originalLanguage',
+      'Destination language': 'destinationLanguage',
+      'Original word': 'originalWord',
+      'Destination word': 'destinationWord'
+    }
+    const row = {}
+    Object.keys(COLUMN_NAME_MAP).forEach(b => {
+      row[COLUMN_NAME_MAP[b]] = a
+    })
+    return row
+  }) ?? []
+  setStoredCustomDictionary(customDictionary)
+})
+$('#delete-all-button').on('click', function () {
+  customDictionary = []
+  setStoredCustomDictionary(customDictionary)
+})
+$translationTranslators.on('click', function () {
+  if (($sourceText.val() as string).length === 0) return
+  $sourceText.prop('readOnly', true)
+  $targetText.prop('readOnly', true)
+  $translationTranslators.addClass('disabled')
+  new Translation($sourceText.val(), $targetTextLanguageSelect.val(), $sourceTextLanguageSelect.val(), {
+    translatorId: $(this).data('translation-translator-value'),
+    googleGenaiModelId: $('#dictionary-google-genai-model-select').val(),
+    thinkingModeEnabled: $('#dictionary-thinking-mode-switch').prop('checked'),
+    groundingWithGoogleSearchEnabled: $('#grounding-with-google-search-switch').prop('checked'),
+    GOOGLE_API_KEY: $googleApiKeyText.val(),
+    openaiModelId: $('#dictionary-openai-model-select').val(),
+    canWebSearch: $('#web-search-switch').prop('checked'),
+    systemInstruction: $('#dictionary-system-instruction-select').val(),
+    tone: $('#dictionary-tone-select').val(),
+    domain: $('#dictionary-domain-select').val(),
+    customDictionaryEnabled: $customDictionarySwitch.prop('checked'),
+    customDictionary,
+    customPromptEnabled: $('#dictionary-custom-prompt-switch').prop('checked'),
+    customPrompt: $('#dictionary-custom-prompt-textarea').val(),
+    temperature: parseFloat($('#dictionary-temperature-text').val() as string),
+    topP: parseFloat($('#dictionary-top-p-text').val() as string),
+    topK: parseFloat($('#dictionary-top-k-text').val() as string)
+  }).translateText(translatedText => {
+    $targetText.val(translatedText)
+  }).finally(() => {
+    $sourceText.prop('readOnly', false)
+    $targetText.prop('readOnly', false)
+    $addWordButton.removeClass('disabled')
+    $translationTranslators.removeClass('disabled')
+  })
+})
+$('[data-define-url]').on('click', function () {
+  if (($sourceText.val() as string).length === 0) return
+  window.open($(this).data('define-url').replace('%l', ($sourceTextLanguageSelect.val() as string).split('-')[0]).replace('%s', $sourceText.val()), '_blank', 'width=1000,height=577')
+})
+$sourceText.on('input', function () {
+  $targetText.val(customDictionary.find(({ originalLanguage, destinationLanguage, originalWord }) => originalLanguage === $sourceTextLanguageSelect.val() && destinationLanguage === $targetTextLanguageSelect.val() && originalWord === $(this).val()).destinationWord ?? $targetText.val())
+})
+$addWordButton.on('click', () => {
+  if (($sourceText.val() as string).length === 0 || ($targetText.val() as string).length === 0) return
+  customDictionary.push({
+    originalLanguage: $sourceTextLanguageSelect.val(),
+    destinationLanguage: $targetTextLanguageSelect.val(),
+    originalWord: $sourceText.val(),
+    destinationWord: $targetText.val()
+  })
+})
+$copyButtons.on('click', function () {
+  const target = $(this).data('target')
+  const $target = $(target)
+  let targetContent = ''
+  if ($target.length > 0) targetContent = $target.val()
+  else if (target === 'textareaTranslation' && textareaTranslation != null) targetContent = textareaTranslation.translatedText
+  void (async function () {
+    try {
+      await navigator.clipboard.writeText(targetContent)
+    } catch (_e) {}
+  }())
+})
+$('.paste-button').on('click', function () {
+  const $target = $($(this).data('target'))
+  if ($target.length === 0) return
+  void navigator.clipboard.readText().then(value => {
+    if ($target.val().length === 0 || window.confirm('Bạn có chắc chắn muốn thay thế văn bản hiện tại?')) $target.val(value).trigger('input')
+  })
+})
+$('#translate-button').on('click', function () {
+  const $textareaCopyButton = $copyButtons.filter(`[data-target="#${$inputTextarea.prop('id') as string}"]`)
+  switch ($(this).text()) {
+    case 'Dịch': {
+      const inputText = $inputTextarea.val() as string
+      if (inputText.length === 0) break
+      $outputTextarea.text('Đang dịch...')
+      $inputTextarea.hide()
+      $outputTextarea.show()
+      $(this).text('Huỷ')
+      textareaTranslation = new Translation(inputText, $('#destination-language-select').val(), $('#original-language-select').val(), {
+        translatorId: $('[data-translator-value]').filter('.active').data('translator-value'),
+        googleGenaiModelId: $googleGenaiModelSelect.val(),
+        thinkingModeEnabled: $('#thinking-mode-switch').prop('checked'),
+        GOOGLE_API_KEY: $googleApiKeyText.val(),
+        openaiModelId: $openaiModelSelect.val(),
+        bilingualEnabled: $('#bilingual-switch').prop('checked'),
+        systemInstruction: $('#system-instruction-select').val(),
+        tone: $('#tone-select').val(),
+        domain: $('#domain-select').val(),
+        customDictionaryEnabled: $customDictionarySwitch.prop('checked'),
+        customDictionary,
+        customPromptEnabled: $('#custom-prompt-switch').prop('checked'),
+        customPrompt: $('#custom-prompt-textarea').val(),
+        temperature: parseFloat($('#temperature-text').val() as string),
+        topP: parseFloat($('#top-p-text').val() as string),
+        topK: parseFloat($('#top-k-text').val() as string)
+      })
+      textareaTranslation.translateText(appendTranslatedTextIntoOutputTextarea).finally(() => {
+        $(this).text('Sửa')
+        $textareaCopyButton.data('target', 'textareaTranslation')
+      })
+      break
+    }
+    case 'Huỷ':
+      if (textareaTranslation != null) textareaTranslation.abortController.abort()
+      // fallthrough
+    case 'Sửa':
+      $textareaCopyButton.data('target', `#${$inputTextarea.prop('id') as string}`)
+      textareaTranslation = null
+      $outputTextarea.text('')
+      $outputTextarea.hide()
+      $inputTextarea.show()
+      $(this).text('Dịch')
+  }
+})
+$inputTextarea.on('input', function () {
+  $('#character-count-number').text(($(this).val() as string).length)
 })

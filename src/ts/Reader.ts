@@ -282,7 +282,7 @@ function loadReaderThemesOptions (): void {
       $(svg).addClass(['bi', 'd-none', 'ms-auto'])
       use.setAttributeNS('http://www.w3.org/2000/svg', 'href', '#check2')
       $(svg).append(use)
-      dropdownItem.innerHTML += `\n${svg.outerHTML}`
+      dropdownItem.innerHTML += ` ${svg.outerHTML}`
       Object.keys(a).filter(b => b !== 'name').forEach(c => {
         setThemeValue(a, $(dropdownItem), c)
       })
