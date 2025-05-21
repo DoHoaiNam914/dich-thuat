@@ -47,7 +47,6 @@ function syncReaderThemeSettings($readerTheme) {
         $lineHeightText.val(lineHeight).change();
     }
     $boldTextSwitch.prop('checked', $readerTheme.data('reader-theme-bold-text')).change();
-    console.log($readerTheme.data('reader-theme-justify-text'));
     $justifyTextSwitch.prop('checked', $readerTheme.data('reader-theme-justify-text') ?? false).change();
 }
 function showActiveTranslator(translator, focus = false) {
@@ -383,7 +382,6 @@ $translateButton.on('click', function () {
             textareaTranslation.translateText(appendTranslatedTextIntoOutputTextarea).then(() => {
                 if (textareaTranslation?.abortController.signal.aborted)
                     return;
-                console.log('))))');
                 $(this).text('Sửa');
                 $textareaCopyButton.data('target', 'textareaTranslation');
                 $retranslateButton.removeClass('disabled');
