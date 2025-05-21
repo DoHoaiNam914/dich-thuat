@@ -1,3 +1,4 @@
+"use strict";
 const cacheName = 'Dịch thuật';
 const precachedResources = [
     '/',
@@ -19,7 +20,7 @@ async function precache() {
     const cache = await self.caches.open(cacheName);
     return await cache.addAll(precachedResources);
 }
-// @ts-expect-error
+// @ts-expect-error ExtendableEvent
 self.addEventListener('install', (event) => {
     event.waitUntil(precache());
 });
@@ -35,7 +36,7 @@ async function cacheFirst(request) {
         }
         return networkResponse;
     }
-    catch (error) {
+    catch {
         return Response.error();
     }
 }
@@ -57,12 +58,12 @@ async function cacheFirst(request) {
 //       void cache.put(request, networkResponse.clone())
 //     }
 //     return networkResponse
-//   } catch (_e) {
+//   } catch {
 //     const cachedResponse = await self.caches.match(request)
 //     return cachedResponse ?? Response.error()
 //   }
 // }
-// @ts-expect-error
+// @ts-expect-error FetchEvent
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
     if (precachedResources.includes(url.pathname))
@@ -70,3 +71,4 @@ self.addEventListener('fetch', (event) => {
     // event.respondWith(cacheFirstWithRefresh(event.request))
     // event.respondWith(networkFirst(event.request))
 });
+//# sourceMappingURL=service-worker.js.map

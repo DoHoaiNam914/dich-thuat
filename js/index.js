@@ -1,8 +1,8 @@
 'use strict';
 /* global $, Papa */
-import * as Reader from './Reader.js';
+import Reader from './Reader.js';
 import { MODELS, SystemInstructions, Translation, Translators } from './Translation.js';
-import * as Utils from './Utils.js';
+import Utils from './Utils.js';
 const $addWordButton = $('#add-word-button');
 const $apiKeyTexts = $('.api-key-text');
 const $boldTextSwitch = $('#bold-text-switch');
@@ -26,7 +26,7 @@ const $targetTextLanguageSelect = $('#target-text-language-select');
 const $translateButton = $('#translate-button');
 const $translationTranslators = $('[data-translation-translator-value]');
 const $translators = $('[data-translator-value]');
-const translationStorage = { translator: Translators.GOOGLE_GENAI_TRANSLATE, googleGenaiModel: Object.values(MODELS.GOOGLE_GENAI).flat().find(element => element.selected).modelId, openaiModel: Object.values(MODELS.OPENAI).flat().find(element => element.selected).modelId, systemInstruction: SystemInstructions.GPT4OMINI, ...JSON.parse(window.localStorage.getItem('translation') ?? '{}') };
+const translationStorage = { translator: Translators.GOOGLE_GENAI_TRANSLATE, googleGenaiModel: Object.values(MODELS.GOOGLE_GENAI).flat().filter(element => typeof element === 'object').find((element) => element.selected)?.modelId, openaiModel: Object.values(MODELS.OPENAI).flat().filter(element => typeof element === 'object').find((element) => element.selected)?.modelId, systemInstruction: SystemInstructions.GPT4OMINI, ...JSON.parse(window.localStorage.getItem('translation') ?? '{}') };
 let customDictionary = [];
 let textareaTranslation = null;
 let dictionaryTranslation = null;
@@ -61,7 +61,15 @@ function showActiveTranslator(translator, focus = false) {
 function setStoredCustomDictionaryAndReloadCounter(customDictionary) {
     $('#custom-dictionary-count-number').text(customDictionary.length);
     if (customDictionary.length > 0) {
-        customDictionary.sort((a, b) => Boolean(a.originalWord.split(/(?:)/u).length - b.originalWord.split(/(?:)/u).length) || Boolean(a.destinationWord.localeCompare(b.destinationWord, 'vi', { ignorePunctuation: true })) || Boolean(a.originalWord.localeCompare(b.originalWord, 'vi', { ignorePunctuation: true })));
+        customDictionary.sort((a, b) => {
+            const wordLengthDifference = a.originalWord.split(/(?:)/u).length - b.originalWord.split(/(?:)/u).length;
+            if (wordLengthDifference !== 0)
+                return wordLengthDifference;
+            const destinationWordDifference = a.destinationWord.localeCompare(b.destinationWord, 'vi', { ignorePunctuation: true });
+            if (destinationWordDifference !== 0)
+                return destinationWordDifference;
+            return a.originalWord.localeCompare(b.originalWord, 'vi', { ignorePunctuation: true });
+        });
         window.localStorage.setItem('customDictionary', JSON.stringify(customDictionary));
     }
     else {
@@ -71,7 +79,7 @@ function setStoredCustomDictionaryAndReloadCounter(customDictionary) {
 function appendTranslatedTextIntoOutputTextarea(translatedText, text, options) {
     const $outputTextarea = $('#output-textarea');
     $outputTextarea.empty();
-    if (options.bilingualEnabled) {
+    if (options.isBilingualEnabled) {
         const translatedLines = translatedText.split('\n');
         text.split('\n').forEach((element, index) => {
             const paragraph = document.createElement('p');
@@ -196,11 +204,11 @@ $('#dictionary-modal').on('hide.bs.modal', () => {
     $('#source-text, #target-text').val('');
 });
 $('#custom-dictionary-input').on('change', function () {
-    // @ts-expect-error
+    // @ts-expect-error Papaparse
     Papa.parse($(this).prop('files')[0], {
         header: true,
         skipEmptyLines: true,
-        complete: (results, file) => {
+        complete: (results) => {
             customDictionary = results.data.map(a => {
                 const COLUMN_NAME_MAP = {
                     'Original language': 'originalLanguage',
@@ -208,7 +216,7 @@ $('#custom-dictionary-input').on('change', function () {
                     'Original word': 'originalWord',
                     'Destination word': 'destinationWord'
                 };
-                const row = {};
+                const row = { originalLanguage: '', destinationLanguage: '', originalWord: '', destinationWord: '' };
                 Object.keys(COLUMN_NAME_MAP).forEach(b => {
                     row[COLUMN_NAME_MAP[b]] = a[b];
                 });
@@ -237,20 +245,20 @@ $translationTranslators.on('click', function () {
     dictionaryTranslation = new Translation(sourceText, $targetTextLanguageSelect.val(), $sourceTextLanguageSelect.val(), {
         translatorId: $(this).data('translation-translator-value'),
         googleGenaiModelId: $('#dictionary-google-genai-model-select').val(),
-        thinkingModeEnabled: $('#dictionary-thinking-mode-switch').prop('checked'),
-        groundingWithGoogleSearchEnabled: $('#grounding-with-google-search-switch').prop('checked'),
+        isThinkingModeEnabled: $('#dictionary-thinking-mode-switch').prop('checked'),
+        isGroundingWithGoogleSearchEnabled: $('#grounding-with-google-search-switch').prop('checked'),
         GEMINI_API_KEY: $geminiApiKeyText.val(),
         openaiModelId: $('#dictionary-openai-model-select').val(),
-        canWebSearch: $('#web-search-switch').prop('checked'),
+        isWebSearchEnabled: $('#web-search-switch').prop('checked'),
         systemInstruction: $('#dictionary-system-instruction-select').val(),
         temperature: parseFloat($('#dictionary-temperature-text').val()),
         topP: parseFloat($('#dictionary-top-p-text').val()),
         topK: parseFloat($('#dictionary-top-k-text').val()),
         tone: $('#dictionary-tone-select').val(),
         domain: $('#dictionary-domain-select').val(),
-        customDictionaryEnabled: $customDictionarySwitch.prop('checked'),
+        isCustomDictionaryEnabled: $customDictionarySwitch.prop('checked'),
         customDictionary,
-        customPromptEnabled: $('#dictionary-custom-prompt-switch').prop('checked'),
+        isCustomPromptEnabled: $('#dictionary-custom-prompt-switch').prop('checked'),
         customPrompt: $('#dictionary-custom-prompt-textarea').val()
     });
     dictionaryTranslation.translateText(translatedText => {
@@ -301,7 +309,7 @@ $deleteButton.on('click', () => {
 $('#copy-csv-button').on('click', () => {
     void (async function () {
         try {
-            // @ts-expect-error
+            // @ts-expect-error Papaparse
             await navigator.clipboard.writeText(Papa.unparse(customDictionary.map(a => {
                 const COLUMN_NAME_MAP = {
                     originalLanguage: 'Original language',
@@ -316,7 +324,9 @@ $('#copy-csv-button').on('click', () => {
                 return row;
             })));
         }
-        catch (_e) { }
+        catch {
+            // continue regardless of error
+        }
     }());
 });
 $copyButtons.on('click', function () {
@@ -331,7 +341,9 @@ $copyButtons.on('click', function () {
         try {
             await navigator.clipboard.writeText(targetContent);
         }
-        catch (_e) { }
+        catch {
+            // continue regardless of error
+        }
     }());
 });
 $('.paste-button').on('click', function () {
@@ -364,19 +376,19 @@ $translateButton.on('click', function () {
             textareaTranslation = new Translation(inputText, $('#destination-language-select').val(), $('#original-language-select').val(), {
                 translatorId: $('[data-translator-value]').filter('.active').data('translator-value'),
                 googleGenaiModelId: $('#google-genai-model-select').val(),
-                thinkingModeEnabled: $('#thinking-mode-switch').prop('checked'),
+                isThinkingModeEnabled: $('#thinking-mode-switch').prop('checked'),
                 GEMINI_API_KEY: $geminiApiKeyText.val(),
                 openaiModelId: $('#openai-model-select').val(),
-                bilingualEnabled: $('#bilingual-switch').prop('checked'),
+                isBilingualEnabled: $('#bilingual-switch').prop('checked'),
                 systemInstruction: $('#system-instruction-select').val(),
                 temperature: parseFloat($('#temperature-text').val()),
                 topP: parseFloat($('#top-p-text').val()),
                 topK: parseFloat($('#top-k-text').val()),
                 tone: $('#tone-select').val(),
                 domain: $('#domain-select').val(),
-                customDictionaryEnabled: $customDictionarySwitch.prop('checked'),
+                isCustomDictionaryEnabled: $customDictionarySwitch.prop('checked'),
                 customDictionary,
-                customPromptEnabled: $('#custom-prompt-switch').prop('checked'),
+                isCustomPromptEnabled: $('#custom-prompt-switch').prop('checked'),
                 customPrompt: $('#custom-prompt-textarea').val()
             });
             textareaTranslation.translateText(appendTranslatedTextIntoOutputTextarea).then(() => {
@@ -406,3 +418,4 @@ $translateButton.on('click', function () {
 $inputTextarea.on('input', function () {
     $('#character-count-number').text($(this).val().length);
 });
+//# sourceMappingURL=index.js.map

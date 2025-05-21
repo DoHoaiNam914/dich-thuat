@@ -1,14 +1,18 @@
 'use strict';
-function clamp(value, min, max) {
-    return Math.min(max, Math.max(min, value));
-}
-function isValidJson(string) {
-    try {
-        JSON.parse(string);
-        return true;
+class Utils {
+    static clamp(value, min, max) {
+        return Math.min(max, Math.max(min, value));
     }
-    catch (_e) {
-        return false;
+    static isValidJson(jsonString) {
+        try {
+            JSON.parse(jsonString);
+            return true;
+        }
+        catch {
+            return false;
+        }
     }
 }
-export { clamp, isValidJson };
+Utils.has = Object.prototype.hasOwnProperty;
+export default Utils;
+//# sourceMappingURL=Utils.js.map

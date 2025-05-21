@@ -1,6 +1,108 @@
 'use strict';
 /* global $ */
-const THEMES = [
+import Utils from './Utils.js';
+class Reader {
+    static setThemeValue(theme, $dropdownItem, valueKey) {
+        const value = theme[valueKey];
+        switch (valueKey) {
+            case 'active':
+                if (value)
+                    $dropdownItem.addClass('active');
+                break;
+            case 'boldText':
+                $dropdownItem.attr('data-reader-theme-bold-text', String(value));
+                break;
+            case 'fontFamily':
+                $dropdownItem.attr('data-reader-theme-font-family', value);
+                break;
+            case 'fontSize':
+                $dropdownItem.attr('data-reader-theme-font-size', value);
+                break;
+            case 'fontWeight':
+                $dropdownItem.attr('data-reader-theme-font-weight', value);
+                break;
+            case 'justifyText':
+                $dropdownItem.attr('data-reader-theme-justify-text', value);
+                break;
+            case 'lineHeight':
+                $dropdownItem.attr('data-reader-theme-line-height', value);
+                break;
+            case 'value':
+                $dropdownItem.attr('data-reader-theme-value', value);
+        }
+    }
+    static loadReaderThemesOptions() {
+        const unorderedList = document.createElement('ul');
+        Reader.THEMES.forEach((a) => {
+            const listItem = document.createElement('li');
+            if (Utils.has.call(a, 'title') && Utils.has.call(a, 'themes')) {
+                const dropdownHeader = document.createElement('h6');
+                const themeGroup = a;
+                $(dropdownHeader).addClass(['align-items-center', 'd-flex', 'dropdown-header']);
+                $(dropdownHeader).text(themeGroup.title);
+                $(listItem).append(dropdownHeader);
+                $(unorderedList).append(listItem.cloneNode(true));
+                $(listItem).empty();
+                themeGroup.themes.forEach((b) => {
+                    const dropdownItem = document.createElement('button');
+                    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                    const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+                    $(dropdownItem).addClass(['align-items-center', 'd-flex', 'dropdown-item']);
+                    $(dropdownItem).prop('type', 'button');
+                    $(dropdownItem).text(b.name);
+                    $(svg).addClass(['bi', 'd-none', 'ms-auto']);
+                    use.setAttributeNS('http://www.w3.org/2000/svg', 'href', '#check2');
+                    $(svg).append(use);
+                    $(dropdownItem).append(' ', svg);
+                    [...Object.keys(themeGroup).filter(c => c !== 'title' && c !== 'themes'), ...Object.keys(b).filter(c => c !== 'name')].forEach(c => {
+                        Reader.setThemeValue({ ...a, ...b }, $(dropdownItem), c);
+                    });
+                    $(listItem).append(dropdownItem);
+                    $(unorderedList).append(listItem.cloneNode(true));
+                    $(listItem).empty();
+                });
+            }
+            else if (Utils.has.call(a, 'name') && Utils.has.call(a, 'value')) {
+                const dropdownItem = document.createElement('button');
+                const theme = a;
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+                $(dropdownItem).addClass(['align-items-center', 'd-flex', 'dropdown-item']);
+                $(dropdownItem).prop('type', 'button');
+                $(dropdownItem).text(theme.name);
+                $(svg).addClass(['bi', 'd-none', 'ms-auto']);
+                use.setAttributeNS('http://www.w3.org/2000/svg', 'href', '#check2');
+                $(svg).append(use);
+                $(dropdownItem).append(' ', svg);
+                Object.keys(a).filter(b => b !== 'name').forEach(c => {
+                    Reader.setThemeValue(theme, $(dropdownItem), c);
+                });
+                $(listItem).append(dropdownItem);
+                $(unorderedList).append(listItem.cloneNode(true));
+                $(listItem).empty();
+            }
+        });
+        $('.reader-theme-toggle .dropdown-menu').html(unorderedList.innerHTML);
+    }
+    static fontMapper(fontFamily) {
+        return fontFamily?.replace(/['"]/g, '').split(/, */).filter(element => element.length > 0).map(element => Reader.FONT_MAP.find(([first, second]) => first === element || second === element)?.[1] ?? element).join(', ');
+    }
+    static setReaderTheme(readerTheme, syncSettings, prevReaderTheme = null) {
+        $(document.body).removeClass(prevReaderTheme ?? Reader.THEMES[0].value).addClass(readerTheme);
+        syncSettings($(`[data-reader-theme-value="${readerTheme}"]`));
+    }
+    static showActiveReaderTheme(readerTheme, focus = false) {
+        const $themeSwitcher = $('#reader-theme');
+        if ($themeSwitcher == null)
+            return;
+        const $readerThemes = $('[data-reader-theme-value]');
+        $readerThemes.removeClass('active');
+        $readerThemes.filter(`[data-reader-theme-value="${readerTheme}"]`).addClass('active');
+        if (focus)
+            $themeSwitcher.focus();
+    }
+}
+Reader.THEMES = [
     {
         name: 'Bootstrap 5',
         value: 'bg-body',
@@ -128,7 +230,7 @@ const THEMES = [
         ]
     }
 ];
-const FONT_MAP = Object.entries({
+Reader.FONT_MAP = Object.entries({
     'Phông chữ Bootstrap 5 sans serif': '--bs-font-sans-serif',
     'Phông chữ Bootstrap 5 monospace': '--bs-font-monospace',
     /* Các phông chữ của Readium */
@@ -207,103 +309,5 @@ const FONT_MAP = Object.entries({
     TBMincho: 'tbmincho',
     Thonburi: 'thonburi-ttf'
 });
-function setThemeValue(theme, $dropdownItem, valueKey) {
-    const value = theme.themes?.[valueKey] ?? theme[valueKey];
-    switch (valueKey) {
-        case 'active':
-            if (value)
-                $dropdownItem.addClass('active');
-            break;
-        case 'boldText':
-            $dropdownItem.attr('data-reader-theme-bold-text', value);
-            break;
-        case 'fontFamily':
-            $dropdownItem.attr('data-reader-theme-font-family', value);
-            break;
-        case 'fontSize':
-            $dropdownItem.attr('data-reader-theme-font-size', value);
-            break;
-        case 'fontWeight':
-            $dropdownItem.attr('data-reader-theme-font-weight', value);
-            break;
-        case 'justifyText':
-            $dropdownItem.attr('data-reader-theme-justify-text', value);
-            break;
-        case 'lineHeight':
-            $dropdownItem.attr('data-reader-theme-line-height', value);
-            break;
-        case 'value':
-            $dropdownItem.attr('data-reader-theme-value', value);
-    }
-}
-function loadReaderThemesOptions() {
-    const unorderedList = document.createElement('ul');
-    THEMES.forEach(a => {
-        const listItem = document.createElement('li');
-        if (Object.hasOwn(a, 'title') && Object.hasOwn(a, 'themes')) {
-            const dropdownHeader = document.createElement('h6');
-            $(dropdownHeader).addClass(['align-items-center', 'd-flex', 'dropdown-header']);
-            $(dropdownHeader).text(a.title);
-            $(listItem).append(dropdownHeader);
-            $(unorderedList).append(listItem.cloneNode(true));
-            $(listItem).empty();
-            a.themes.forEach(b => {
-                const dropdownItem = document.createElement('button');
-                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-                const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-                $(dropdownItem).addClass(['align-items-center', 'd-flex', 'dropdown-item']);
-                $(dropdownItem).prop('type', 'button');
-                $(dropdownItem).text(b.name);
-                $(svg).addClass(['bi', 'd-none', 'ms-auto']);
-                use.setAttributeNS('http://www.w3.org/2000/svg', 'href', '#check2');
-                $(svg).append(use);
-                dropdownItem.innerHTML += `\n${svg.outerHTML}`;
-                [...Object.keys(a), ...Object.keys(b)].filter(c => c !== 'title' && c !== 'themes' && c !== 'name').forEach(c => {
-                    setThemeValue({ ...a, themes: b }, $(dropdownItem), c);
-                });
-                $(listItem).append(dropdownItem);
-                $(unorderedList).append(listItem.cloneNode(true));
-                $(listItem).empty();
-            });
-        }
-        else if (Object.hasOwn(a, 'name') && Object.hasOwn(a, 'value')) {
-            const dropdownItem = document.createElement('button');
-            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-            const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-            $(dropdownItem).addClass(['align-items-center', 'd-flex', 'dropdown-item']);
-            $(dropdownItem).prop('type', 'button');
-            $(dropdownItem).text(a.name);
-            $(svg).addClass(['bi', 'd-none', 'ms-auto']);
-            use.setAttributeNS('http://www.w3.org/2000/svg', 'href', '#check2');
-            $(svg).append(use);
-            dropdownItem.innerHTML += ` ${svg.outerHTML}`;
-            Object.keys(a).filter(b => b !== 'name').forEach(c => {
-                setThemeValue(a, $(dropdownItem), c);
-            });
-            $(listItem).append(dropdownItem);
-            $(unorderedList).append(listItem.cloneNode(true));
-            $(listItem).empty();
-        }
-    });
-    $('.reader-theme-toggle .dropdown-menu').html(unorderedList.innerHTML);
-}
-function fontMapper(fontFamily) {
-    return fontFamily?.replaceAll(/['"]/g, '').split(/, */).filter(element => element.length > 0).map(element => element.length >= 3 && FONT_MAP.some(([first, second]) => first === element || second === element) ? FONT_MAP.find(([first, second]) => first === element || second === element)?.[1] : element).join(', ');
-}
-function setReaderTheme(readerTheme, syncReaderThemeSettings = ($readerTheme) => { }, prevReaderTheme = null) {
-    $(document.body).removeClass(prevReaderTheme ?? THEMES[0].value);
-    $(document.body).addClass(readerTheme);
-    const $readerTheme = $(`[data-reader-theme-value="${readerTheme}"]`);
-    syncReaderThemeSettings($readerTheme);
-}
-function showActiveReaderTheme(readerTheme, focus = false) {
-    const $themeSwitcher = $('#reader-theme');
-    if ($themeSwitcher == null)
-        return;
-    const $readerThemes = $('[data-reader-theme-value]');
-    $readerThemes.removeClass('active');
-    $readerThemes.filter(`[data-reader-theme-value="${readerTheme}"]`).addClass('active');
-    if (focus)
-        $themeSwitcher.focus();
-}
-export { fontMapper, loadReaderThemesOptions, setReaderTheme, showActiveReaderTheme };
+export default Reader;
+//# sourceMappingURL=Reader.js.map
