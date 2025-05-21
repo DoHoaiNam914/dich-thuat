@@ -359,24 +359,22 @@ $translateButton.on('click', function () {
             });
             textareaTranslation.translateText(appendTranslatedTextIntoOutputTextarea).then(() => {
                 $(this).text('Sửa');
-            }).catch(() => {
-                $(this).click();
-            }).finally(() => {
-                $retranslateButton.removeClass('disabled');
                 $textareaCopyButton.data('target', 'textareaTranslation');
+                $retranslateButton.removeClass('disabled');
+            }).catch(() => {
+                if (!textareaTranslation?.abortController.signal.aborted)
+                    $(this).click();
             });
             break;
         }
         case 'Huỷ':
-            if (textareaTranslation != null)
-                textareaTranslation.abortController.abort();
+            textareaTranslation?.abortController.abort();
         // fallthrough
         case 'Sửa':
-            $textareaCopyButton.data('target', `#${$inputTextarea.prop('id')}`);
-            textareaTranslation = null;
             $outputTextarea.text('');
             $outputTextarea.hide();
             $inputTextarea.show();
+            $textareaCopyButton.data('target', `#${$inputTextarea.prop('id')}`);
             $(this).text('Dịch');
             $retranslateButton.addClass('disabled');
     }
