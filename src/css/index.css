@@ -25,6 +25,7 @@
   --reader-line-height: 1.2em;
   --viewport-width: 1000px;
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 .viewport {
