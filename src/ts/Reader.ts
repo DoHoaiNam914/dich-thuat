@@ -294,9 +294,6 @@ function loadReaderThemesOptions (): void {
 function fontMapper (fontFamily): string {
   return fontFamily?.replaceAll(/['"]/g, '').split(/, */).filter(element => element.length > 0).map(element => element.length >= 3 && FONT_MAP.some(([first, second]) => first === element || second === element) ? FONT_MAP.find(([first, second]) => first === element || second === element)?.[1] : element).join(', ')
 }
-function getPreferredReaderTheme (): string {
-  return window.localStorage.getItem('readerTheme') ?? THEMES[0].value
-}
 function setReaderTheme (readerTheme: string, syncReaderThemeSettings = ($readerTheme) => {}, prevReaderTheme = null): void {
   $(document.body).removeClass(prevReaderTheme ?? THEMES[0].value)
   $(document.body).addClass(readerTheme)
@@ -311,4 +308,4 @@ function showActiveReaderTheme (readerTheme: string, focus = false): void {
   $readerThemes.filter(`[data-reader-theme-value="${readerTheme}"]`).addClass('active')
   if (focus) $themeSwitcher.focus()
 }
-export { loadReaderThemesOptions, fontMapper, getPreferredReaderTheme, setReaderTheme, showActiveReaderTheme }
+export { fontMapper, loadReaderThemesOptions, setReaderTheme, showActiveReaderTheme }
