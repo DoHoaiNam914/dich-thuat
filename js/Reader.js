@@ -290,9 +290,6 @@ function loadReaderThemesOptions() {
 function fontMapper(fontFamily) {
     return fontFamily?.replaceAll(/['"]/g, '').split(/, */).filter(element => element.length > 0).map(element => element.length >= 3 && FONT_MAP.some(([first, second]) => first === element || second === element) ? FONT_MAP.find(([first, second]) => first === element || second === element)?.[1] : element).join(', ');
 }
-function getPreferredReaderTheme() {
-    return window.localStorage.getItem('readerTheme') ?? THEMES[0].value;
-}
 function setReaderTheme(readerTheme, syncReaderThemeSettings = ($readerTheme) => { }, prevReaderTheme = null) {
     $(document.body).removeClass(prevReaderTheme ?? THEMES[0].value);
     $(document.body).addClass(readerTheme);
@@ -309,4 +306,4 @@ function showActiveReaderTheme(readerTheme, focus = false) {
     if (focus)
         $themeSwitcher.focus();
 }
-export { loadReaderThemesOptions, fontMapper, getPreferredReaderTheme, setReaderTheme, showActiveReaderTheme };
+export { fontMapper, loadReaderThemesOptions, setReaderTheme, showActiveReaderTheme };
