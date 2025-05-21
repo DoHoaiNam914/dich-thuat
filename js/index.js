@@ -226,13 +226,14 @@ $('#delete-all-button').on('click', function () {
     setStoredCustomDictionaryAndReloadCounter(customDictionary);
 });
 $translationTranslators.on('click', function () {
-    if ($sourceText.val().length === 0)
+    const sourceText = $sourceText.val();
+    if (sourceText.length === 0)
         return;
-    $sourceText.prop('readOnly', true);
-    $targetText.prop('readOnly', true);
-    $addWordButton.addClass('disabled');
-    $translationTranslators.addClass('disabled');
-    dictionaryTranslation = new Translation($sourceText.val(), $targetTextLanguageSelect.val(), $sourceTextLanguageSelect.val(), {
+    const previousTargetText = $targetText.val();
+    $targetText.val('Đang dịch...');
+    $('#source-text, #target-text').prop('readOnly', true);
+    $('#add-word-button, #delete-button, [translation-translator-value]').addClass('disabled');
+    dictionaryTranslation = new Translation(sourceText, $targetTextLanguageSelect.val(), $sourceTextLanguageSelect.val(), {
         translatorId: $(this).data('translation-translator-value'),
         googleGenaiModelId: $('#dictionary-google-genai-model-select').val(),
         thinkingModeEnabled: $('#dictionary-thinking-mode-switch').prop('checked'),
@@ -253,11 +254,11 @@ $translationTranslators.on('click', function () {
     });
     dictionaryTranslation.translateText(translatedText => {
         $targetText.val(translatedText);
+    }).catch(() => {
+        $targetText.val(previousTargetText);
     }).finally(() => {
-        $sourceText.prop('readOnly', false);
-        $targetText.prop('readOnly', false);
-        $addWordButton.removeClass('disabled');
-        $translationTranslators.removeClass('disabled');
+        $('#source-text, #target-text').prop('readOnly', false);
+        $('#add-word-button, #delete-button, [translation-translator-value]').removeClass('disabled');
     });
 });
 $('[data-define-url]').on('click', function () {
@@ -269,16 +270,22 @@ $sourceText.on('input', function () {
     $targetText.val(customDictionary.find(({ originalLanguage, destinationLanguage, originalWord }) => originalLanguage === $sourceTextLanguageSelect.val() && destinationLanguage === $targetTextLanguageSelect.val() && originalWord === $(this).val())?.destinationWord ?? $targetText.val());
 });
 $addWordButton.on('click', () => {
+    const originalLanguage = $sourceTextLanguageSelect.val();
+    const destinationLanguage = $targetTextLanguageSelect.val();
     const originalWord = $sourceText.val();
     const destinationWord = $targetText.val();
     if (originalWord.length === 0 || destinationWord.length === 0)
         return;
+    const wordIndex = customDictionary.findIndex(element => element.originalLanguage === originalLanguage && element.destinationLanguage === destinationLanguage && element.originalWord === originalWord);
+    if (wordIndex !== -1)
+        customDictionary.splice(wordIndex, 1);
     customDictionary.push({
         originalLanguage: $sourceTextLanguageSelect.val(),
         destinationLanguage: $targetTextLanguageSelect.val(),
         originalWord,
         destinationWord
     });
+    $('#source-text, #target-text').val('');
     setStoredCustomDictionaryAndReloadCounter(customDictionary);
 });
 $deleteButton.on('click', () => {
@@ -286,6 +293,7 @@ $deleteButton.on('click', () => {
     if (wordIndex === -1 || !window.confirm('Bạn có chắc chắn muốn xoá từ này?'))
         return;
     customDictionary.splice(wordIndex, 1);
+    $targetText.val('');
     setStoredCustomDictionaryAndReloadCounter(customDictionary);
 });
 $copyButtons.on('click', function () {
@@ -349,8 +357,11 @@ $translateButton.on('click', function () {
                 customPromptEnabled: $('#custom-prompt-switch').prop('checked'),
                 customPrompt: $('#custom-prompt-textarea').val()
             });
-            textareaTranslation.translateText(appendTranslatedTextIntoOutputTextarea).finally(() => {
+            textareaTranslation.translateText(appendTranslatedTextIntoOutputTextarea).then(() => {
                 $(this).text('Sửa');
+            }).catch(() => {
+                $(this).click();
+            }).finally(() => {
                 $retranslateButton.removeClass('disabled');
                 $textareaCopyButton.data('target', 'textareaTranslation');
             });
