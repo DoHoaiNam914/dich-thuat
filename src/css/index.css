@@ -33,7 +33,7 @@
 
 .textarea > .form-control {
   height: 100vh;
-  font: normal normal var(--reader-font-weight) normal var(--reader-font-size)/var(--reader-line-height) var(--reader-font-family);
+  font: var(--reader-font-weight) var(--reader-font-size)/var(--reader-line-height) var(--reader-font-family);
   overscroll-behavior: none;
   padding: 10px 10px 5.55rem;
   width: 100vw;
@@ -45,6 +45,10 @@ body:not(.bg-body) .textarea > .form-control, body:not(.bg-body) .textarea > .fo
 
 .textarea > .form-control > p {
   margin-bottom: 0;
+}
+
+.textarea.bold-text > .form-control {
+  --reader-font-weight: bold !important;
 }
 
 .combined-navbar {

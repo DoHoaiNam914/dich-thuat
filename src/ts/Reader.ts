@@ -73,8 +73,6 @@ const THEMES: Array<{ [key: string]: any }> = [
   },
   {
     title: 'Apple Sách',
-    fontSize: 1,
-    boldText: false,
     themes: [
       {
         name: 'Nguyên bản',
@@ -299,26 +297,11 @@ function fontMapper (fontFamily): string {
 function getPreferredReaderTheme (): string {
   return window.localStorage.getItem('readerTheme') ?? THEMES[0].value
 }
-function setReaderTheme (readerTheme: string, prevReaderTheme = null): void {
+function setReaderTheme (readerTheme: string, syncReaderThemeSettings = ($readerTheme) => {}, prevReaderTheme = null): void {
   $(document.body).removeClass(prevReaderTheme ?? THEMES[0].value)
   $(document.body).addClass(readerTheme)
   const $readerTheme = $(`[data-reader-theme-value="${readerTheme}"]`)
-  const fontFamily = $readerTheme.data('reader-theme-font-family')
-  const $fontFamilyText = $('#font-family-text')
-  if (fontFamily != null && ($('#font-family-text').val() as string).length === 0) $fontFamilyText.val(fontFamily).change()
-  $('#font-size-text').val($readerTheme.data('reader-theme-font-size') ?? 1).change()
-  const lineHeight = $readerTheme.data('reader-theme-line-height')
-  const $lineHeightText = $('#line-height-text')
-  if (typeof lineHeight === 'string' && lineHeight.startsWith('--')) {
-    $lineHeightText.val(1.6).change()
-    $(document.body).css('--opt-line-height', `var(${lineHeight})`)
-    $lineHeightText.attr('readonly', 'true')
-  } else {
-    $lineHeightText.removeAttr('readonly')
-    $lineHeightText.val(lineHeight ?? 1.2).change()
-  }
-  $('#bold-text-switch').prop('checked', $readerTheme.data('reader-theme-bold-text')).change()
-  $('#justify-text-switch').prop('checked', $readerTheme.data('reader-theme-justify-text')).change()
+  syncReaderThemeSettings($readerTheme)
 }
 function showActiveReaderTheme (readerTheme: string, focus = false): void {
   const $themeSwitcher = $('#reader-theme')

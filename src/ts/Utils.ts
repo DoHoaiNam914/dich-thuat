@@ -1,4 +1,8 @@
 'use strict'
+function clamp (value, min, max): number {
+  return Math.min(max, Math.max(min, value))
+}
+
 function isValidJson (string): boolean {
   try {
     JSON.parse(string)
@@ -7,4 +11,4 @@ function isValidJson (string): boolean {
     return false
   }
 }
-export { isValidJson }
+export { clamp, isValidJson }
