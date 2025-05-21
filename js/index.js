@@ -2,14 +2,19 @@
 /* global $, Papa */
 import * as Reader from './Reader.js';
 import { MODELS, SystemInstructions, Translation, Translators } from './Translation.js';
+import * as Utils from './Utils.js';
 const $addWordButton = $('#add-word-button');
 const $apiKeyTexts = $('.api-key-text');
+const $boldTextSwitch = $('#bold-text-switch');
 const $copyButtons = $('.copy-button');
 const $customDictionarySwitch = $('#custom-dictionary-switch');
 const $deleteButton = $('#delete-button');
 const $fontFamilyText = $('#font-family-text');
+const $fontSizeText = $('#font-size-text');
 const $geminiApiKeyText = $('#gemini-api-key-text');
 const $inputTextarea = $('#input-textarea');
+const $justifyTextSwitch = $('#justify-text-switch');
+const $lineHeightText = $('#line-height-text');
 const $modelSelects = $('.model-select');
 const $outputTextarea = $('#output-textarea');
 const $retranslateButton = $('#retranslate-button');
@@ -25,6 +30,26 @@ const translationStorage = { translator: Translators.GOOGLE_GENAI_TRANSLATE, goo
 let customDictionary = [];
 let textareaTranslation = null;
 let dictionaryTranslation = null;
+function syncReaderThemeSettings($readerTheme) {
+    $(document.body).css('--reader-font-weight', $readerTheme.data('reader-theme-font-weight') ?? '');
+    const fontFamily = $readerTheme.data('reader-theme-font-family');
+    if (fontFamily != null && $fontFamilyText.val().length === 0)
+        $fontFamilyText.val(fontFamily).change();
+    $fontSizeText.val($readerTheme.data('reader-theme-font-size')).change();
+    const lineHeight = $readerTheme.data('reader-theme-line-height');
+    if (typeof lineHeight === 'string' && lineHeight.startsWith('--')) {
+        $lineHeightText.val(1.6).change();
+        $(document.body).css('--opt-line-height', `var(${lineHeight})`);
+        $lineHeightText.attr('readonly', 'true');
+    }
+    else {
+        $lineHeightText.removeAttr('readonly');
+        $lineHeightText.val(lineHeight).change();
+    }
+    $boldTextSwitch.prop('checked', $readerTheme.data('reader-theme-bold-text')).change();
+    console.log($readerTheme.data('reader-theme-justify-text'));
+    $justifyTextSwitch.prop('checked', $readerTheme.data('reader-theme-justify-text') ?? false).change();
+}
 function showActiveTranslator(translator, focus = false) {
     const $translatorSwitcher = $('#translator');
     if ($translatorSwitcher == null)
@@ -81,59 +106,40 @@ $(window).on('unload', () => {
 $(document).ready(() => {
     Reader.loadReaderThemesOptions();
     const preferredReaderTheme = Reader.getPreferredReaderTheme();
-    Reader.setReaderTheme(preferredReaderTheme);
+    Reader.setReaderTheme(preferredReaderTheme, syncReaderThemeSettings);
     Reader.showActiveReaderTheme(preferredReaderTheme);
     const $readerThemes = $('[data-reader-theme-value]');
     $readerThemes.on('click', function () {
         const readerTheme = $(this).data('reader-theme-value');
         window.localStorage.setItem('readerTheme', readerTheme);
-        Reader.setReaderTheme(readerTheme, $readerThemes.filter('.active').data('reader-theme-value'));
+        Reader.setReaderTheme(readerTheme, syncReaderThemeSettings, $readerThemes.filter('.active').data('reader-theme-value'));
         Reader.showActiveReaderTheme(readerTheme, true);
     });
     showActiveTranslator(translationStorage.translator);
-    const $googleGenaiModelSelects = $('#google-genai-model-select, #dictionary-google-genai-model-select');
-    $googleGenaiModelSelects.empty();
-    Object.entries(MODELS.GOOGLE_GENAI).forEach(([first, second]) => {
-        const optgroup = document.createElement('optgroup');
-        $(optgroup).prop('label', first);
-        second.forEach(element => {
-            const option = document.createElement('option');
-            if (typeof element === 'object') {
-                const { modelId, modelName, selected } = element;
-                if (modelName != null)
-                    $(option).val(modelId);
-                $(option).text(modelName ?? modelId);
-                $(option).prop('selected', selected);
-            }
-            else {
-                $(option).text(element);
-            }
-            $(optgroup).append(option);
+    const $modelSelects = $('.model-select');
+    $modelSelects.empty();
+    $modelSelects.each((_index, a) => {
+        Object.entries(MODELS[$(a).prop('id').replace('dictionary-', '').split('-').slice(0, -2).join('_').toUpperCase()]).forEach(([first, second]) => {
+            const optgroup = document.createElement('optgroup');
+            $(optgroup).prop('label', first);
+            second.forEach(b => {
+                const option = document.createElement('option');
+                if (typeof b === 'object') {
+                    const { modelId, modelName, selected } = b;
+                    if (modelName != null)
+                        $(option).val(modelId);
+                    $(option).text(modelName ?? modelId);
+                    $(option).prop('selected', selected);
+                }
+                else {
+                    $(option).text(b);
+                }
+                $(optgroup).append(option);
+            });
+            $(a).append(optgroup);
         });
-        $googleGenaiModelSelects.append(optgroup);
     });
-    const $openaiModelSelects = $('#openai-model-select, #dictionary-openai-model-select');
-    $openaiModelSelects.empty();
-    Object.entries(MODELS.OPENAI).forEach(([first, second]) => {
-        const optgroup = document.createElement('optgroup');
-        $(optgroup).prop('label', first);
-        second.forEach(element => {
-            const option = document.createElement('option');
-            if (typeof element === 'object') {
-                const { modelId, modelName, selected } = element;
-                if (modelName != null)
-                    $(option).val(modelId);
-                $(option).text(modelName ?? modelId);
-                $(option).prop('selected', selected);
-            }
-            else {
-                $(option).text(element);
-            }
-            $(optgroup).append(option);
-        });
-        $openaiModelSelects.append(optgroup);
-    });
-    $modelSelects.each((_index, element) => {
+    $('.option-select').each((_index, element) => {
         $(element).val(translationStorage[$(element).prop('id').split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')]);
     });
     $apiKeyTexts.each((_index, element) => {
@@ -148,23 +154,27 @@ $fontFamilyText.on('change', function () {
     $(this).val(fontFamily);
     $(document.body).css('--reader-font-family', fontFamily.split(', ').map((element) => element.includes(' ') ? `'${element}'` : (element.startsWith('--') ? `var(${element})` : element)).join(', '));
 });
-$('#font-size-text').on('change', function () {
-    let value = parseFloat($(this).val());
-    value = Math.min($(this).prop('max'), Math.max($(this).prop('min'), String(value).length === 0 ? $(this).prop('value') : value));
+$fontSizeText.on('change', function () {
+    const raw = $(this).val();
+    const parsed = parseFloat(raw.length === 0 ? $(this).attr('value') : raw);
+    const value = Utils.clamp(parsed, $(this).prop('min'), $(this).prop('max'));
     $(this).val(value);
-    $(document.body).css('--reader-font-size', `${value}em`);
+    $(document.body).css('--reader-font-size', value === 1 ? '' : `${value}em`);
 });
-$('#line-height-text').on('change', function () {
-    let value = parseFloat($(this).val());
-    value = Math.min($(this).prop('max'), Math.max($(this).prop('min'), String(value).length === 0 ? $(this).prop('value') : value));
+$lineHeightText.on('change', function () {
+    const raw = $(this).val();
+    const parsed = parseFloat(raw.length === 0 ? $(this).attr('value') : raw);
+    const value = Utils.clamp(parsed, $(this).prop('min'), $(this).prop('max'));
     $(this).val(value);
-    $(document.body).css('--reader-line-height', `${value}em`);
+    $(document.body).css('--reader-line-height', value === 1.2 ? '' : `${value}em`);
 });
-$('#bold-text-switch').on('change', function () {
-    const themeFontWeight = $('[data-reader-theme-value]').filter('.active').data('reader-theme-font-weight');
-    $(document.body).css('--reader-font-weight', $(this).prop('checked') ? 'bold' : themeFontWeight ?? null);
+$boldTextSwitch.on('change', function () {
+    if ($(this).prop('checked'))
+        $('.textarea').addClass('bold-text');
+    else
+        $('.textarea').removeClass('bold-text');
 });
-$('#justify-text-switch').on('change', function () {
+$justifyTextSwitch.on('change', function () {
     $(document.body).css('--reader-text-align', $(this).prop('checked') ? 'justify' : '');
 });
 $translators.on('click', function () {

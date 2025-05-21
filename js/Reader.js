@@ -73,8 +73,6 @@ const THEMES = [
     },
     {
         title: 'Apple Sách',
-        fontSize: 1,
-        boldText: false,
         themes: [
             {
                 name: 'Nguyên bản',
@@ -295,28 +293,11 @@ function fontMapper(fontFamily) {
 function getPreferredReaderTheme() {
     return window.localStorage.getItem('readerTheme') ?? THEMES[0].value;
 }
-function setReaderTheme(readerTheme, prevReaderTheme = null) {
+function setReaderTheme(readerTheme, syncReaderThemeSettings = ($readerTheme) => { }, prevReaderTheme = null) {
     $(document.body).removeClass(prevReaderTheme ?? THEMES[0].value);
     $(document.body).addClass(readerTheme);
     const $readerTheme = $(`[data-reader-theme-value="${readerTheme}"]`);
-    const fontFamily = $readerTheme.data('reader-theme-font-family');
-    const $fontFamilyText = $('#font-family-text');
-    if (fontFamily != null && $('#font-family-text').val().length === 0)
-        $fontFamilyText.val(fontFamily).change();
-    $('#font-size-text').val($readerTheme.data('reader-theme-font-size') ?? 1).change();
-    const lineHeight = $readerTheme.data('reader-theme-line-height');
-    const $lineHeightText = $('#line-height-text');
-    if (typeof lineHeight === 'string' && lineHeight.startsWith('--')) {
-        $lineHeightText.val(1.6).change();
-        $(document.body).css('--opt-line-height', `var(${lineHeight})`);
-        $lineHeightText.attr('readonly', 'true');
-    }
-    else {
-        $lineHeightText.removeAttr('readonly');
-        $lineHeightText.val(lineHeight ?? 1.2).change();
-    }
-    $('#bold-text-switch').prop('checked', $readerTheme.data('reader-theme-bold-text')).change();
-    $('#justify-text-switch').prop('checked', $readerTheme.data('reader-theme-justify-text')).change();
+    syncReaderThemeSettings($readerTheme);
 }
 function showActiveReaderTheme(readerTheme, focus = false) {
     const $themeSwitcher = $('#reader-theme');
