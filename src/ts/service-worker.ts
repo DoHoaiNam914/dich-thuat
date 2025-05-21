@@ -1,5 +1,5 @@
 const cacheName = 'Dịch thuật'
-const precachedResources = [
+const precachedResources: string[] = [
   '/',
   '/index.html',
   '/manifest.json',
@@ -19,11 +19,11 @@ async function precache (): Promise<void> {
   const cache = await self.caches.open(cacheName)
   return await cache.addAll(precachedResources)
 }
-// @ts-expect-error
+// @ts-expect-error ExtendableEvent
 self.addEventListener('install', (event: ExtendableEvent) => {
   event.waitUntil(precache())
 })
-async function cacheFirst (request): Promise<Response> {
+async function cacheFirst (request: Request): Promise<Response> {
   const cachedResponse = await self.caches.match(request)
   if (cachedResponse != null) return cachedResponse
   try {
@@ -33,7 +33,7 @@ async function cacheFirst (request): Promise<Response> {
       void cache.put(request, networkResponse.clone())
     }
     return networkResponse
-  } catch (error) {
+  } catch {
     return Response.error()
   }
 }
@@ -55,12 +55,12 @@ async function cacheFirst (request): Promise<Response> {
 //       void cache.put(request, networkResponse.clone())
 //     }
 //     return networkResponse
-//   } catch (_e) {
+//   } catch {
 //     const cachedResponse = await self.caches.match(request)
 //     return cachedResponse ?? Response.error()
 //   }
 // }
-// @ts-expect-error
+// @ts-expect-error FetchEvent
 self.addEventListener('fetch', (event: FetchEvent) => {
   const url = new URL(event.request.url)
   if (precachedResources.includes(url.pathname)) event.respondWith(cacheFirst(event.request))

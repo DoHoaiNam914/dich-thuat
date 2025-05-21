@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+        "rootDir": ".",
+        "outDir": "../js",
+
+        "pretty": true,
+        "lib": ["es2020", "dom"],
+        "target": "es2020",
+        "module": "esnext",
+        "moduleResolution": "classic",
+
+        "declaration": true,
+        "declarationMap": true,
+        "sourceMap": true,
+        "composite": true,
+        "emitDeclarationOnly": false,
+        "isolatedDeclarations": true,
+
+        "strict": true,
+        "strictBindCallApply": false,
+        "useUnknownInCatchVariables": false,
+        "noImplicitOverride": true,
+
+        "skipLibCheck": true,
+
+        "alwaysStrict": true,
+        "preserveConstEnums": true,
+        "newLine": "lf",
+
+        "types": ["jquery"]
+    }
+}

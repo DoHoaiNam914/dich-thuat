@@ -1,8 +1,8 @@
 'use strict'
 /* global $, Papa */
-import * as Reader from './Reader.js'
-import { MODELS, SystemInstructions, Translation, Translators } from './Translation.js'
-import * as Utils from './Utils.js'
+import Reader from './Reader.js'
+import { DictionaryEntry, Domains, Model, MODELS, ModelEntry, Options, SystemInstructions, Tones, Translation, Translators } from './Translation.js'
+import Utils from './Utils.js'
 const $addWordButton = $('#add-word-button')
 const $apiKeyTexts = $('.api-key-text')
 const $boldTextSwitch = $('#bold-text-switch')
@@ -26,11 +26,11 @@ const $targetTextLanguageSelect = $('#target-text-language-select')
 const $translateButton = $('#translate-button')
 const $translationTranslators = $('[data-translation-translator-value]')
 const $translators = $('[data-translator-value]')
-const translationStorage = { translator: Translators.GOOGLE_GENAI_TRANSLATE, googleGenaiModel: Object.values(MODELS.GOOGLE_GENAI).flat().find(element => element.selected).modelId, openaiModel: Object.values(MODELS.OPENAI).flat().find(element => element.selected).modelId, systemInstruction: SystemInstructions.GPT4OMINI, ...JSON.parse(window.localStorage.getItem('translation') ?? '{}') }
-let customDictionary: Array<{ [key: string]: string }> = []
+const translationStorage = { translator: Translators.GOOGLE_GENAI_TRANSLATE, googleGenaiModel: (Object.values(MODELS.GOOGLE_GENAI) as ModelEntry[][]).flat().filter(element => typeof element === 'object').find((element: Model) => element.selected)?.modelId, openaiModel: (Object.values(MODELS.OPENAI) as ModelEntry[][]).flat().filter(element => typeof element === 'object').find((element: Model) => element.selected)?.modelId, systemInstruction: SystemInstructions.GPT4OMINI, ...JSON.parse(window.localStorage.getItem('translation') ?? '{}') }
+let customDictionary: DictionaryEntry[] = []
 let textareaTranslation: Translation | null = null
 let dictionaryTranslation: Translation | null = null
-function syncReaderThemeSettings ($readerTheme): void {
+function syncReaderThemeSettings ($readerTheme: JQuery<HTMLButtonElement>): void {
   $(document.body).css('--reader-font-weight', $readerTheme.data('reader-theme-font-weight') ?? '')
   const fontFamily = $readerTheme.data('reader-theme-font-family')
   if (fontFamily != null && ($fontFamilyText.val() as string).length === 0) $fontFamilyText.val(fontFamily).change()
@@ -54,19 +54,25 @@ function showActiveTranslator (translator: string, focus = false): void {
   $translators.filter(`[data-translator-value="${translator}"]`).addClass('active')
   if (focus) $translatorSwitcher.focus()
 }
-function setStoredCustomDictionaryAndReloadCounter (customDictionary): void {
+function setStoredCustomDictionaryAndReloadCounter (customDictionary: DictionaryEntry[]): void {
   $('#custom-dictionary-count-number').text(customDictionary.length)
   if (customDictionary.length > 0) {
-    customDictionary.sort((a, b) => Boolean(a.originalWord.split(/(?:)/u).length - b.originalWord.split(/(?:)/u).length) || Boolean(a.destinationWord.localeCompare(b.destinationWord, 'vi', { ignorePunctuation: true })) || Boolean(a.originalWord.localeCompare(b.originalWord, 'vi', { ignorePunctuation: true })))
+    customDictionary.sort((a, b) => {
+      const wordLengthDifference = a.originalWord.split(/(?:)/u).length - b.originalWord.split(/(?:)/u).length
+      if (wordLengthDifference !== 0) return wordLengthDifference
+      const destinationWordDifference = a.destinationWord.localeCompare(b.destinationWord, 'vi', { ignorePunctuation: true })
+      if (destinationWordDifference !== 0) return destinationWordDifference
+      return a.originalWord.localeCompare(b.originalWord, 'vi', { ignorePunctuation: true })
+    })
     window.localStorage.setItem('customDictionary', JSON.stringify(customDictionary))
   } else {
     window.localStorage.removeItem('customDictionary')
   }
 }
-function appendTranslatedTextIntoOutputTextarea (translatedText, text, options): void {
+function appendTranslatedTextIntoOutputTextarea (translatedText: string, text: string, options: Options): void {
   const $outputTextarea = $('#output-textarea')
   $outputTextarea.empty()
-  if (options.bilingualEnabled as boolean) {
+  if (options.isBilingualEnabled) {
     const translatedLines = translatedText.split('\n')
     text.split('\n').forEach((element, index) => {
       const paragraph = document.createElement('p')
@@ -137,7 +143,7 @@ $(document).ready(() => {
   setStoredCustomDictionaryAndReloadCounter(customDictionary)
 })
 $fontFamilyText.on('change', function () {
-  const fontFamily = Reader.fontMapper($(this).val())
+  const fontFamily = Reader.fontMapper($(this).val() as string)
   $(this).val(fontFamily)
   $(document.body).css('--reader-font-family', fontFamily.split(', ').map((element: string) => element.includes(' ') ? `'${element}'` : (element.startsWith('--') ? `var(${element})` : element)).join(', '))
 })
@@ -182,19 +188,19 @@ $('#dictionary-modal').on('hide.bs.modal', () => {
   $('#source-text, #target-text').val('')
 })
 $('#custom-dictionary-input').on('change', function () {
-  // @ts-expect-error
+  // @ts-expect-error Papaparse
   Papa.parse($(this).prop('files')[0], {
     header: true,
     skipEmptyLines: true,
-    complete: (results, file) => {
+    complete: (results: { data: Record<string, string>[] }) => {
       customDictionary = results.data.map(a => {
-        const COLUMN_NAME_MAP = {
+        const COLUMN_NAME_MAP: Record<string, keyof DictionaryEntry> = {
           'Original language': 'originalLanguage',
           'Destination language': 'destinationLanguage',
           'Original word': 'originalWord',
           'Destination word': 'destinationWord'
         }
-        const row = {}
+        const row: DictionaryEntry = { originalLanguage: '', destinationLanguage: '', originalWord: '', destinationWord: '' }
         Object.keys(COLUMN_NAME_MAP).forEach(b => {
           row[COLUMN_NAME_MAP[b]] = a[b]
         })
@@ -218,24 +224,24 @@ $translationTranslators.on('click', function () {
   $targetText.val('Đang dịch...')
   $('#source-text, #target-text').prop('readOnly', true)
   $('#add-word-button, #delete-button, [translation-translator-value]').addClass('disabled')
-  dictionaryTranslation = new Translation(sourceText, $targetTextLanguageSelect.val(), $sourceTextLanguageSelect.val(), {
+  dictionaryTranslation = new Translation(sourceText, $targetTextLanguageSelect.val() as string, $sourceTextLanguageSelect.val() as string | null, {
     translatorId: $(this).data('translation-translator-value'),
-    googleGenaiModelId: $('#dictionary-google-genai-model-select').val(),
-    thinkingModeEnabled: $('#dictionary-thinking-mode-switch').prop('checked'),
-    groundingWithGoogleSearchEnabled: $('#grounding-with-google-search-switch').prop('checked'),
-    GEMINI_API_KEY: $geminiApiKeyText.val(),
-    openaiModelId: $('#dictionary-openai-model-select').val(),
-    canWebSearch: $('#web-search-switch').prop('checked'),
-    systemInstruction: $('#dictionary-system-instruction-select').val(),
+    googleGenaiModelId: $('#dictionary-google-genai-model-select').val() as string,
+    isThinkingModeEnabled: $('#dictionary-thinking-mode-switch').prop('checked'),
+    isGroundingWithGoogleSearchEnabled: $('#grounding-with-google-search-switch').prop('checked'),
+    GEMINI_API_KEY: $geminiApiKeyText.val() as string,
+    openaiModelId: $('#dictionary-openai-model-select').val() as string,
+    isWebSearchEnabled: $('#web-search-switch').prop('checked'),
+    systemInstruction: $('#dictionary-system-instruction-select').val() as SystemInstructions,
     temperature: parseFloat($('#dictionary-temperature-text').val() as string),
     topP: parseFloat($('#dictionary-top-p-text').val() as string),
     topK: parseFloat($('#dictionary-top-k-text').val() as string),
-    tone: $('#dictionary-tone-select').val(),
-    domain: $('#dictionary-domain-select').val(),
-    customDictionaryEnabled: $customDictionarySwitch.prop('checked'),
+    tone: $('#dictionary-tone-select').val() as Tones,
+    domain: $('#dictionary-domain-select').val() as Domains,
+    isCustomDictionaryEnabled: $customDictionarySwitch.prop('checked'),
     customDictionary,
-    customPromptEnabled: $('#dictionary-custom-prompt-switch').prop('checked'),
-    customPrompt: $('#dictionary-custom-prompt-textarea').val()
+    isCustomPromptEnabled: $('#dictionary-custom-prompt-switch').prop('checked'),
+    customPrompt: $('#dictionary-custom-prompt-textarea').val() as string
   })
   dictionaryTranslation.translateText(translatedText => {
     $targetText.val(translatedText)
@@ -280,21 +286,23 @@ $deleteButton.on('click', () => {
 $('#copy-csv-button').on('click', () => {
   void (async function () {
     try {
-      // @ts-expect-error
+      // @ts-expect-error Papaparse
       await navigator.clipboard.writeText(Papa.unparse(customDictionary.map(a => {
-        const COLUMN_NAME_MAP = {
+        const COLUMN_NAME_MAP: Record<string, string> = {
           originalLanguage: 'Original language',
           originalWord: 'Original word',
           destinationLanguage: 'Destination language',
           destinationWord: 'Destination word'
         }
-        const row = {}
+        const row: Record<string, string> = {}
         Object.keys(COLUMN_NAME_MAP).forEach(b => {
-          row[COLUMN_NAME_MAP[b]] = a[b]
+          row[COLUMN_NAME_MAP[b]] = a[b as keyof DictionaryEntry]
         })
         return row
       })))
-    } catch (_e) {}
+    } catch {
+      // continue regardless of error
+    }
   }())
 })
 $copyButtons.on('click', function () {
@@ -306,7 +314,9 @@ $copyButtons.on('click', function () {
   void (async function () {
     try {
       await navigator.clipboard.writeText(targetContent)
-    } catch (_e) {}
+    } catch {
+      // continue regardless of error
+    }
   }())
 })
 $('.paste-button').on('click', function () {
@@ -332,23 +342,23 @@ $translateButton.on('click', function () {
       $inputTextarea.hide()
       $outputTextarea.show()
       $(this).text('Huỷ')
-      textareaTranslation = new Translation(inputText, $('#destination-language-select').val(), $('#original-language-select').val(), {
+      textareaTranslation = new Translation(inputText, $('#destination-language-select').val() as string, $('#original-language-select').val() as string | null, {
         translatorId: $('[data-translator-value]').filter('.active').data('translator-value'),
-        googleGenaiModelId: $('#google-genai-model-select').val(),
-        thinkingModeEnabled: $('#thinking-mode-switch').prop('checked'),
-        GEMINI_API_KEY: $geminiApiKeyText.val(),
-        openaiModelId: $('#openai-model-select').val(),
-        bilingualEnabled: $('#bilingual-switch').prop('checked'),
-        systemInstruction: $('#system-instruction-select').val(),
+        googleGenaiModelId: $('#google-genai-model-select').val() as string,
+        isThinkingModeEnabled: $('#thinking-mode-switch').prop('checked'),
+        GEMINI_API_KEY: $geminiApiKeyText.val() as string,
+        openaiModelId: $('#openai-model-select').val() as string,
+        isBilingualEnabled: $('#bilingual-switch').prop('checked'),
+        systemInstruction: $('#system-instruction-select').val() as SystemInstructions,
         temperature: parseFloat($('#temperature-text').val() as string),
         topP: parseFloat($('#top-p-text').val() as string),
         topK: parseFloat($('#top-k-text').val() as string),
-        tone: $('#tone-select').val(),
-        domain: $('#domain-select').val(),
-        customDictionaryEnabled: $customDictionarySwitch.prop('checked'),
+        tone: $('#tone-select').val() as Tones,
+        domain: $('#domain-select').val() as Domains,
+        isCustomDictionaryEnabled: $customDictionarySwitch.prop('checked'),
         customDictionary,
-        customPromptEnabled: $('#custom-prompt-switch').prop('checked'),
-        customPrompt: $('#custom-prompt-textarea').val()
+        isCustomPromptEnabled: $('#custom-prompt-switch').prop('checked'),
+        customPrompt: $('#custom-prompt-textarea').val() as string
       })
       textareaTranslation.translateText(appendTranslatedTextIntoOutputTextarea).then(() => {
         if (textareaTranslation?.abortController.signal.aborted as boolean) return
