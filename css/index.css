@@ -39,6 +39,10 @@
   width: 100vw;
 }
 
+.textarea > div.form-control {
+  overflow: hidden auto;
+}
+
 body:not(.bg-body) .textarea > .form-control, body:not(.bg-body) .textarea > .form-control::placeholder {
   color: var(--reader-color);
 }
