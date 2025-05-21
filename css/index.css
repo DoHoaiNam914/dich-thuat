@@ -34,7 +34,7 @@
 .textarea > .form-control {
   height: 100vh;
   font: normal normal var(--reader-font-weight) normal var(--reader-font-size)/var(--reader-line-height) var(--reader-font-family);
-  overflow-y: auto;
+  overscroll-behavior: none;
   padding: 10px 10px 5.55rem;
   width: 100vw;
 }
