@@ -313,6 +313,7 @@ class Translation {
           const tools: Array<{}> = []
           if (canGroundingWithGoogleSearch as boolean) tools.push({ googleSearch: {} })
           const config = {
+            abortSignal: this.abortController.signal,
             ...temperature > -1 ? { temperature } : {},
             ...topP > -1 ? { topP } : {},
             ...topK > -1 ? { topK } : {},
