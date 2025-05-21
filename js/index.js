@@ -255,7 +255,8 @@ $translationTranslators.on('click', function () {
     dictionaryTranslation.translateText(translatedText => {
         $targetText.val(translatedText);
     }).catch(() => {
-        $targetText.val(previousTargetText);
+        if (!textareaTranslation?.abortController.signal.aborted)
+            $targetText.val(previousTargetText);
     }).finally(() => {
         $('#source-text, #target-text').prop('readOnly', false);
         $('#add-word-button, #delete-button, [translation-translator-value]').removeClass('disabled');
