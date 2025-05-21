@@ -22,6 +22,10 @@ const MODELS = {
                 modelName: 'Gemini 2.5 Flash Preview 04-17'
             },
             {
+                modelId: 'gemini-2.5-flash-preview-05-20',
+                modelName: 'Gemini 2.5 Flash Preview 05-20'
+            },
+            {
                 modelId: 'gemini-2.5-pro-preview-05-06',
                 modelName: 'Gemini 2.5 Pro Preview 05-06',
                 selected: true
