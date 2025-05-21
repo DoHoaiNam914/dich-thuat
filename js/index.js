@@ -61,10 +61,13 @@ function showActiveTranslator(translator, focus = false) {
 }
 function setStoredCustomDictionaryAndReloadCounter(customDictionary) {
     $('#custom-dictionary-count-number').text(customDictionary.length);
-    if (customDictionary.length > 0)
+    if (customDictionary.length > 0) {
+        customDictionary.sort((a, b) => Boolean(a.originalWord.split(/(?:)/u).length - b.originalWord.split(/(?:)/u).length) || Boolean(a.destinationWord.localeCompare(b.destinationWord, 'vi', { ignorePunctuation: true })) || Boolean(a.originalWord.localeCompare(b.originalWord, 'vi', { ignorePunctuation: true })));
         window.localStorage.setItem('customDictionary', JSON.stringify(customDictionary));
-    else
+    }
+    else {
         window.localStorage.removeItem('customDictionary');
+    }
 }
 function appendTranslatedTextIntoOutputTextarea(translatedText, text, options) {
     const $outputTextarea = $('#output-textarea');
@@ -194,30 +197,29 @@ $('#dictionary-modal').on('hide.bs.modal', () => {
     $('#source-text, #target-text').val('');
 });
 $('#custom-dictionary-input').on('change', function () {
-    const fileReader = new FileReader();
-    fileReader.onload = () => {
-        // @ts-expect-error
-        customDictionary = Papa.parse(fileReader.result, {
-            header: true,
-            skipEmptyLines: true
-        }).data.map(a => {
-            const COLUMN_NAME_MAP = {
-                'Original language': 'originalLanguage',
-                'Destination language': 'destinationLanguage',
-                'Original word': 'originalWord',
-                'Destination word': 'destinationWord'
-            };
-            const row = {};
-            Object.keys(COLUMN_NAME_MAP).forEach(b => {
-                row[COLUMN_NAME_MAP[b]] = a[b];
+    // @ts-expect-error
+    Papa.parse($(this).prop('files')[0], {
+        header: true,
+        skipEmptyLines: true,
+        complete: (results, file) => {
+            customDictionary = results.data.map(a => {
+                const COLUMN_NAME_MAP = {
+                    'Original language': 'originalLanguage',
+                    'Destination language': 'destinationLanguage',
+                    'Original word': 'originalWord',
+                    'Destination word': 'destinationWord'
+                };
+                const row = {};
+                Object.keys(COLUMN_NAME_MAP).forEach(b => {
+                    row[COLUMN_NAME_MAP[b]] = a[b];
+                });
+                return row;
             });
-            return row;
-        }).toSorted((a, b) => Boolean(a.originalWord.split(/(?:)/u).length - b.originalWord.split(/(?:)/u).length) || Boolean(a.destinationWord.localeCompare(b.destinationWord, 'vi', { ignorePunctuation: true })) || Boolean(a.originalWord.localeCompare(b.originalWord, 'vi', { ignorePunctuation: true }))) ?? [];
-        setStoredCustomDictionaryAndReloadCounter(customDictionary);
-        $sourceText.trigger('input');
-        $(this).val('');
-    };
-    fileReader.readAsText($(this).prop('files')[0]);
+            setStoredCustomDictionaryAndReloadCounter(customDictionary);
+            $sourceText.trigger('input');
+            $(this).val('');
+        }
+    });
 });
 $('#delete-all-button').on('click', function () {
     if (!window.confirm('Bạn có chắc chắn muốn xoá tất cả từ trong từ điển?'))
@@ -297,6 +299,27 @@ $deleteButton.on('click', () => {
     $targetText.val('');
     setStoredCustomDictionaryAndReloadCounter(customDictionary);
 });
+$('#copy-csv-button').on('click', () => {
+    void (async function () {
+        try {
+            // @ts-expect-error
+            await navigator.clipboard.writeText(Papa.unparse(customDictionary.map(a => {
+                const COLUMN_NAME_MAP = {
+                    originalLanguage: 'Original language',
+                    originalWord: 'Original word',
+                    destinationLanguage: 'Destination language',
+                    destinationWord: 'Destination word'
+                };
+                const row = {};
+                Object.keys(COLUMN_NAME_MAP).forEach(b => {
+                    row[COLUMN_NAME_MAP[b]] = a[b];
+                });
+                return row;
+            })));
+        }
+        catch (_e) { }
+    }());
+});
 $copyButtons.on('click', function () {
     const target = $(this).data('target');
     const $target = $(target);
@@ -358,6 +381,9 @@ $translateButton.on('click', function () {
                 customPrompt: $('#custom-prompt-textarea').val()
             });
             textareaTranslation.translateText(appendTranslatedTextIntoOutputTextarea).then(() => {
+                if (textareaTranslation?.abortController.signal.aborted)
+                    return;
+                console.log('))))');
                 $(this).text('Sửa');
                 $textareaCopyButton.data('target', 'textareaTranslation');
                 $retranslateButton.removeClass('disabled');
