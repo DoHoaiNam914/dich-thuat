@@ -105,13 +105,9 @@ $(window).on('unload', () => {
 });
 $(document).ready(() => {
     Reader.loadReaderThemesOptions();
-    const preferredReaderTheme = Reader.getPreferredReaderTheme();
-    Reader.setReaderTheme(preferredReaderTheme, syncReaderThemeSettings);
-    Reader.showActiveReaderTheme(preferredReaderTheme);
     const $readerThemes = $('[data-reader-theme-value]');
     $readerThemes.on('click', function () {
         const readerTheme = $(this).data('reader-theme-value');
-        window.localStorage.setItem('readerTheme', readerTheme);
         Reader.setReaderTheme(readerTheme, syncReaderThemeSettings, $readerThemes.filter('.active').data('reader-theme-value'));
         Reader.showActiveReaderTheme(readerTheme, true);
     });
