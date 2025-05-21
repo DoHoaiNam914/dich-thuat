@@ -45,7 +45,6 @@ function syncReaderThemeSettings ($readerTheme): void {
     $lineHeightText.val(lineHeight).change()
   }
   $boldTextSwitch.prop('checked', $readerTheme.data('reader-theme-bold-text')).change()
-  console.log($readerTheme.data('reader-theme-justify-text'))
   $justifyTextSwitch.prop('checked', $readerTheme.data('reader-theme-justify-text') ?? false).change()
 }
 function showActiveTranslator (translator: string, focus = false): void {
@@ -353,7 +352,6 @@ $translateButton.on('click', function () {
       })
       textareaTranslation.translateText(appendTranslatedTextIntoOutputTextarea).then(() => {
         if (textareaTranslation?.abortController.signal.aborted as boolean) return
-        console.log('))))')
         $(this).text('Sửa')
         $textareaCopyButton.data('target', 'textareaTranslation')
         $retranslateButton.removeClass('disabled')
