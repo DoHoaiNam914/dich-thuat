@@ -319,10 +319,9 @@ $('.paste-button').on('click', function () {
     void navigator.clipboard.readText().then(value => {
         if ($target.val().length === 0 || window.confirm('Bạn có chắc chắn muốn thay thế văn bản hiện tại?')) {
             $target.val(value).trigger('input');
+            if ($target.prop('id') === $inputTextarea.prop('id') && $translateButton.text() === 'Sửa')
+                $translateButton.click().click();
         }
-    }).finally(() => {
-        if ($target.prop('id') === $inputTextarea.prop('id') && $translateButton.text() === 'Sửa')
-            $translateButton.click().click();
     });
 });
 $retranslateButton.on('click', () => {
