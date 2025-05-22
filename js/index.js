@@ -210,7 +210,7 @@ $systemInstructionSelect.on('change', function () {
     window.localStorage.setItem('translation', JSON.stringify({ ...translationStorage, systemInstruction: $(this).val() }));
 });
 $domainSelect.on('change', function () {
-    $(`#dictionary-#${$(this).prop('id')}`).val($(this).val());
+    $(`#dictionary-${$(this).prop('id')}`).val($(this).val());
 });
 $('#dictionary-modal').on('hide.bs.modal', () => {
     if (dictionaryTranslation != null)
@@ -274,7 +274,7 @@ $translationTranslators.on('click', function () {
         topP: parseFloat($('#dictionary-top-p-text').val()),
         topK: parseFloat($('#dictionary-top-k-text').val()),
         tone: $('#dictionary-tone-select').val(),
-        domain: $(`#dictionary-#${$domainSelect.prop('id')}`).val(),
+        domain: $(`#dictionary-${$domainSelect.prop('id')}`).val(),
         isCustomDictionaryEnabled: $customDictionarySwitch.prop('checked'),
         customDictionary,
         isCustomPromptEnabled: $('#dictionary-custom-prompt-switch').prop('checked'),
