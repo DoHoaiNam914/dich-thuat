@@ -441,4 +441,3 @@ $translateButton.on('click', function () {
 $inputTextarea.on('input', function () {
     $('#character-count-number').text($(this).val().length);
 });
-//# sourceMappingURL=index.js.map

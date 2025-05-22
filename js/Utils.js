@@ -15,4 +15,3 @@ class Utils {
 }
 Utils.has = Object.prototype.hasOwnProperty;
 export default Utils;
-//# sourceMappingURL=Utils.js.map

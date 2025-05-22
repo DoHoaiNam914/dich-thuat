@@ -71,4 +71,3 @@ self.addEventListener('fetch', (event) => {
     // event.respondWith(cacheFirstWithRefresh(event.request))
     // event.respondWith(networkFirst(event.request))
 });
-//# sourceMappingURL=service-worker.js.map

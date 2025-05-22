@@ -310,4 +310,3 @@ Reader.FONT_MAP = Object.entries({
     Thonburi: 'thonburi-ttf'
 });
 export default Reader;
-//# sourceMappingURL=Reader.js.map
