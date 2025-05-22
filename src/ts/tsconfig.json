@@ -9,13 +9,6 @@
         "module": "esnext",
         "moduleResolution": "classic",
 
-        "declaration": true,
-        "declarationMap": true,
-        "sourceMap": true,
-        "composite": true,
-        "emitDeclarationOnly": false,
-        "isolatedDeclarations": true,
-
         "strict": true,
         "strictBindCallApply": false,
         "useUnknownInCatchVariables": false,
