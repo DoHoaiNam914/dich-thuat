@@ -225,6 +225,14 @@
                           Trình dịch OpenAI
                           <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
                         </button></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-translator-value="groqTranslate">
+                          Groq Dịch
+                          <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
+                        </button></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-translator-value="openrouterTranslate">
+                          OpenRouter Dịch
+                          <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
+                        </button></li>
                       </ul>
                     </div>
                     <div class="accordion accordion-flush mb-3" id="translator-accordion">
@@ -234,7 +242,7 @@
                           <div class="accordion-body">
                             <div class="mb-3">
                               <label class="form-check-label" for="google-genai-model-select">Mô hình:</label>
-                              <select class="form-select option-select model-select mb-3" id="google-genai-model-select"><option value="gemini-2.5-pro-preview-05-06" selected>Gemini 2.5 Pro Preview 05-06</option></select>
+                              <select class="form-select string-value-option model-select mb-3" id="google-genai-model-select"><option value="gemini-2.5-pro-preview-05-06" selected>Gemini 2.5 Pro Preview 05-06</option></select>
                             </div>
                             <div class="form-check form-switch mb-3">
                               <input class="form-check-input" id="thinking-mode-switch" type="checkbox" role="switch" checked>
@@ -253,7 +261,37 @@
                           <div class="accordion-body">
                             <div>
                               <label class="form-check-label" for="openai-model-select">Mô hình:</label>
-                              <select class="form-select option-select model-select mb-3" id="openai-model-select"><option selected>gpt-4.1</option></select>
+                              <select class="form-select string-value-option model-select" id="openai-model-select"><option selected>gpt-4.1</option></select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="accordion-item">
+                        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-target="#groq-collapse" data-bs-toggle="collapse">Groq</button></h2>
+                        <div class="accordion-collapse collapse" id="groq-collapse" data-bs-parent="#translator-accordion">
+                          <div class="accordion-body">
+                            <div class="mb-3">
+                              <label class="form-check-label" for="groq-model-select">Mô hình:</label>
+                              <select class="form-select string-value-option model-select" id="groq-model-select"><option value="meta-llama/llama-4-scout-17b-16e-instruct" selected>Gemini 2.5 Pro Preview 05-06</option></select>
+                            </div>
+                            <div>
+                              <label class="form-label" for="groq-api-key-text">Groq API Key:</label>
+                              <input class="form-control api-key-text" id="groq-api-key-text" placeholder="gsk_..." type="text">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="accordion-item">
+                        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-target="#openrouter-collapse" data-bs-toggle="collapse">OpenRouter</button></h2>
+                        <div class="accordion-collapse collapse" id="openrouter-collapse" data-bs-parent="#translator-accordion">
+                          <div class="accordion-body">
+                            <div class="mb-3">
+                              <label class="form-check-label" for="openrouter-model-text">Mô hình:</label>
+                              <input class="form-control string-value-option" id="openrouter-model-text" placeholder="ID mô hình" type="text" value="qwen/qwen3-235b-a22b">
+                            </div>
+                            <div>
+                              <label class="form-label" for="openrouter-api-key-text">Groq API Key:</label>
+                              <input class="form-control api-key-text" id="openrouter-api-key-text" placeholder="sk-or-v1-..." type="text">
                             </div>
                           </div>
                         </div>
@@ -387,6 +425,8 @@
                         <li><h6 class="align-items-center d-flex dropdown-header">Dịch với...</h6></li>
                         <li><button class="align-items-center d-flex dropdown-item" type="button" data-translation-translator-value="googleGenaiTranslate">Google Gen AI Dịch</button></li>
                         <li><button class="align-items-center d-flex dropdown-item" type="button" data-translation-translator-value="openaiTranslator">Trình dịch OpenAI</button></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-translation-translator-value="groqTranslate">Groq Dịch</button></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-translation-translator-value="openrouterTranslate">OpenRouter Dịch</button></li>
                         <li><h6 class="align-items-center d-flex dropdown-header">Tìm kiếm trên...</h6></li>
                         <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="https://www.google.com/search?q=%s">Google</button></li>
                         <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="http://%l.wikipedia.org/wiki/Special:Search?search=%s">Wikipedia</button></li>
@@ -444,13 +484,13 @@
                           <div class="accordion-body">
                             <div class="mb-3">
                               <label class="form-check-label" for="dictionary-google-genai-model-select">Mô hình:</label>
-                              <select class="form-select model-select mb-3" id="dictionary-google-genai-model-select"><option value="gemini-2.5-pro-preview-05-06" selected>Gemini 2.5 Pro Preview 05-06</option></select>
+                              <select class="form-select model-select" id="dictionary-google-genai-model-select"><option value="gemini-2.5-pro-preview-05-06" selected>Gemini 2.5 Pro Preview 05-06</option></select>
                             </div>
                             <div class="form-check form-switch mb-3">
                               <input class="form-check-input" id="dictionary-thinking-mode-switch" type="checkbox" role="switch" checked>
                               <label class="form-check-label" for="dictionary-thinking-mode-switch">Chế độ suy nghĩ (Gemini 2.5 Flash Preview)</label>
                             </div>
-                            <div class="form-check form-switch mb-3">
+                            <div class="form-check form-switch">
                               <input class="form-check-input" id="grounding-with-google-search-switch" type="checkbox" role="switch">
                               <label class="form-check-label" for="grounding-with-google-search-switch">Sự truyền thụ kiến thức vững vàng với Google Tìm kiếm</label>
                             </div>
@@ -461,13 +501,35 @@
                         <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-target="#dictionary-openai-collapse" data-bs-toggle="collapse">OpenAI</button></h2>
                         <div class="accordion-collapse collapse" id="dictionary-openai-collapse" data-bs-parent="#dictionary-translator-accordion">
                           <div class="accordion-body">
-                            <div>
+                            <div class="mb-3">
                               <label class="form-check-label" for="dictionary-openai-model-select">Mô hình:</label>
-                              <select class="form-select model-select mb-3" id="dictionary-openai-model-select"><option selected>gpt-4.1</option></select>
+                              <select class="form-select model-select" id="dictionary-openai-model-select"><option selected>gpt-4.1</option></select>
                             </div>
-                            <div class="form-check form-switch mb-3">
+                            <div class="form-check form-switch">
                               <input class="form-check-input" id="web-search-switch" type="checkbox" role="switch">
                               <label class="form-check-label" for="web-search-switch">Tìm kiếm mạng</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="accordion-item">
+                        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-target="#dictionary-groq-collapse" data-bs-toggle="collapse">Groq</button></h2>
+                        <div class="accordion-collapse collapse" id="dictionary-groq-collapse" data-bs-parent="#dictionary-translator-accordion">
+                          <div class="accordion-body">
+                            <div>
+                              <label class="form-check-label" for="dictionary-groq-model-select">Mô hình:</label>
+                              <select class="form-select model-select" id="dictionary-groq-model-select"><option value="meta-llama/llama-4-scout-17b-16e-instruct" selected>Gemini 2.5 Pro Preview 05-06</option></select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="accordion-item">
+                        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-target="#dictionary-openrouter-collapse" data-bs-toggle="collapse">OpenRouter</button></h2>
+                        <div class="accordion-collapse collapse" id="dictionary-openrouter-collapse" data-bs-parent="#dictionary-translator-accordion">
+                          <div class="accordion-body">
+                            <div>
+                              <label class="form-check-label" for="dictionary-openrouter-model-text">Mô hình:</label>
+                              <input class="form-control" id="dictionary-openrouter-model-text" placeholder="ID mô hình" type="text" value="qwen/qwen3-235b-a22b">
                             </div>
                           </div>
                         </div>

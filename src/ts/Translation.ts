@@ -4,7 +4,11 @@ import {
   HarmBlockThreshold,
   HarmCategory
 // @ts-expect-error @google/genai
-} from 'https://esm.run/@google/genai'
+} from 'https://esm.run/@google/genai';
+// @ts-expect-error groq-sdk
+import { Groq } from 'https://esm.run/groq-sdk';
+// @ts-expect-error openai
+import OpenAI from 'https://esm.run/openai';
 import Utils from './Utils.js'
 interface Model {
   modelId: string
@@ -144,6 +148,23 @@ const MODELS: ModelsType = {
     Other: [
       'chatgpt-4o-latest'
     ]
+  },
+  GROQ: {
+    'Alibaba Cloud': ['qwen-qwq-32b'],
+    'DeepSeek / Meta': ['deepseek-r1-distill-llama-70b'],
+    Google: ['gemma2-9b-it'],
+    Meta: [
+      'llama-3.1-8b-instant',
+      'llama-3.3-70b-versatile',
+      'llama3-70b-8192',
+      'llama3-8b-8192',
+      'meta-llama/llama-4-maverick-17b-128e-instruct',
+      {
+        modelId: 'meta-llama/llama-4-scout-17b-16e-instruct',
+        selected: true
+      }
+    ],
+    Mistral: ['mistral-saba-24b']
   }
 }
 interface DictionaryEntry {
@@ -206,8 +227,10 @@ interface Options {
   customDictionary?: DictionaryEntry[]
   customPrompt?: string
   domain?: Domains
-  googleGenaiModelId?: string
   GEMINI_API_KEY?: string
+  googleGenaiModelId?: string
+  groqModelId?: string
+  GROQ_API_KEY?: string
   isBilingualEnabled?: boolean
   isCustomDictionaryEnabled?: boolean
   isCustomPromptEnabled?: boolean
@@ -215,6 +238,8 @@ interface Options {
   isThinkingModeEnabled?: boolean
   isWebSearchEnabled?: boolean
   openaiModelId?: string
+  openrouterModelId?: string,
+  OPENROUTER_API_KEY?: string,
   systemInstruction?: SystemInstructions
   temperature?: number
   tone?: Tones
@@ -227,9 +252,11 @@ enum Translators {
   DEEPL_TRANSLATE = 'deeplTranslate',
   GOOGLE_GENAI_TRANSLATE = 'googleGenaiTranslate',
   GOOGLE_TRANSLATE = 'googleTranslate',
+  GROQ_TRANSLATE = 'groqTranslate',
   LINGVANEX = 'lingvanex',
   MICROSOFT_TRANSLATOR = 'microsoftTranslator',
   OPENAI_TRANSLATOR = 'openaiTranslator',
+  OPENROUTER_TRANSLATE = 'openrouterTranslate',
   PAPAGO = 'papago'
 }
 class Translation {
@@ -251,6 +278,8 @@ class Translation {
       isGroundingWithGoogleSearchEnabled: false,
       openaiModelId: (Object.values(MODELS.OPENAI) as ModelEntry[][]).flat().filter(element => typeof element === 'object').find((element: Model) => element.selected)?.modelId,
       isWebSearchEnabled: false,
+      groqModelId: (Object.values(MODELS.GROQ) as ModelEntry[][]).flat().filter(element => typeof element === 'object').find((element: Model) => element.selected)?.modelId,
+      openrouterModelId: 'qwen/qwen3-235b-a22b',
       isBilingualEnabled: false,
       systemInstruction: SystemInstructions.GPT4OMINI,
       temperature: 0.1,
@@ -265,12 +294,41 @@ class Translation {
       ...options
     }
     switch (options.translatorId) {
-      case Translators.BAIDU_TRANSLATE:
-      case Translators.DEEPL_TRANSLATE:
-      case Translators.GOOGLE_TRANSLATE:
-      case Translators.LINGVANEX:
-      case Translators.MICROSOFT_TRANSLATOR:
-      case Translators.OPENAI_TRANSLATOR: {
+      case Translators.GROQ_TRANSLATE: {
+        const { groqModelId, GROQ_API_KEY, systemInstruction, temperature, topP } = options
+        const groq = new Groq({ apiKey: GROQ_API_KEY, dangerouslyAllowBrowser: true });
+        this.translateText = async (resolve) => {
+          const prompt = this.getPrompt(systemInstruction as SystemInstructions, this.text)
+          const chatCompletion = await groq.chat.completions.create({
+            "messages": [
+              ...this.getSystemInstructions(systemInstruction as SystemInstructions, this.text, this.originalLanguage, this.destinationLanguage, options).map(element => ({
+                "role": "system",
+                "content": element
+              })),
+              {
+                "role": "user",
+                "content": prompt
+              }
+            ],
+            "model": groqModelId,
+            "temperature": temperature === -1 ? 1 : temperature,
+            "top_p": topP === -1 ? 1 : topP,
+            "stream": true,
+            "stop": null
+          });
+
+          let responseText = ''
+          for await (const chunk of chatCompletion) {
+            responseText += chunk.choices[0]?.delta?.content || ''
+            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(responseText, prompt) : responseText
+            if (this.translatedText.length === 0) continue
+            if (this.abortController.signal.aborted as boolean) return
+            resolve(this.translatedText, this.text, options)
+          }
+        }
+        break
+      }
+      case Translators.OPENAI_TRANSLATOR:
         this.translateText = async (resolve) => {
           const { openaiModelId, isWebSearchEnabled, systemInstruction, temperature, topP } = options
           const prompt = this.getPrompt(systemInstruction as SystemInstructions, this.text)
@@ -279,38 +337,38 @@ class Translation {
               model: openaiModelId,
               input: [
                 ...this.getSystemInstructions(systemInstruction as SystemInstructions, this.text, this.originalLanguage, this.destinationLanguage, options).map(element => ({
-                  role: /^o\d/.test(openaiModelId as string) ? (openaiModelId === 'o1-mini' ? 'user' : 'developer') : 'system',
-                  content: [
+                  "role": /^o\d/.test(openaiModelId as string) ? (openaiModelId === 'o1-mini' ? 'user' : 'developer') : 'system',
+                  "content": [
                     {
-                      type: 'input_text',
-                      text: element
+                      "type": "input_text",
+                      "text": element
                     }
                   ]
                 })),
                 {
-                  role: 'user',
-                  content: [
+                  "role": 'user',
+                  "content": [
                     {
-                      type: 'input_text',
-                      text: prompt
+                      "type": "input_text",
+                      "text": prompt
                     }
                   ]
                 }
               ],
               text: {
-                format: {
-                  type: 'text'
+                "format": {
+                  "type": "text"
                 }
               },
               reasoning: {},
               tools: [
                 ...isWebSearchEnabled
                   ? [{
-                      type: 'web_search_preview',
-                      user_location: {
-                        type: 'approximate'
+                      "type": "web_search_preview",
+                      "user_location": {
+                        "type": "approximate"
                       },
-                      search_context_size: 'medium'
+                      "search_context_size": "medium"
                     }]
                   : []
               ],
@@ -327,7 +385,7 @@ class Translation {
             signal: this.abortController.signal
           }).then(async value => await value.json()).then(value => {
             const responseText = value.output.filter((element: { type: string }) => element.type === 'message')[0].content[0].text
-            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(responseText, (prompt.match(/(?<=^### TEXT SENTENCE WITH UUID:\n)[\s\S]+(?=\n### TRANSLATED TEXT WITH UUID:$)/) ?? [''])[0]) : responseText
+            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(responseText, prompt) : responseText
             if (this.abortController.signal.aborted as boolean) return
             resolve(this.translatedText, this.text, options)
           }).catch(reason => {
@@ -335,17 +393,50 @@ class Translation {
           })
         }
         break
+      case Translators.OPENROUTER_TRANSLATE: {
+        const { openrouterModelId, OPENROUTER_API_KEY, systemInstruction, temperature, topP, topK } = options
+        const openai = new OpenAI({
+          baseURL: "https://openrouter.ai/api/v1",
+          apiKey: OPENROUTER_API_KEY,
+          dangerouslyAllowBrowser: true,
+        });
+        this.translateText = async (resolve) => {
+          const prompt = this.getPrompt(systemInstruction as SystemInstructions, this.text)
+          const completion = await openai.chat.completions.create({
+            model: openrouterModelId,
+            messages: [
+              ...this.getSystemInstructions(systemInstruction as SystemInstructions, this.text, this.originalLanguage, this.destinationLanguage, options).map(element => ({
+                "role": "system",
+                "content": element
+              })),
+              {
+                "role": "user",
+                "content": prompt
+              }
+            ],
+            ...temperature as number > -1 ? { temperature } : {},
+            ...topP as number > -1 ? { top_p: topP } : {},
+            ...topK as number > -1 ? { top_k: topK } : {},
+            reasoning: { "exclude": true },
+          }, { signal: this.abortController.signal });
+        
+          const responseText = completion.choices[0].message?.content
+          this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(responseText, prompt) : responseText
+          if (this.abortController.signal.aborted as boolean) return
+          resolve(this.translatedText, this.text, options)
+        }
+        break
       }
-      case Translators.PAPAGO:
       case Translators.GOOGLE_GENAI_TRANSLATE:
-      default: {
+      default:
         this.translateText = async (resolve) => {
           const { googleGenaiModelId, isThinkingModeEnabled, isGroundingWithGoogleSearchEnabled, GEMINI_API_KEY, systemInstruction, temperature, topP, topK } = options
           const ai = new GoogleGenAI({
-            apiKey: GEMINI_API_KEY
-          })
-          const tools = []
-          if (isGroundingWithGoogleSearchEnabled) tools.push({ googleSearch: {} })
+            apiKey: GEMINI_API_KEY,
+          });
+          const tools = [
+            ...isGroundingWithGoogleSearchEnabled? [{ googleSearch: {} }] : [],
+          ];
           const config = {
             abortSignal: this.abortController.signal,
             ...temperature as number > -1 ? { temperature } : {},
@@ -354,8 +445,8 @@ class Translation {
             ...(googleGenaiModelId as string).startsWith('gemini-2.5-flash') && !isThinkingModeEnabled
               ? {
                   thinkingConfig: {
-                    thinkingBudget: 0
-                  }
+                    thinkingBudget: 0,
+                  },
                 }
               : {},
             safetySettings: [
@@ -374,42 +465,41 @@ class Translation {
               {
                 category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
                 threshold: HarmBlockThreshold.BLOCK_NONE // Block none
-              }
+              },
             ],
             ...tools.length > 0 ? { tools } : {},
             responseMimeType: 'text/plain',
             systemInstruction: this.getSystemInstructions(systemInstruction as SystemInstructions, this.text, this.originalLanguage, this.destinationLanguage, options).map(element => ({
               text: element
-            }))
-          }
-          const model = options.googleGenaiModelId
+            })),
+          };
+          const model = options.googleGenaiModelId;
           const prompt = this.getPrompt(systemInstruction as SystemInstructions, this.text)
           const contents = [
             {
               role: 'user',
               parts: [
                 {
-                  text: `${prompt.split('\n').filter(element => element.length > 0).join('\n')}`
-                }
-              ]
-            }
-          ]
+                  text: `${prompt.split('\n').filter(element => element.length > 0).join('\n')}`,
+                },
+              ],
+            },
+          ];
 
           const response = await ai.models.generateContentStream({
             model,
             config,
-            contents
-          })
+            contents,
+          });
           let responseText = ''
           for await (const chunk of response) {
             responseText += chunk.text as string
-            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(responseText, (prompt.match(/(?<=^### TEXT SENTENCE WITH UUID:\n)[\s\S]+(?=\n### TRANSLATED TEXT WITH UUID:$)/) ?? [''])[0]) : responseText
+            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(responseText, prompt) : responseText
             if (this.translatedText.length === 0) continue
             if (this.abortController.signal.aborted as boolean) return
             resolve(this.translatedText, this.text, options)
           }
         }
-      }
     }
   }
   private getPrompt (systemInstruction: SystemInstructions, text: string): string {
@@ -506,7 +596,7 @@ class Translation {
         }
       }
       if (Object.keys(translatedStringMap ?? {}).length > 0) {
-        return textSentenceWithUuid.split('\n').map(element => {
+        return (textSentenceWithUuid.match(/(?<=^### TEXT SENTENCE WITH UUID:\n)[\s\S]+(?=\n### TRANSLATED TEXT WITH UUID:$)/) as RegExpMatchArray)[0].split('\n').map(element => {
           const uuid = (element.match(/^[a-z0-9]{8}#[a-z0-9]{3}/) ?? [''])[0]
           return translatedStringMap[uuid] ?? ''
         }).join('\n')
