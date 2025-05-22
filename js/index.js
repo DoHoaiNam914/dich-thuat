@@ -9,24 +9,35 @@ const $boldTextSwitch = $('#bold-text-switch');
 const $copyButtons = $('.copy-button');
 const $customDictionarySwitch = $('#custom-dictionary-switch');
 const $deleteButton = $('#delete-button');
+const $domainSelect = $('#domain-select');
 const $fontFamilyText = $('#font-family-text');
 const $fontSizeText = $('#font-size-text');
 const $geminiApiKeyText = $('#gemini-api-key-text');
+const $groqApiKeyText = $('#groq-api-key-text');
 const $inputTextarea = $('#input-textarea');
 const $justifyTextSwitch = $('#justify-text-switch');
 const $lineHeightText = $('#line-height-text');
-const $modelSelects = $('.model-select');
+const $openrouterApiKeyText = $('#openrouter-api-key-text');
 const $outputTextarea = $('#output-textarea');
 const $retranslateButton = $('#retranslate-button');
 const $sourceText = $('#source-text');
 const $sourceTextLanguageSelect = $('#source-text-language-select');
+const $stringValueOptions = $('.string-value-option');
 const $systemInstructionSelect = $('#system-instruction-select');
 const $targetText = $('#target-text');
 const $targetTextLanguageSelect = $('#target-text-language-select');
 const $translateButton = $('#translate-button');
 const $translationTranslators = $('[data-translation-translator-value]');
 const $translators = $('[data-translator-value]');
-const translationStorage = { translator: Translators.GOOGLE_GENAI_TRANSLATE, googleGenaiModel: Object.values(MODELS.GOOGLE_GENAI).flat().filter(element => typeof element === 'object').find((element) => element.selected)?.modelId, openaiModel: Object.values(MODELS.OPENAI).flat().filter(element => typeof element === 'object').find((element) => element.selected)?.modelId, systemInstruction: SystemInstructions.GPT4OMINI, ...JSON.parse(window.localStorage.getItem('translation') ?? '{}') };
+const translationStorage = {
+    translator: Translators.GOOGLE_GENAI_TRANSLATE,
+    googleGenaiModel: Object.values(MODELS.GOOGLE_GENAI).flat().filter(element => typeof element === 'object').find((element) => element.selected)?.modelId,
+    openaiModel: Object.values(MODELS.OPENAI).flat().filter(element => typeof element === 'object').find((element) => element.selected)?.modelId,
+    groqModel: Object.values(MODELS.GROQ).flat().filter(element => typeof element === 'object').find((element) => element.selected)?.modelId,
+    openrouterModel: 'qwen/qwen3-235b-a22b',
+    systemInstruction: SystemInstructions.GPT4OMINI,
+    ...JSON.parse(window.localStorage.getItem('translation') ?? '{}')
+};
 let customDictionary = [];
 let textareaTranslation = null;
 let dictionaryTranslation = null;
@@ -123,8 +134,8 @@ $(document).ready(() => {
     });
     showActiveTranslator(translationStorage.translator);
     const $modelSelects = $('.model-select');
-    $modelSelects.empty();
-    $modelSelects.each((_index, a) => {
+    $modelSelects.each((index, a) => {
+        $(a).empty();
         Object.entries(MODELS[$(a).prop('id').replace('dictionary-', '').split('-').slice(0, -2).join('_').toUpperCase()]).forEach(([first, second]) => {
             const optgroup = document.createElement('optgroup');
             $(optgroup).prop('label', first);
@@ -145,10 +156,10 @@ $(document).ready(() => {
             $(a).append(optgroup);
         });
     });
-    $('.option-select').each((_index, element) => {
+    $stringValueOptions.each((_index, element) => {
         $(element).val(translationStorage[$(element).prop('id').split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')]);
     });
-    $apiKeyTexts.each((_index, element) => {
+    $apiKeyTexts.each((index, element) => {
         $(element).val(window.localStorage.getItem($(element).prop('id').split('-').slice(0, -1).join('_').toUpperCase()) ?? '');
     });
     $systemInstructionSelect.val(translationStorage.systemInstruction);
@@ -188,7 +199,7 @@ $translators.on('click', function () {
     window.localStorage.setItem('translation', JSON.stringify({ ...translationStorage, translator }));
     showActiveTranslator(translator, true);
 });
-$modelSelects.on('change', function () {
+$stringValueOptions.on('change', function () {
     translationStorage[$(this).prop('id').split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')] = $(this).val();
     window.localStorage.setItem('translation', JSON.stringify(translationStorage));
 });
@@ -198,10 +209,14 @@ $apiKeyTexts.on('change', function () {
 $systemInstructionSelect.on('change', function () {
     window.localStorage.setItem('translation', JSON.stringify({ ...translationStorage, systemInstruction: $(this).val() }));
 });
+$domainSelect.on('change', function () {
+    $(`#dictionary-#${$(this).prop('id')}`).val($(this).val());
+});
 $('#dictionary-modal').on('hide.bs.modal', () => {
     if (dictionaryTranslation != null)
         dictionaryTranslation.abortController.abort();
-    $('#source-text, #target-text').val('');
+    $('#source-text, #target-text').val('').prop('readOnly', false);
+    $('#add-word-button, #delete-button, [translation-translator-value]').removeClass('disabled');
 });
 $('#custom-dictionary-input').on('change', function () {
     // @ts-expect-error Papaparse
@@ -250,12 +265,16 @@ $translationTranslators.on('click', function () {
         GEMINI_API_KEY: $geminiApiKeyText.val(),
         openaiModelId: $('#dictionary-openai-model-select').val(),
         isWebSearchEnabled: $('#web-search-switch').prop('checked'),
+        groqModelId: $('#dictionary-groq-model-select').val(),
+        GROQ_API_KEY: $groqApiKeyText.val(),
+        openrouterModelId: $('#dictionary-openrouter-model-text').val(),
+        OPENROUTER_API_KEY: $openrouterApiKeyText.val(),
         systemInstruction: $('#dictionary-system-instruction-select').val(),
         temperature: parseFloat($('#dictionary-temperature-text').val()),
         topP: parseFloat($('#dictionary-top-p-text').val()),
         topK: parseFloat($('#dictionary-top-k-text').val()),
         tone: $('#dictionary-tone-select').val(),
-        domain: $('#dictionary-domain-select').val(),
+        domain: $(`#dictionary-#${$domainSelect.prop('id')}`).val(),
         isCustomDictionaryEnabled: $customDictionarySwitch.prop('checked'),
         customDictionary,
         isCustomPromptEnabled: $('#dictionary-custom-prompt-switch').prop('checked'),
@@ -379,13 +398,17 @@ $translateButton.on('click', function () {
                 isThinkingModeEnabled: $('#thinking-mode-switch').prop('checked'),
                 GEMINI_API_KEY: $geminiApiKeyText.val(),
                 openaiModelId: $('#openai-model-select').val(),
+                groqModelId: $('#groq-model-select').val(),
+                GROQ_API_KEY: $groqApiKeyText.val(),
+                openrouterModelId: $('#openrouter-model-text').val(),
+                OPENROUTER_API_KEY: $openrouterApiKeyText.val(),
                 isBilingualEnabled: $('#bilingual-switch').prop('checked'),
                 systemInstruction: $('#system-instruction-select').val(),
                 temperature: parseFloat($('#temperature-text').val()),
                 topP: parseFloat($('#top-p-text').val()),
                 topK: parseFloat($('#top-k-text').val()),
                 tone: $('#tone-select').val(),
-                domain: $('#domain-select').val(),
+                domain: $domainSelect.val(),
                 isCustomDictionaryEnabled: $customDictionarySwitch.prop('checked'),
                 customDictionary,
                 isCustomPromptEnabled: $('#custom-prompt-switch').prop('checked'),

@@ -67,8 +67,10 @@ interface Options {
     customDictionary?: DictionaryEntry[];
     customPrompt?: string;
     domain?: Domains;
-    googleGenaiModelId?: string;
     GEMINI_API_KEY?: string;
+    googleGenaiModelId?: string;
+    groqModelId?: string;
+    GROQ_API_KEY?: string;
     isBilingualEnabled?: boolean;
     isCustomDictionaryEnabled?: boolean;
     isCustomPromptEnabled?: boolean;
@@ -76,6 +78,8 @@ interface Options {
     isThinkingModeEnabled?: boolean;
     isWebSearchEnabled?: boolean;
     openaiModelId?: string;
+    openrouterModelId?: string;
+    OPENROUTER_API_KEY?: string;
     systemInstruction?: SystemInstructions;
     temperature?: number;
     tone?: Tones;
@@ -88,9 +92,11 @@ declare enum Translators {
     DEEPL_TRANSLATE = "deeplTranslate",
     GOOGLE_GENAI_TRANSLATE = "googleGenaiTranslate",
     GOOGLE_TRANSLATE = "googleTranslate",
+    GROQ_TRANSLATE = "groqTranslate",
     LINGVANEX = "lingvanex",
     MICROSOFT_TRANSLATOR = "microsoftTranslator",
     OPENAI_TRANSLATOR = "openaiTranslator",
+    OPENROUTER_TRANSLATE = "openrouterTranslate",
     PAPAGO = "papago"
 }
 declare class Translation {
