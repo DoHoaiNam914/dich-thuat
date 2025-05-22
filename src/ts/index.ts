@@ -195,7 +195,7 @@ $systemInstructionSelect.on('change', function () {
   window.localStorage.setItem('translation', JSON.stringify({ ...translationStorage, systemInstruction: $(this).val() }))
 })
 $domainSelect.on('change', function () {
-  $(`#dictionary-#${$(this).prop('id')}`).val($(this).val() as string)
+  $(`#dictionary-${$(this).prop('id')}`).val($(this).val() as string)
 })
 $('#dictionary-modal').on('hide.bs.modal', () => {
   if (dictionaryTranslation != null) dictionaryTranslation.abortController.abort()
@@ -256,7 +256,7 @@ $translationTranslators.on('click', function () {
     topP: parseFloat($('#dictionary-top-p-text').val() as string),
     topK: parseFloat($('#dictionary-top-k-text').val() as string),
     tone: $('#dictionary-tone-select').val() as Tones,
-    domain: $(`#dictionary-#${$domainSelect.prop('id')}`).val() as Domains,
+    domain: $(`#dictionary-${$domainSelect.prop('id')}`).val() as Domains,
     isCustomDictionaryEnabled: $customDictionarySwitch.prop('checked'),
     customDictionary,
     isCustomPromptEnabled: $('#dictionary-custom-prompt-switch').prop('checked'),
