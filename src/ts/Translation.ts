@@ -388,8 +388,6 @@ class Translation {
             this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(responseText, prompt) : responseText
             if (this.abortController.signal.aborted as boolean) return
             resolve(this.translatedText, this.text, options)
-          }).catch(reason => {
-            console.error(reason)
           })
         }
         break

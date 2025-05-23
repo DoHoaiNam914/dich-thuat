@@ -24,7 +24,7 @@ const $sourceText = $('#source-text')
 const $sourceTextLanguageSelect = $('#source-text-language-select')
 const $stringValueOptions = $('.string-value-option')
 const $systemInstructionSelect = $('#system-instruction-select')
-const $targetText = $('#target-text')
+const $targetTextarea = $('#target-textarea')
 const $targetTextLanguageSelect = $('#target-text-language-select')
 const $translateButton = $('#translate-button')
 const $translationTranslators = $('[data-translation-translator-value]')
@@ -199,7 +199,7 @@ $domainSelect.on('change', function () {
 })
 $('#dictionary-modal').on('hide.bs.modal', () => {
   if (dictionaryTranslation != null) dictionaryTranslation.abortController.abort()
-  $('#source-text, #target-text').val('').prop('readOnly', false)
+  $('#source-text, #target-textarea').val('').prop('readOnly', false)
   $('#add-word-button, #delete-button, [translation-translator-value]').removeClass('disabled')
 })
 $('#custom-dictionary-input').on('change', function () {
@@ -235,9 +235,9 @@ $('#delete-all-button').on('click', function () {
 $translationTranslators.on('click', function () {
   const sourceText = $sourceText.val() as string
   if (sourceText.length === 0) return
-  const previousTargetText = $targetText.val() as string
-  $targetText.val('Đang dịch...')
-  $('#source-text, #target-text').prop('readOnly', true)
+  const previousTargetText = $targetTextarea.val() as string
+  $targetTextarea.val('Đang dịch...')
+  $('#source-text, #target-textarea').prop('readOnly', true)
   $('#add-word-button, #delete-button, [translation-translator-value]').addClass('disabled')
   dictionaryTranslation = new Translation(sourceText, $targetTextLanguageSelect.val() as string, $sourceTextLanguageSelect.val() as string | null, {
     translatorId: $(this).data('translation-translator-value'),
@@ -263,11 +263,11 @@ $translationTranslators.on('click', function () {
     customPrompt: $('#dictionary-custom-prompt-textarea').val() as string
   })
   dictionaryTranslation.translateText(translatedText => {
-    $targetText.val(translatedText)
+    $targetTextarea.val(translatedText)
   }).catch(() => {
-    if (!(textareaTranslation?.abortController.signal.aborted as boolean)) $targetText.val(previousTargetText)
+    if (!(textareaTranslation?.abortController.signal.aborted as boolean)) $targetTextarea.val(previousTargetText)
   }).finally(() => {
-    $('#source-text, #target-text').prop('readOnly', false)
+    $('#source-text, #target-textarea').prop('readOnly', false)
     $('#add-word-button, #delete-button, [translation-translator-value]').removeClass('disabled')
   })
 })
@@ -276,13 +276,16 @@ $('[data-define-url]').on('click', function () {
   window.open($(this).data('define-url').replace('%l', ($sourceTextLanguageSelect.val() as string).split('-')[0]).replace('%s', $sourceText.val()), '_blank', 'width=1000,height=577')
 })
 $sourceText.on('input', function () {
-  $targetText.val(customDictionary.find(({ originalLanguage, destinationLanguage, originalWord }) => originalLanguage === $sourceTextLanguageSelect.val() && destinationLanguage === $targetTextLanguageSelect.val() && originalWord === $(this).val())?.destinationWord ?? ($targetText.val() as string))
+  $targetTextarea.val(customDictionary.find(({ originalLanguage, destinationLanguage, originalWord }) => originalLanguage === $sourceTextLanguageSelect.val() && destinationLanguage === $targetTextLanguageSelect.val() && originalWord === $(this).val())?.destinationWord ?? ($targetTextarea.val() as string))
+})
+$targetTextarea.on('input', function () {
+  $(this).val(($(this).val() as string).replace(/\n/g, ' '))
 })
 $addWordButton.on('click', () => {
   const originalLanguage = $sourceTextLanguageSelect.val() as string
   const destinationLanguage = $targetTextLanguageSelect.val() as string
   const originalWord = $sourceText.val() as string
-  const destinationWord = $targetText.val() as string
+  const destinationWord = $targetTextarea.val() as string
   if (originalWord.length === 0 || destinationWord.length === 0) return
   const wordIndex = customDictionary.findIndex(element => element.originalLanguage === originalLanguage && element.destinationLanguage === destinationLanguage && element.originalWord === originalWord)
   if (wordIndex !== -1) customDictionary.splice(wordIndex, 1)
@@ -292,14 +295,14 @@ $addWordButton.on('click', () => {
     originalWord,
     destinationWord
   })
-  $('#source-text, #target-text').val('')
+  $('#source-text, #target-textarea').val('')
   setStoredCustomDictionaryAndReloadCounter(customDictionary)
 })
 $deleteButton.on('click', () => {
   const wordIndex = customDictionary.findIndex(({ originalLanguage, destinationLanguage, originalWord }) => originalLanguage === $sourceTextLanguageSelect.val() && destinationLanguage === $targetTextLanguageSelect.val() && originalWord === $sourceText.val())
   if (wordIndex === -1 || !window.confirm('Bạn có chắc chắn muốn xoá từ này?')) return
   customDictionary.splice(wordIndex, 1)
-  $targetText.val('')
+  $targetTextarea.val('')
   setStoredCustomDictionaryAndReloadCounter(customDictionary)
 })
 $('#copy-csv-button').on('click', () => {
