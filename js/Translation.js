@@ -348,8 +348,6 @@ class Translation {
                         if (this.abortController.signal.aborted)
                             return;
                         resolve(this.translatedText, this.text, options);
-                    }).catch(reason => {
-                        console.error(reason);
                     });
                 };
                 break;
