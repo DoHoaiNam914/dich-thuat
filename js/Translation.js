@@ -194,6 +194,12 @@ var Domains;
     Domains["ANIMALS"] = "Animals";
     Domains["NONE"] = "None";
 })(Domains || (Domains = {}));
+var Efforts;
+(function (Efforts) {
+    Efforts["LOW"] = "low";
+    Efforts["MEDIUM"] = "medium";
+    Efforts["HIGH"] = "high";
+})(Efforts || (Efforts = {}));
 var SystemInstructions;
 (function (SystemInstructions) {
     SystemInstructions["GPT4OMINI"] = "gpt-4o-mini";
@@ -235,6 +241,7 @@ class Translation {
             isThinkingModeEnabled: true,
             isGroundingWithGoogleSearchEnabled: false,
             openaiModelId: Object.values(MODELS.OPENAI).flat().filter(element => typeof element === 'object').find((element) => element.selected)?.modelId,
+            effort: Efforts.MEDIUM,
             isWebSearchEnabled: false,
             groqModelId: Object.values(MODELS.GROQ).flat().filter(element => typeof element === 'object').find((element) => element.selected)?.modelId,
             openrouterModelId: 'qwen/qwen3-235b-a22b',
@@ -289,14 +296,14 @@ class Translation {
             }
             case Translators.OPENAI_TRANSLATOR:
                 this.translateText = async (resolve) => {
-                    const { openaiModelId, isWebSearchEnabled, systemInstruction, temperature, topP } = options;
+                    const { openaiModelId, effort, isWebSearchEnabled, systemInstruction, temperature, topP } = options;
                     const prompt = this.getPrompt(systemInstruction, this.text);
                     await window.fetch('https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1/responses', {
                         body: JSON.stringify({
                             model: openaiModelId,
                             input: [
                                 ...this.getSystemInstructions(systemInstruction, this.text, this.originalLanguage, this.destinationLanguage, options).map(element => ({
-                                    "role": /^o\d/.test(openaiModelId) ? (openaiModelId === 'o1-mini' ? 'user' : 'developer') : 'system',
+                                    "role": MODELS.OPENAI.Reasoning.includes(openaiModelId) ? (openaiModelId.startsWith('o1-mini') ? 'user' : 'developer') : 'system',
                                     "content": [
                                         {
                                             "type": "input_text",
@@ -319,7 +326,7 @@ class Translation {
                                     "type": "text"
                                 }
                             },
-                            reasoning: {},
+                            reasoning: { ...MODELS.OPENAI.Reasoning.includes(openaiModelId) && effort !== 'medium' ? { "effort": effort } : {} },
                             tools: [
                                 ...isWebSearchEnabled
                                     ? [{
@@ -331,8 +338,12 @@ class Translation {
                                         }]
                                     : []
                             ],
-                            temperature: temperature === -1 ? 1 : temperature,
-                            top_p: topP === -1 ? 1 : topP,
+                            ...MODELS.OPENAI.Reasoning.includes(openaiModelId)
+                                ? {}
+                                : {
+                                    temperature: temperature === -1 ? 1 : temperature,
+                                    top_p: topP === -1 ? 1 : topP
+                                },
                             store: false
                         }),
                         headers: {
