@@ -2,6 +2,9 @@
 /* global $ */
 import Utils from './Utils.js';
 class Reader {
+    static getCssFontFamily(fontFamily) {
+        return fontFamily.split(', ').map((element) => element.includes(' ') ? `'${element}'` : (element.startsWith('--') ? `var(${element})` : element)).join(', ');
+    }
     static setThemeValue(theme, $dropdownItem, valueKey) {
         const value = theme[valueKey];
         switch (valueKey) {
@@ -14,6 +17,7 @@ class Reader {
                 break;
             case 'fontFamily':
                 $dropdownItem.attr("data-reader-theme-font-family", value);
+                $dropdownItem.css("font-family", Reader.getCssFontFamily(value));
                 break;
             case 'fontSize':
                 $dropdownItem.attr("data-reader-theme-font-size", value);
