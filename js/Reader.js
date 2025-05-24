@@ -7,31 +7,31 @@ class Reader {
         switch (valueKey) {
             case 'active':
                 if (value)
-                    $dropdownItem.addClass('active');
+                    $dropdownItem.addClass("active");
                 break;
             case 'boldText':
-                $dropdownItem.attr('data-reader-theme-bold-text', String(value));
+                $dropdownItem.attr("data-reader-theme-bold-text", String(value));
                 break;
             case 'fontFamily':
-                $dropdownItem.attr('data-reader-theme-font-family', value);
+                $dropdownItem.attr("data-reader-theme-font-family", value);
                 break;
             case 'fontSize':
-                $dropdownItem.attr('data-reader-theme-font-size', value);
+                $dropdownItem.attr("data-reader-theme-font-size", value);
                 break;
             case 'fontWeight':
-                $dropdownItem.attr('data-reader-theme-font-weight', value);
+                $dropdownItem.attr("data-reader-theme-font-weight", value);
                 break;
             case 'justifyText':
-                $dropdownItem.attr('data-reader-theme-justify-text', value);
+                $dropdownItem.attr("data-reader-theme-justify-text", value);
                 break;
             case 'lineHeight':
-                $dropdownItem.attr('data-reader-theme-line-height', value);
+                $dropdownItem.attr("data-reader-theme-line-height", value);
                 break;
             case 'value':
-                $dropdownItem.attr('data-reader-theme-value', value);
+                $dropdownItem.attr("data-reader-theme-value", value);
         }
     }
-    static loadReaderThemesOptions() {
+    static loadReaderThemesOptions($dropdownMenu) {
         const unorderedList = document.createElement('ul');
         Reader.THEMES.forEach((a) => {
             const listItem = document.createElement('li');
@@ -48,12 +48,12 @@ class Reader {
                     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
                     const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
                     $(dropdownItem).addClass(['align-items-center', 'd-flex', 'dropdown-item']);
-                    $(dropdownItem).prop('type', 'button');
+                    $(dropdownItem).prop("type", "button");
                     $(dropdownItem).text(b.name);
                     $(svg).addClass(['bi', 'd-none', 'ms-auto']);
                     use.setAttributeNS('http://www.w3.org/2000/svg', 'href', '#check2');
                     $(svg).append(use);
-                    $(dropdownItem).append(' ', svg);
+                    $(dropdownItem).append(" ", svg);
                     [...Object.keys(themeGroup).filter(c => c !== 'title' && c !== 'themes'), ...Object.keys(b).filter(c => c !== 'name')].forEach(c => {
                         Reader.setThemeValue({ ...a, ...b }, $(dropdownItem), c);
                     });
@@ -68,12 +68,12 @@ class Reader {
                 const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
                 const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
                 $(dropdownItem).addClass(['align-items-center', 'd-flex', 'dropdown-item']);
-                $(dropdownItem).prop('type', 'button');
+                $(dropdownItem).prop("type", "button");
                 $(dropdownItem).text(theme.name);
                 $(svg).addClass(['bi', 'd-none', 'ms-auto']);
                 use.setAttributeNS('http://www.w3.org/2000/svg', 'href', '#check2');
                 $(svg).append(use);
-                $(dropdownItem).append(' ', svg);
+                $(dropdownItem).append(" ", svg);
                 Object.keys(a).filter(b => b !== 'name').forEach(c => {
                     Reader.setThemeValue(theme, $(dropdownItem), c);
                 });
@@ -82,24 +82,10 @@ class Reader {
                 $(listItem).empty();
             }
         });
-        $('.reader-theme-toggle .dropdown-menu').html(unorderedList.innerHTML);
+        $dropdownMenu.html(unorderedList.innerHTML);
     }
     static fontMapper(fontFamily) {
         return fontFamily?.replace(/['"]/g, '').split(/, */).filter(element => element.length > 0).map(element => Reader.FONT_MAP.find(([first, second]) => first === element || second === element)?.[1] ?? element).join(', ');
-    }
-    static setReaderTheme(readerTheme, syncSettings, prevReaderTheme = null) {
-        $(document.body).removeClass(prevReaderTheme ?? Reader.THEMES[0].value).addClass(readerTheme);
-        syncSettings($(`[data-reader-theme-value="${readerTheme}"]`));
-    }
-    static showActiveReaderTheme(readerTheme, focus = false) {
-        const $themeSwitcher = $('#reader-theme');
-        if ($themeSwitcher == null)
-            return;
-        const $readerThemes = $('[data-reader-theme-value]');
-        $readerThemes.removeClass('active');
-        $readerThemes.filter(`[data-reader-theme-value="${readerTheme}"]`).addClass('active');
-        if (focus)
-            $themeSwitcher.focus();
     }
 }
 Reader.THEMES = [
@@ -309,4 +295,4 @@ Reader.FONT_MAP = Object.entries({
     TBMincho: 'tbmincho',
     Thonburi: 'thonburi-ttf'
 });
-export default Reader;
+export { Reader };

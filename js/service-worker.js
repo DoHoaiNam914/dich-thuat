@@ -1,4 +1,5 @@
-"use strict";
+'use strict';
+/* global addEventListener, caches, fetch */
 const cacheName = 'Dịch thuật';
 const precachedResources = [
     '/',
@@ -9,65 +10,63 @@ const precachedResources = [
     '/css/index.css',
     '/css/Roboto.css',
     '/css/themes.css',
-    '/js/color-modes.js',
     '/js/index.js',
     '/js/Reader.js',
     '/js/service-worker.js',
     '/js/Translation.js',
-    '/js/Utils.js'
+    '/js/Utils.js',
+    '/lib/color-modes.js',
+    '/lib/papaparse.min.js'
 ];
-async function precache() {
-    const cache = await self.caches.open(cacheName);
-    return await cache.addAll(precachedResources);
-}
-// @ts-expect-error ExtendableEvent
-self.addEventListener('install', (event) => {
-    event.waitUntil(precache());
-});
-async function cacheFirst(request) {
-    const cachedResponse = await self.caches.match(request);
-    if (cachedResponse != null)
-        return cachedResponse;
-    try {
-        const networkResponse = await self.fetch(request);
-        if (networkResponse.ok) {
-            const cache = await self.caches.open(cacheName);
-            void cache.put(request, networkResponse.clone());
-        }
-        return networkResponse;
-    }
-    catch {
-        return Response.error();
-    }
-}
-// async function cacheFirstWithRefresh (request): Promise<Response> {
-//   const fetchResponsePromise = self.fetch(request).then(async networkResponse => {
+// async function precache (): Promise<void> {
+//   const cache = await caches.open(cacheName)
+//   return await cache.addAll(precachedResources)
+// }
+// addEventListener('install', event => {
+//   (event as ExtendableEvent).waitUntil(precache())
+// })
+// async function cacheFirst (request: Request): Promise<Response> {
+//   const cachedResponse = await caches.match(request)
+//   if (cachedResponse != null) return cachedResponse
+//   try {
+//     const networkResponse = await fetch(request)
 //     if (networkResponse.ok) {
-//       const cache = await self.caches.open(cacheName)
+//       const cache = await caches.open(cacheName)
+//       void cache.put(request, networkResponse.clone())
+//     }
+//     return networkResponse
+//   } catch {
+//     return Response.error()
+//   }
+// }
+// async function cacheFirstWithRefresh (request): Promise<Response> {
+//   const fetchResponsePromise = fetch(request).then(async networkResponse => {
+//     if (networkResponse.ok) {
+//       const cache = await caches.open(cacheName)
 //       void cache.put(request, networkResponse.clone())
 //     }
 //     return networkResponse
 //   })
 //   return await caches.match(request) ?? await fetchResponsePromise
 // }
-// async function networkFirst (request): Promise<Response> {
-//   try {
-//     const networkResponse = await self.fetch(request)
-//     if (networkResponse.ok) {
-//       const cache = await self.caches.open(cacheName)
-//       void cache.put(request, networkResponse.clone())
-//     }
-//     return networkResponse
-//   } catch {
-//     const cachedResponse = await self.caches.match(request)
-//     return cachedResponse ?? Response.error()
-//   }
-// }
-// @ts-expect-error FetchEvent
-self.addEventListener('fetch', (event) => {
+async function networkFirst(request) {
+    try {
+        const networkResponse = await fetch(request);
+        if (networkResponse.ok) {
+            const cache = await caches.open(cacheName);
+            void cache.put(request, networkResponse.clone());
+        }
+        return networkResponse;
+    }
+    catch {
+        const cachedResponse = await caches.match(request);
+        return cachedResponse ?? Response.error();
+    }
+}
+addEventListener('fetch', event => {
     const url = new URL(event.request.url);
+    // if (precachedResources.includes(url.pathname)) (event as FetchEvent).respondWith(cacheFirst((event as FetchEvent).request))
+    // if (precachedResources.includes(url.pathname)) (event as FetchEvent).respondWith(cacheFirstWithRefresh((event as FetchEvent).request))
     if (precachedResources.includes(url.pathname))
-        event.respondWith(cacheFirst(event.request));
-    // event.respondWith(cacheFirstWithRefresh(event.request))
-    // event.respondWith(networkFirst(event.request))
+        event.respondWith(networkFirst(event.request));
 });
