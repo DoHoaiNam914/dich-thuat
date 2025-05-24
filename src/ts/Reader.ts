@@ -251,7 +251,7 @@ class Reader {
         break
       case 'fontFamily':
         $dropdownItem.attr( "data-reader-theme-font-family", value as string )
-        $dropdownItem.css( "font-family", Reader.getCssFontFamily(value as string) )
+        $dropdownItem.css( "font-family", Reader.getCssFontFamily(Reader.fontMapper(value as string)) )
         break
       case 'fontSize':
         $dropdownItem.attr( "data-reader-theme-font-size", value as number )
