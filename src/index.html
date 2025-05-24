@@ -103,6 +103,10 @@
     <link href="css/fonts.css" rel="stylesheet">
     <link href="css/index.css" rel="stylesheet">
     <script>
+      'use strict'
+      if ('serviceWorker' in navigator) navigator.serviceWorker.register('js/service-worker.js')
+    </script>
+    <script>
       ;(function () {
         'use strict'
         if (!Boolean(new URLSearchParams(window.location.search).get('debug'))) return
@@ -112,7 +116,7 @@
       }())
     </script>
     <script crossorigin="anonymous" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="js/papaparse.min.js"></script>
+    <script src="lib/papaparse.min.js"></script>
   </head>
   <body class="bg-body">
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
@@ -259,9 +263,17 @@
                         <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-target="#openai-collapse" data-bs-toggle="collapse">OpenAI</button></h2>
                         <div class="accordion-collapse collapse" id="openai-collapse" data-bs-parent="#translator-accordion">
                           <div class="accordion-body">
-                            <div>
+                            <div class="mb-3">
                               <label class="form-check-label" for="openai-model-select">Mô hình:</label>
                               <select class="form-select string-value-option model-select" id="openai-model-select"><option selected>gpt-4.1</option></select>
+                            </div>
+                            <div>
+                              <label class="form-check-label" for="effort-select">Sự cố gắng:</label>
+                              <select class="form-select" id="effort-select">
+                                <option>low</option>
+                                <option selected>medium</option>
+                                <option>high</option>
+                              </select>
                             </div>
                           </div>
                         </div>
@@ -418,8 +430,8 @@
                       <label class="form-label" for="custom-dictionary-input">Nhập từ điển:</label>
                       <input class="form-control" id="custom-dictionary-input" accept="text/csv" type="file">
                     </div>
-                    <button class="btn btn btn-outline-danger" id="delete-all-button" type="button">Xoá tất cả</button>
-                    <div class="dropdown d-inline-block">
+                    <button class="btn btn btn-outline-danger mb-1" id="delete-all-button" type="button">Xoá tất cả</button>
+                    <div class="dropdown d-inline-block mb-3">
                       <button class="align-items-center btn btn-primary dropdown-toggle d-flex" type="button" data-bs-toggle="dropdown">Hành động</button>
                       <ul class="dropdown-menu dropdown-menu-end shadow" style="backdrop-filter: blur(8px);">
                         <li><h6 class="align-items-center d-flex dropdown-header">Dịch với...</h6></li>
@@ -447,7 +459,7 @@
                     <div class="mb-3">
                       <div class="mb-2">
                         <label class="form-label" for="source-text">Văn bản gốc:</label>
-                        <select class="form-select mb-1" id="source-text-language-select">
+                        <select class="form-select text-language-select mb-1" id="source-text-language-select">
                           <option value="vi">Tiếng Việt</option>
                           <option value="en" selected>Tiếng Anh</option>
                           <option value="ja">Tiếng Nhật</option>
@@ -458,7 +470,7 @@
                       </div>
                       <div>
                         <label class="form-label" for="target-text">Văn bản đích:</label>
-                        <select class="form-select mb-1" id="target-text-language-select">
+                        <select class="form-select text-language-select mb-1" id="target-text-language-select">
                           <option value="vi" selected>Tiếng Việt</option>
                           <option value="en">Tiếng Anh</option>
                           <option value="ja">Tiếng Nhật</option>
@@ -504,6 +516,14 @@
                             <div class="mb-3">
                               <label class="form-check-label" for="dictionary-openai-model-select">Mô hình:</label>
                               <select class="form-select model-select" id="dictionary-openai-model-select"><option selected>gpt-4.1</option></select>
+                            </div>
+                            <div class="mb-3">
+                              <label class="form-check-label" for="dictionary-effort-select">Sự cố gắng:</label>
+                              <select class="form-select" id="dictionary-effort-select">
+                                <option>low</option>
+                                <option selected>medium</option>
+                                <option>high</option>
+                              </select>
                             </div>
                             <div class="form-check form-switch">
                               <input class="form-check-input" id="web-search-switch" type="checkbox" role="switch">
@@ -683,7 +703,7 @@
       </div>
     </div>
     <script crossorigin="anonymous" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/color-modes.js" type="module"></script>
+    <script src="lib/color-modes.js" type="module"></script>
     <script src="js/index.js" type="module"></script>
   </body>
 </html>

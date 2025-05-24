@@ -23,7 +23,7 @@ interface ThemeGroup {
   title: string
 }
 type ThemeItem = ThemeGroup | Theme
-export default class Reader {
+class Reader {
   public static readonly THEMES: ThemeItem[] = [
     {
       name: 'Bootstrap 5',
@@ -241,95 +241,84 @@ export default class Reader {
     const value = theme[valueKey]
     switch (valueKey) {
       case 'active':
-        if (value) $dropdownItem.addClass('active')
+        if (value) $dropdownItem.addClass( "active" )
         break
       case 'boldText':
-        $dropdownItem.attr('data-reader-theme-bold-text', String(value))
+        $dropdownItem.attr( "data-reader-theme-bold-text", String(value) )
         break
       case 'fontFamily':
-        $dropdownItem.attr('data-reader-theme-font-family', value as number)
+        $dropdownItem.attr( "data-reader-theme-font-family", value as number )
         break
       case 'fontSize':
-        $dropdownItem.attr('data-reader-theme-font-size', value as number)
+        $dropdownItem.attr( "data-reader-theme-font-size", value as number )
         break
       case 'fontWeight':
-        $dropdownItem.attr('data-reader-theme-font-weight', value as number)
+        $dropdownItem.attr( "data-reader-theme-font-weight", value as number )
         break
       case 'justifyText':
-        $dropdownItem.attr('data-reader-theme-justify-text', value as string)
+        $dropdownItem.attr( "data-reader-theme-justify-text", value as string )
         break
       case 'lineHeight':
-        $dropdownItem.attr('data-reader-theme-line-height', value as number)
+        $dropdownItem.attr( "data-reader-theme-line-height", value as number )
         break
       case 'value':
-        $dropdownItem.attr('data-reader-theme-value', value as string)
+        $dropdownItem.attr( "data-reader-theme-value", value as string )
     }
   }
-  public static loadReaderThemesOptions (): void {
+  public static loadReaderThemesOptions ($dropdownMenu: JQuery<HTMLDivElement>): void {
     const unorderedList = document.createElement('ul')
     Reader.THEMES.forEach((a: ThemeItem) => {
       const listItem = document.createElement('li')
       if (Utils.has.call(a, 'title') && Utils.has.call(a, 'themes')) {
         const dropdownHeader = document.createElement('h6')
         const themeGroup = a as ThemeGroup
-        $(dropdownHeader).addClass(['align-items-center', 'd-flex', 'dropdown-header'])
-        $(dropdownHeader).text(themeGroup.title)
-        $(listItem).append(dropdownHeader)
-        $(unorderedList).append(listItem.cloneNode(true) as HTMLLIElement)
-        $(listItem).empty()
+        $( dropdownHeader ).addClass( ['align-items-center', 'd-flex', 'dropdown-header'] )
+        $( dropdownHeader ).text( themeGroup.title )
+        $( listItem ).append( dropdownHeader )
+        $( unorderedList ).append( listItem.cloneNode(true) as HTMLLIElement )
+        $( listItem ).empty()
         themeGroup.themes.forEach((b: Theme) => {
           const dropdownItem = document.createElement('button')
           const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
           const use = document.createElementNS('http://www.w3.org/2000/svg', 'use')
-          $(dropdownItem).addClass(['align-items-center', 'd-flex', 'dropdown-item'])
-          $(dropdownItem).prop('type', 'button')
-          $(dropdownItem).text(b.name)
-          $(svg).addClass(['bi', 'd-none', 'ms-auto'])
+          $( dropdownItem ).addClass( ['align-items-center', 'd-flex', 'dropdown-item' ])
+          $( dropdownItem ).prop( "type", "button" )
+          $( dropdownItem ).text( b.name )
+          $( svg ).addClass( ['bi', 'd-none', 'ms-auto'] )
           use.setAttributeNS('http://www.w3.org/2000/svg', 'href', '#check2')
-          $(svg).append(use)
-          $(dropdownItem).append(' ', svg)
+          $( svg ).append( use )
+          $( dropdownItem ).append( " ", svg )
           ;([...Object.keys(themeGroup).filter(c => c !== 'title' && c !== 'themes'), ...Object.keys(b).filter(c => c !== 'name')] as (keyof Theme)[]).forEach(c => {
-            Reader.setThemeValue({ ...a, ...b }, $(dropdownItem), c)
+            Reader.setThemeValue({ ...a, ...b }, $( dropdownItem ), c)
           })
-          $(listItem).append(dropdownItem)
-          $(unorderedList).append(listItem.cloneNode(true) as HTMLLIElement)
-          $(listItem).empty()
+          $( listItem ).append( dropdownItem )
+          $( unorderedList ).append( listItem.cloneNode(true) as HTMLLIElement )
+          $( listItem ).empty()
         })
       } else if (Utils.has.call(a, 'name') && Utils.has.call(a, 'value')) {
         const dropdownItem = document.createElement('button')
         const theme = a as Theme
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
         const use = document.createElementNS('http://www.w3.org/2000/svg', 'use')
-        $(dropdownItem).addClass(['align-items-center', 'd-flex', 'dropdown-item'])
-        $(dropdownItem).prop('type', 'button')
-        $(dropdownItem).text(theme.name)
-        $(svg).addClass(['bi', 'd-none', 'ms-auto'])
+        $( dropdownItem ).addClass( ['align-items-center', 'd-flex', 'dropdown-item'] )
+        $( dropdownItem ).prop( "type", "button" )
+        $( dropdownItem ).text( theme.name )
+        $( svg ).addClass( ['bi', 'd-none', 'ms-auto'] )
         use.setAttributeNS('http://www.w3.org/2000/svg', 'href', '#check2')
         $(svg).append(use)
-        $(dropdownItem).append(' ', svg)
+        $(dropdownItem).append(" ", svg)
         ;(Object.keys(a) as (keyof Theme)[]).filter(b => b !== 'name').forEach(c => {
-          Reader.setThemeValue(theme, $(dropdownItem), c)
+          Reader.setThemeValue(theme, $( dropdownItem ), c)
         })
-        $(listItem).append(dropdownItem)
-        $(unorderedList).append(listItem.cloneNode(true) as HTMLLIElement)
-        $(listItem).empty()
+        $( listItem ).append( dropdownItem )
+        $( unorderedList ).append( listItem.cloneNode(true) as HTMLLIElement )
+        $( listItem ).empty()
       }
     })
-    $('.reader-theme-toggle .dropdown-menu').html(unorderedList.innerHTML)
+    $dropdownMenu.html( unorderedList.innerHTML )
   }
   public static fontMapper (fontFamily: string): string {
     return fontFamily?.replace(/['"]/g, '').split(/, */).filter(element => element.length > 0).map(element => Reader.FONT_MAP.find(([first, second]) => first === element || second === element)?.[1] ?? element).join(', ')
   }
-  public static setReaderTheme (readerTheme: string, syncSettings: ($readerTheme: JQuery<HTMLButtonElement>) => void, prevReaderTheme = null): void {
-    $(document.body).removeClass(prevReaderTheme ?? (Reader.THEMES[0] as Theme).value).addClass(readerTheme)
-    syncSettings($(`[data-reader-theme-value="${readerTheme}"]`))
-  }
-  public static showActiveReaderTheme (readerTheme: string, focus = false): void {
-    const $themeSwitcher = $('#reader-theme')
-    if ($themeSwitcher == null) return
-    const $readerThemes = $('[data-reader-theme-value]')
-    $readerThemes.removeClass('active')
-    $readerThemes.filter(`[data-reader-theme-value="${readerTheme}"]`).addClass('active')
-    if (focus) $themeSwitcher.focus()
-  }
 }
+export { Reader, Theme }

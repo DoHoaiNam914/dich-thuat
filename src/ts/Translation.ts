@@ -1,4 +1,5 @@
 'use strict'
+/* global crypto, fetch */
 import {
   GoogleGenAI,
   HarmBlockThreshold,
@@ -339,7 +340,7 @@ class Translation {
         this.translateText = async (resolve) => {
           const { openaiModelId, effort, isWebSearchEnabled, systemInstruction, temperature, topP } = options
           const prompt = this.getPrompt(systemInstruction as SystemInstructions, this.text)
-          await window.fetch('https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1/responses', {
+          await fetch('https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1/responses', {
             body: JSON.stringify({
               model: openaiModelId,
               input: [
@@ -390,7 +391,7 @@ class Translation {
             headers: {
               'Content-Type': 'application/json',
               'accept-language': 'vi-VN,vi;q=0.9',
-              'air-user-id': window.crypto.randomUUID()
+              'air-user-id': crypto.randomUUID()
             },
             method: 'POST',
             signal: this.abortController.signal
@@ -516,7 +517,7 @@ class Translation {
       case SystemInstructions.DOCTRANSLATE_IO:
         return `### TEXT SENTENCE WITH UUID:\n${text.split('\n').map((element: string) => {
           if (element.replace(/^\s+/, '').length > 0) {
-            const partedUuid: string[] = window.crypto.randomUUID().split('-')
+            const partedUuid: string[] = crypto.randomUUID().split('-')
             return `${partedUuid[0]}#${partedUuid[2].substring(1)}: ${element}`
           }
           return ''
@@ -588,7 +589,7 @@ class Translation {
   }
   private doctranslateIoResponsePostprocess (translatedTextWithUuid: string, textSentenceWithUuid: string): string {
     // @ts-expect-error unicodeSets
-    translatedTextWithUuid = translatedTextWithUuid.replace('({)\\n', '$1\n').replace(/(\\")?"?(?:(?:\n|\\n)?\})?(\n?(?:`{3})?)$/, '$1"\n}$2').replace(/\n(?! *"(?:insight|rule|translated_string|[a-z0-9]{6,8}#[a-z0-9]{2,3})"|\}(?=\n?(?:`{3})?$))/g, '\\n').replace(/("translated_string": ")([[\s--\n]\S]+)(?=")/v, (_match, p1: string, p2: string) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`)
+    translatedTextWithUuid = translatedTextWithUuid.replace('({)\\n', '$1\n').replace(/(\\")?"?(?:(?:\n|\\n)?\})?(\n?(?:`{3})?)$/, '$1"\n}$2').replace(/\n(?! *"(?:insight|rule|translated_string|[a-z0-9]{6,9}#[a-z0-9]{2,3})"|\}(?=\n?(?:`{3})?$))/g, '\\n').replace(/("translated_string": ")([[\s--\n]\S]+)(?=")/v, (_match, p1: string, p2: string) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`)
     const jsonMatch = translatedTextWithUuid.match(/(\{[\s\S]+\})/)
     const potentialJsonString = (jsonMatch != null ? jsonMatch[0] : translatedTextWithUuid.replace(/^`{3}json\n/, '').replace(/\n`{3}$/, '')).replace(/insight": "[\s\S]+(?=translated_string": ")/, '')
     if (Utils.isValidJson(potentialJsonString)) {
@@ -599,7 +600,7 @@ class Translation {
       } else if (Utils.isValidJson(parsedResult.translated_string)) {
         translatedStringMap = JSON.parse(parsedResult.translated_string)
       } else {
-        const translatedStringParts = parsedResult.translated_string.split(/\s*([a-z0-9]{6,8}#[a-z0-9]{2,3}): (?:[a-z0-9]{6,8}#[a-z0-9]{2,3}: )?/).slice(1)
+        const translatedStringParts = parsedResult.translated_string.split(/\s*([a-z0-9]{6,9}#[a-z0-9]{2,3}): (?:[a-z0-9]{6,9}#[a-z0-9]{2,3}: )?/).slice(1)
         for (let i = 0; i < translatedStringParts.length; i += 2) {
           translatedStringMap[translatedStringParts[i]] = translatedStringParts[i + 1].replace(/\n+$/, '')
         }
@@ -614,4 +615,4 @@ class Translation {
     return ''
   }
 }
-export { DictionaryEntry, Domains, Model, MODELS, ModelEntry, Options, SystemInstructions, Tones, Translation, Translators }
+export { DictionaryEntry, Domains, Efforts, Model, MODELS, ModelEntry, Options, SystemInstructions, Tones, Translation, Translators }
