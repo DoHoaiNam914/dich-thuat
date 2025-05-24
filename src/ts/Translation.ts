@@ -79,6 +79,10 @@ const MODELS: ModelsType = {
       {
         modelId: 'gemma-3-27b-it',
         modelName: 'Gemma 3 27B'
+      },
+      {
+        modelId: 'gemma-3n-e4b-it',
+        modelName: 'Gemma 3n E4B'
       }
     ],
     Other: [

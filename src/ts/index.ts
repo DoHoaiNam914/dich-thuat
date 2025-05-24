@@ -79,6 +79,10 @@ function setStoredCustomDictionaryAndReloadCounter (customDictionary: Dictionary
   $( "#custom-dictionary-count-number" ).text( customDictionary.length )
   if (customDictionary.length > 0) {
     customDictionary.sort((a, b) => {
+      const originalLanguageDifference = a.originalLanguage.localeCompare(b.originalLanguage)
+      if (originalLanguageDifference !== 0) return originalLanguageDifference
+      const destinationLanguageDifference = a.destinationLanguage.localeCompare(b.destinationLanguage)
+      if (destinationLanguageDifference !== 0) return destinationLanguageDifference
       const wordLengthDifference = a.originalWord.split(/(?:)/u).length - b.originalWord.split(/(?:)/u).length
       if (wordLengthDifference !== 0) return wordLengthDifference
       const destinationWordDifference = a.destinationWord.localeCompare(b.destinationWord, 'vi', { ignorePunctuation: true })
@@ -166,7 +170,7 @@ $( document ).ready(() => {
 $fontFamilyText.on( "change", function () {
   const fontFamily = Reader.fontMapper($( this ).val() as string)
   $( this ).val( fontFamily )
-  $( document.body ).css( "--reader-font-family", fontFamily.split(', ').map((element: string) => element.includes(' ') ? `'${element}'` : (element.startsWith('--') ? `var(${element})` : element)).join(', ') )
+  $( document.body ).css( "--reader-font-family", Reader.getCssFontFamily(fontFamily) )
 })
 $fontSizeText.on( "change", function () {
   const raw = $( this ).val() as string
@@ -330,7 +334,7 @@ $translationTranslators.on( "click", function () {
   const previousTargetText = $targetTextarea.val() as string
   $targetTextarea.val( "Đang dịch..." )
   $( "#source-text, #target-textarea" ).prop( "readOnly", true )
-  $( "#add-word-button, #delete-button, [data-translation-translator-value]" ).addClass( "disabled" )
+  $( "[data-translation-translator-value], #add-word-button, #delete-button" ).addClass( "disabled" )
   dictionaryTranslation = new Translation(sourceText, $targetTextLanguageSelect.val() as string, $sourceTextLanguageSelect.val() as string | null, {
     translatorId: $( this ).data( "translation-translator-value" ),
     googleGenaiModelId: $( "#dictionary-google-genai-model-select" ).val() as string,
@@ -361,7 +365,7 @@ $translationTranslators.on( "click", function () {
     if (!(textareaTranslation?.abortController.signal.aborted as boolean)) $targetTextarea.val( previousTargetText )
   }).finally(() => {
     $( "#source-text, #target-textarea" ).prop( "readOnly", false )
-    $( "#add-word-button, #delete-button, [data-translation-translator-value]" ).removeClass( "disabled" )
+    $( "[data-translation-translator-value], #add-word-button, #delete-button" ).removeClass( "disabled" )
   })
 })
 $( "[data-define-url]" ).on( "click", function () {
