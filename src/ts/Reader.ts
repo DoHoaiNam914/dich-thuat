@@ -237,6 +237,9 @@ class Reader {
     TBMincho: 'tbmincho',
     Thonburi: 'thonburi-ttf'
   })
+  public static getCssFontFamily (fontFamily: string): string {
+    return fontFamily.split(', ').map((element: string) => element.includes(' ') ? `'${element}'` : (element.startsWith('--') ? `var(${element})` : element)).join(', ')
+  }
   private static setThemeValue (theme: Theme, $dropdownItem: JQuery<HTMLButtonElement>, valueKey: keyof Theme): void {
     const value = theme[valueKey]
     switch (valueKey) {
@@ -247,7 +250,8 @@ class Reader {
         $dropdownItem.attr( "data-reader-theme-bold-text", String(value) )
         break
       case 'fontFamily':
-        $dropdownItem.attr( "data-reader-theme-font-family", value as number )
+        $dropdownItem.attr( "data-reader-theme-font-family", value as string )
+        $dropdownItem.css( "font-family", Reader.getCssFontFamily(value as string) )
         break
       case 'fontSize':
         $dropdownItem.attr( "data-reader-theme-font-size", value as number )
