@@ -17,7 +17,7 @@ class Reader {
                 break;
             case 'fontFamily':
                 $dropdownItem.attr("data-reader-theme-font-family", value);
-                $dropdownItem.css("font-family", Reader.getCssFontFamily(value));
+                $dropdownItem.css("font-family", Reader.getCssFontFamily(Reader.fontMapper(value)));
                 break;
             case 'fontSize':
                 $dropdownItem.attr("data-reader-theme-font-size", value);
