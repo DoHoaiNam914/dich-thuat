@@ -248,6 +248,7 @@ class Reader {
         break
       case 'boldText':
         $dropdownItem.attr( "data-reader-theme-bold-text", String(value) )
+        $dropdownItem.css( "font-weight", "bold" )
         break
       case 'fontFamily':
         $dropdownItem.attr( "data-reader-theme-font-family", value as string )
@@ -258,6 +259,7 @@ class Reader {
         break
       case 'fontWeight':
         $dropdownItem.attr( "data-reader-theme-font-weight", value as number )
+        if ($dropdownItem.css( "font-weight" ) !== "bold") $dropdownItem.css( "font-weight", value as number )
         break
       case 'justifyText':
         $dropdownItem.attr( "data-reader-theme-justify-text", value as string )
