@@ -360,7 +360,7 @@ $translationTranslators.on( "click", function () {
     customPrompt: $( "#dictionary-custom-prompt-textarea" ).val() as string
   })
   dictionaryTranslation.translateText(translatedText => {
-    $targetTextarea.val( translatedText )
+    $targetTextarea.val( translatedText ).trigger( "input" )
   }).catch(() => {
     if (!(textareaTranslation?.abortController.signal.aborted as boolean)) $targetTextarea.val( previousTargetText )
   }).finally(() => {
