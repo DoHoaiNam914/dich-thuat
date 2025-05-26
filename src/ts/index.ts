@@ -1,11 +1,13 @@
 'use strict'
 /* global $, confirm, localStorage, open, Papa */
 import { Reader, Theme } from './Reader.js'
-import { DictionaryEntry, Domains, Efforts, Model, MODELS, ModelEntry, Options, SystemInstructions, Tones, Translation, Translators } from './Translation.js'
+import { DictionaryEntry, Domains, Efforts, MODELS, Options, SystemInstructions, Tones, Translation } from './Translation.js'
 import Utils from './Utils.js'
 const $addWordButton = $( "#add-word-button" )
 const $apiKeyTexts = $( ".api-key-text" )
 const $boldTextSwitch = $( "#bold-text-switch" )
+const $chutesModelSelect = $( "#chutes-model-select" )
+const $chutesApiTokenText = $( "#chutes-api-token-text" )
 const $copyButtons = $( ".copy-button" )
 const $customDictionarySwitch = $( "#custom-dictionary-switch" )
 const $deleteButton = $( "#delete-button" )
@@ -13,10 +15,14 @@ const $domainSelect = $( "#domain-select" )
 const $fontFamilyText = $( "#font-family-text" )
 const $fontSizeText = $( "#font-size-text" )
 const $geminiApiKeyText = $( "#gemini-api-key-text" )
+const $googleGenaiModelSelect = $( "#google-genai-model-select" )
+const $groqModelSelect = $( "#groq-model-select" )
 const $groqApiKeyText = $( "#groq-api-key-text" )
 const $inputTextarea = $( "#input-textarea" )
 const $justifyTextSwitch = $( "#justify-text-switch" )
 const $lineHeightText = $( "#line-height-text" )
+const $openaiModelSelect = $( "#openai-model-select" )
+const $openrouterModelSelect = $( "#openrouter-model-select" )
 const $openrouterApiKeyText = $( "#openrouter-api-key-text" )
 const $outputTextarea = $( "#output-textarea" )
 const $retranslateButton = $( "#retranslate-button" )
@@ -30,12 +36,13 @@ const $translateButton = $( "#translate-button" )
 const $translationTranslators = $( "[data-translation-translator-value]" )
 const $translators = $( "[data-translator-value]" )
 const translationStorage = {
-  translator: Translators.GOOGLE_GENAI_TRANSLATE,
-  googleGenaiModel: (Object.values(MODELS.GOOGLE_GENAI) as ModelEntry[][]).flat().filter(element => typeof element === 'object').find((element: Model) => element.selected)?.modelId,
-  openaiModel: (Object.values(MODELS.OPENAI) as ModelEntry[][]).flat().filter(element => typeof element === 'object').find((element: Model) => element.selected)?.modelId,
-  groqModel: (Object.values(MODELS.GROQ) as ModelEntry[][]).flat().filter(element => typeof element === 'object').find((element: Model) => element.selected)?.modelId,
-  openrouterModel: 'qwen/qwen3-235b-a22b',
-  systemInstruction: SystemInstructions.GPT4OMINI,
+  translator: $translators.filter( ".active" ).data( "translator-value" ),
+  googleGenaiModel: $googleGenaiModelSelect.val(),
+  openaiModel: $openaiModelSelect.val(),
+  groqModel: $groqModelSelect.val(),
+  chutesModel: $chutesModelSelect.val(),
+  openrouterModel: $openrouterModelSelect.val(),
+  systemInstruction: $systemInstructionSelect.val(),
   ...JSON.parse(localStorage.getItem('translation') ?? '{}')
 }
 let customDictionary: DictionaryEntry[] = []
@@ -211,88 +218,6 @@ $systemInstructionSelect.on( "change", function () {
 $domainSelect.on( "change", function () {
   $( `#dictionary-${$( this ).prop( "id" )}` ).val( $( this ).val() as string )
 })
-$copyButtons.on( "click", function () {
-  const target = $( this ).data( "target" )
-  const $target = $( target )
-  let targetContent = ''
-  if ($target.length > 0) targetContent = $target.val()
-  else if (target === 'textareaTranslation' && textareaTranslation != null) targetContent = textareaTranslation.translatedText
-  void (async function () {
-    try {
-      await navigator.clipboard.writeText(targetContent)
-    } catch {
-      // continue regardless of error
-    }
-  }())
-})
-$( ".paste-button" ).on( "click", function () {
-  const $target = $( $( this ).data( "target" ) )
-  if ($target.length === 0) return
-  void navigator.clipboard.readText().then(value => {
-    if ($target.val().length === 0 || ($target.val() !== value && confirm('Bạn có chắc chắn muốn thay thế văn bản hiện tại?'))) {
-      $target.val( value ).trigger( "input" )
-      if ($target.prop( "id" ) === $inputTextarea.prop( "id" ) && $translateButton.text() === 'Sửa') $translateButton.click().click()
-    }
-  })
-})
-$retranslateButton.on( "click", () => {
-  if (confirm('Bạn có chắc chắn muốn dịch lại?')) $translateButton.click().click()
-})
-$translateButton.on( "click", function () {
-  const $textareaCopyButton = $copyButtons.filter( `[data-target="#${$inputTextarea.prop( "id" ) as string}"]` )
-  switch ($( this ).text()) {
-    case 'Dịch': {
-      const inputText = $inputTextarea.val() as string
-      if (inputText.length === 0) break
-      $outputTextarea.text( "Đang dịch..." )
-      $inputTextarea.hide()
-      $outputTextarea.show()
-      $( this ).text( "Huỷ" )
-      textareaTranslation = new Translation(inputText, $( "#destination-language-select" ).val() as string, $( "#original-language-select" ).val() as string | null, {
-        translatorId: $( ".active[data-translator-value]" ).data( "translator-value" ),
-        googleGenaiModelId: $( "#google-genai-model-select" ).val() as string,
-        isThinkingModeEnabled: $( "#thinking-mode-switch" ).prop( "checked" ),
-        GEMINI_API_KEY: $geminiApiKeyText.val() as string,
-        openaiModelId: $( "#openai-model-select" ).val() as string,
-        effort: $( "#effort-select" ).val() as Efforts,
-        groqModelId: $( "#groq-model-select" ).val() as string,
-        GROQ_API_KEY: $groqApiKeyText.val() as string,
-        openrouterModelId: $( "#openrouter-model-text" ).val() as string,
-        OPENROUTER_API_KEY: $openrouterApiKeyText.val() as string,
-        isBilingualEnabled: $( "#bilingual-switch" ).prop( "checked" ),
-        systemInstruction: $( "#system-instruction-select" ).val() as SystemInstructions,
-        temperature: parseFloat($( "#temperature-text" ).val() as string),
-        topP: parseFloat($( "#top-p-text" ).val() as string),
-        topK: parseFloat($( "#top-k-text" ).val() as string),
-        tone: $( "#tone-select" ).val() as Tones,
-        domain: $domainSelect.val() as Domains,
-        isCustomDictionaryEnabled: $customDictionarySwitch.prop( "checked" ),
-        customDictionary,
-        isCustomPromptEnabled: $( "#custom-prompt-switch" ).prop( "checked" ),
-        customPrompt: $( "#custom-prompt-textarea" ).val() as string
-      })
-      textareaTranslation.translateText(appendTranslatedTextIntoOutputTextarea).then(() => {
-        if (textareaTranslation?.abortController.signal.aborted as boolean) return
-        $( this ).text( "Sửa" )
-        $textareaCopyButton.data( "target", "textareaTranslation" )
-        $retranslateButton.removeClass( "disabled" )
-      }).catch(() => {
-        if (!(textareaTranslation?.abortController.signal.aborted as boolean)) $( this ).click()
-      })
-      break
-    }
-    case 'Huỷ':
-      textareaTranslation?.abortController.abort()
-      // fallthrough
-    case 'Sửa':
-      $outputTextarea.text( "" )
-      $outputTextarea.hide()
-      $inputTextarea.show()
-      $textareaCopyButton.data( "target", `#${$inputTextarea.prop( "id" ) as string}` )
-      $( this ).text( "Dịch" )
-      $retranslateButton.addClass( "disabled" )
-  }
-})
 $( "#dictionary-modal" ).on( "hide.bs.modal", () => {
   if (dictionaryTranslation != null) dictionaryTranslation.abortController.abort()
   $( "#source-text, #target-textarea" ).val( "" ).prop( "readOnly", false )
@@ -343,10 +268,13 @@ $translationTranslators.on( "click", function () {
     GEMINI_API_KEY: $geminiApiKeyText.val() as string,
     openaiModelId: $( "#dictionary-openai-model-select" ).val() as string,
     effort: $( "#dictionary-effort-select" ).val() as Efforts,
-    isWebSearchEnabled: $( "#web-search-switch" ).prop( "checked" ),
+    isOpenaiWebSearchEnabled: $( "#openai-web-search-switch" ).prop( "checked" ),
     groqModelId: $( "#dictionary-groq-model-select" ).val() as string,
     GROQ_API_KEY: $groqApiKeyText.val() as string,
+    chutesModelId: $( "#dictionary-chutes-model-select" ).val() as string,
+    CHUTES_API_TOKEN: $chutesApiTokenText.val() as string,
     openrouterModelId: $( "#dictionary-openrouter-model-text" ).val() as string,
+    isOpenrouterWebSearchEnabled: $( "#openrouter-web-search-switch" ).prop( "checked" ),
     OPENROUTER_API_KEY: $openrouterApiKeyText.val() as string,
     systemInstruction: $( "#dictionary-system-instruction-select" ).val() as SystemInstructions,
     temperature: parseFloat($( "#dictionary-temperature-text" ).val() as string),
@@ -425,6 +353,90 @@ $( "#copy-csv-button" ).on( "click", () => {
       // continue regardless of error
     }
   }())
+})
+$copyButtons.on( "click", function () {
+  const target = $( this ).data( "target" )
+  const $target = $( target )
+  let targetContent = ''
+  if ($target.length > 0) targetContent = $target.val()
+  else if (target === 'textareaTranslation' && textareaTranslation != null) targetContent = textareaTranslation.translatedText
+  void (async function () {
+    try {
+      await navigator.clipboard.writeText(targetContent)
+    } catch {
+      // continue regardless of error
+    }
+  }())
+})
+$( ".paste-button" ).on( "click", function () {
+  const $target = $( $( this ).data( "target" ) )
+  if ($target.length === 0) return
+  void navigator.clipboard.readText().then(value => {
+    if ($target.val().length === 0 || ($target.val() !== value && confirm('Bạn có chắc chắn muốn thay thế văn bản hiện tại?'))) {
+      $target.val( value ).trigger( "input" )
+      if ($target.prop( "id" ) === $inputTextarea.prop( "id" ) && $translateButton.text() === 'Sửa') $translateButton.click().click()
+    }
+  })
+})
+$retranslateButton.on( "click", () => {
+  if (confirm('Bạn có chắc chắn muốn dịch lại?')) $translateButton.click().click()
+})
+$translateButton.on( "click", function () {
+  const $textareaCopyButton = $copyButtons.filter( `[data-target="#${$inputTextarea.prop( "id" ) as string}"]` )
+  switch ($( this ).text()) {
+    case 'Dịch': {
+      const inputText = $inputTextarea.val() as string
+      if (inputText.length === 0) break
+      $outputTextarea.text( "Đang dịch..." )
+      $inputTextarea.hide()
+      $outputTextarea.show()
+      $( this ).text( "Huỷ" )
+      textareaTranslation = new Translation(inputText, $( "#destination-language-select" ).val() as string, $( "#original-language-select" ).val() as string | null, {
+        translatorId: $translators.filter( ".active" ).data( "translator-value" ),
+        googleGenaiModelId: $googleGenaiModelSelect.val() as string,
+        isThinkingModeEnabled: $( "#thinking-mode-switch" ).prop( "checked" ),
+        GEMINI_API_KEY: $geminiApiKeyText.val() as string,
+        openaiModelId: $openaiModelSelect.val() as string,
+        effort: $( "#effort-select" ).val() as Efforts,
+        groqModelId: $groqModelSelect.val() as string,
+        GROQ_API_KEY: $groqApiKeyText.val() as string,
+        chutesModelId: $chutesModelSelect.val() as string,
+        CHUTES_API_TOKEN: $chutesApiTokenText.val() as string,
+        openrouterModelId: $openrouterModelSelect.val() as string,
+        OPENROUTER_API_KEY: $openrouterApiKeyText.val() as string,
+        isBilingualEnabled: $( "#bilingual-switch" ).prop( "checked" ),
+        systemInstruction: $systemInstructionSelect.val() as SystemInstructions,
+        temperature: parseFloat($( "#temperature-text" ).val() as string),
+        topP: parseFloat($( "#top-p-text" ).val() as string),
+        topK: parseFloat($( "#top-k-text" ).val() as string),
+        tone: $( "#tone-select" ).val() as Tones,
+        domain: $domainSelect.val() as Domains,
+        isCustomDictionaryEnabled: $customDictionarySwitch.prop( "checked" ),
+        customDictionary,
+        isCustomPromptEnabled: $( "#custom-prompt-switch" ).prop( "checked" ),
+        customPrompt: $( "#custom-prompt-textarea" ).val() as string
+      })
+      textareaTranslation.translateText(appendTranslatedTextIntoOutputTextarea).then(() => {
+        if (textareaTranslation?.abortController.signal.aborted as boolean) return
+        $( this ).text( "Sửa" )
+        $textareaCopyButton.data( "target", "textareaTranslation" )
+        $retranslateButton.removeClass( "disabled" )
+      }).catch(() => {
+        if (!(textareaTranslation?.abortController.signal.aborted as boolean)) $( this ).click()
+      })
+      break
+    }
+    case 'Huỷ':
+      textareaTranslation?.abortController.abort()
+      // fallthrough
+    case 'Sửa':
+      $outputTextarea.text( "" )
+      $outputTextarea.hide()
+      $inputTextarea.show()
+      $textareaCopyButton.data( "target", `#${$inputTextarea.prop( "id" ) as string}` )
+      $( this ).text( "Dịch" )
+      $retranslateButton.addClass( "disabled" )
+  }
 })
 $inputTextarea.on( "input", function () {
   $( "#character-count-number" ).text( ($( this ).val() as string).length )
