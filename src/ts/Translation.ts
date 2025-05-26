@@ -316,68 +316,71 @@ class Translation {
         this.translateText = async (resolve) => {
           const { chutesModelId, CHUTES_API_TOKEN, systemInstruction, temperature, topP, topK } = options
           const prompt = this.getPrompt(systemInstruction as SystemInstructions, this.text)
-          /* eslint-disable */
-    			const response = await fetch("https://llm.chutes.ai/v1/chat/completions", {
-    					method: "POST",
-    					headers: {
-    						"Authorization": `Bearer ${CHUTES_API_TOKEN}`,
-    			"Content-Type": "application/json"
-    					},
-    					body: JSON.stringify(			{
-    			  "model": chutesModelId,
-    			  "messages": [
-              ...this.getSystemInstructions(systemInstruction as SystemInstructions, this.text, this.originalLanguage, this.destinationLanguage, options).map(element => ({
-                "role": "system",
-                "content": element
-              })),
-              {
-                "role": "user",
-                "content": prompt
-              }
-    			  ],
-    			  "stream": true,
-    			  "temperature": temperature as number > -1 ? temperature : 0.7,
-            ...topP as number > -1 ? { "top_p": topP } : {},
-            ...topK as number > -1 ? { "top_k": topK } : {}
-    			}),
-            signal: this.abortController.signal
-    			});
-    			
-    			const data = await response.json();
-    			console.log(data);
+          /* eslint-disable no-mixed-spaces-and-tabs */
+        			const response = await fetch("https://llm.chutes.ai/v1/chat/completions", {
+        					method: "POST",
+        					headers: {
+        						"Authorization": `Bearer ${CHUTES_API_TOKEN}`,
+        			"Content-Type": "application/json"
+        					},
+        					body: JSON.stringify(			{
+        			  "model": chutesModelId,
+        			  "messages": [
+                  /* eslint-enable no-mixed-spaces-and-tabs */
+                  ...this.getSystemInstructions(systemInstruction as SystemInstructions, this.text, this.originalLanguage, this.destinationLanguage, options).map(element => ({
+                    "role": "system",
+                    "content": element
+                  })),
+                  {
+                    "role": "user",
+                    "content": prompt
+                  }
+                  /* eslint-disable no-mixed-spaces-and-tabs */
+        			  ],
+        			  "stream": true,
+        			  "temperature": temperature as number > -1 ? temperature : 0.7,
+                    /* eslint-enable no-mixed-spaces-and-tabs */
+                    ...topP as number > -1 ? { "top_p": topP } : {},
+                    ...topK as number > -1 ? { "top_k": topK } : {}
+        			}), // eslint-disable-line no-mixed-spaces-and-tabs
+                signal: this.abortController.signal
+                /* eslint-disable no-mixed-spaces-and-tabs */
+        			});
+        			
+          /* eslint-enable no-mixed-spaces-and-tabs */
           let responseText = ''
-          const reader = response.body?.getReader()
-          if (reader == null) {
-            throw new Error('Response body is not readable')
+          const reader = response.body?.getReader();
+          if (!reader) {
+            throw new Error('Response body is not readable');
           }
-      
-          const decoder = new TextDecoder()
-          let buffer = ''
-      
+          
+          const decoder = new TextDecoder();
+          let buffer = '';
+          
           try {
-            while (true) {
-              const { done, value } = await reader.read() as { done: boolean, value: AllowSharedBufferSource }
-              if (done) break
-      
+            while (true) { // eslint-disable-line no-constant-condition
+              const { done, value } = await reader.read();
+              if (done) break;
+          
               // Append new chunk to buffer
-              buffer += decoder.decode(value, { stream: true })
-      
+              buffer += decoder.decode(value, { stream: true });
+          
               // Process complete lines from buffer
-              while (true) {
-                const lineEnd = buffer.indexOf('\n')
-                if (lineEnd === -1) break
-      
-                const line = buffer.slice(0, lineEnd).trim()
-                buffer = buffer.slice(lineEnd + 1)
-      
+              while (true) { // eslint-disable-line no-constant-condition
+                const lineEnd = buffer.indexOf('\n');
+                if (lineEnd === -1) break;
+          
+                const line = buffer.slice(0, lineEnd).trim();
+                buffer = buffer.slice(lineEnd + 1);
+          
                 if (line.startsWith('data: ')) {
-                  const data = line.slice(6)
-                  if (data === '[DONE]') break
-      
+                  const data = line.slice(6);
+                  if (data === '[DONE]') break;
+          
                   try {
-                    const parsed = JSON.parse(data)
-                    const content = parsed.choices[0].delta.content
-                    if (content != null) {
+                    const parsed = JSON.parse(data);
+                    const content = parsed.choices[0].delta.content;
+                    if (content) {
                       responseText += content
                       this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(responseText, prompt) : responseText
                       if (this.translatedText.length === 0) continue
@@ -391,9 +394,10 @@ class Translation {
               }
             }
           } finally {
-            await reader.cancel()
+            reader.cancel();
           }
-    		}
+    		}  // eslint-disable-line no-mixed-spaces-and-tabs
+        break
       case Translators.GROQ_TRANSLATE: {
         const { groqModelId, GROQ_API_KEY, systemInstruction, temperature, topP } = options
         const groq = new Groq({ apiKey: GROQ_API_KEY, dangerouslyAllowBrowser: true });
@@ -680,9 +684,8 @@ class Translation {
     }
     return systemInstructions
   }
-  private doctranslateIoResponsePostprocess (translatedTextWithUuid: string, textSentenceWithUuid: string): string {
-    // @ts-expect-error unicodeSets
-    translatedTextWithUuid = translatedTextWithUuid.replace('({)\\n', '$1\n').replace(/(\\")?"?(?:(?:\n|\\n)?\})?(\n?(?:`{3})?)$/, '$1"\n}$2').replace(/\n(?! *"(?:insight|rule|translated_string|[a-z0-9]{6,9}#[a-z0-9]{2,3})"|\}(?=\n?(?:`{3})?$))/g, '\\n').replace(/("translated_string": ")([[\s--\n]\S]+)(?=")/v, (_match, p1: string, p2: string) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`)
+                      private doctranslateIoResponsePostprocess (translatedTextWithUuid: string, textSentenceWithUuid: string): string {
+    translatedTextWithUuid = translatedTextWithUuid.replace('({)\\n', '$1\n').replace(/(\\")?"?(?:(?:\n|\\n)?\})?(\n?(?:`{3})?)$/, '$1"\n}$2').replace(/\n(?! *"(?:insight|rule|translated_string|[a-z0-9]{6,9}#[a-z0-9]{2,3})"|\}(?=\n?(?:`{3})?$))/g, '\\n').replace(/("translated_string": ")(.+)(?=")/, (_match, p1: string, p2: string) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`)
     const jsonMatch = translatedTextWithUuid.match(/(\{[\s\S]+\})/)
     const potentialJsonString = (jsonMatch != null ? jsonMatch[0] : translatedTextWithUuid.replace(/^`{3}json\n/, '').replace(/\n`{3}$/, '')).replace(/insight": "[\s\S]+(?=translated_string": ")/, '')
     if (Utils.isValidJson(potentialJsonString)) {

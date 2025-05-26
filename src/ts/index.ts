@@ -333,6 +333,7 @@ $deleteButton.on( "click", () => {
   setStoredCustomDictionaryAndReloadCounter(customDictionary)
 })
 $( "#copy-csv-button" ).on( "click", () => {
+  /* eslint-disable-next-line no-void */
   void (async function () {
     try {
       // @ts-expect-error Papaparse
@@ -360,6 +361,7 @@ $copyButtons.on( "click", function () {
   let targetContent = ''
   if ($target.length > 0) targetContent = $target.val()
   else if (target === 'textareaTranslation' && textareaTranslation != null) targetContent = textareaTranslation.translatedText
+  /* eslint-disable-next-line no-void */
   void (async function () {
     try {
       await navigator.clipboard.writeText(targetContent)
@@ -371,6 +373,7 @@ $copyButtons.on( "click", function () {
 $( ".paste-button" ).on( "click", function () {
   const $target = $( $( this ).data( "target" ) )
   if ($target.length === 0) return
+  /* eslint-disable-next-line no-void */
   void navigator.clipboard.readText().then(value => {
     if ($target.val().length === 0 || ($target.val() !== value && confirm('Bạn có chắc chắn muốn thay thế văn bản hiện tại?'))) {
       $target.val( value ).trigger( "input" )

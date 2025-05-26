@@ -32,7 +32,7 @@ const precachedResources: string[] = [
 //     const networkResponse = await fetch(request)
 //     if (networkResponse.ok) {
 //       const cache = await caches.open(cacheName)
-//       void cache.put(request, networkResponse.clone())
+//       void cache.put(request, networkResponse.clone()) // eslint-disable-line no-void
 //     }
 //     return networkResponse
 //   } catch {
@@ -43,7 +43,7 @@ const precachedResources: string[] = [
 //   const fetchResponsePromise = fetch(request).then(async networkResponse => {
 //     if (networkResponse.ok) {
 //       const cache = await caches.open(cacheName)
-//       void cache.put(request, networkResponse.clone())
+//       void cache.put(request, networkResponse.clone()) // eslint-disable-line no-void
 //     }
 //     return networkResponse
 //   })
@@ -54,7 +54,7 @@ async function networkFirst (request: Request): Promise<Response> {
     const networkResponse = await fetch(request)
     if (networkResponse.ok) {
       const cache = await caches.open(cacheName)
-      void cache.put(request, networkResponse.clone())
+      void cache.put(request, networkResponse.clone()) // eslint-disable-line no-void
     }
     return networkResponse
   } catch {
