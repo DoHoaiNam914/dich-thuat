@@ -223,6 +223,7 @@ var Tones;
 var Translators;
 (function (Translators) {
     Translators["BAIDU_TRANSLATE"] = "baiduTranslate";
+    Translators["CHUTES_TRANSLATE"] = "chutesTranslate";
     Translators["DEEPL_TRANSLATE"] = "deeplTranslate";
     Translators["GOOGLE_GENAI_TRANSLATE"] = "googleGenaiTranslate";
     Translators["GOOGLE_TRANSLATE"] = "googleTranslate";
@@ -247,8 +248,10 @@ class Translation {
             isGroundingWithGoogleSearchEnabled: false,
             openaiModelId: Object.values(MODELS.OPENAI).flat().filter(element => typeof element === 'object').find((element) => element.selected)?.modelId,
             effort: Efforts.MEDIUM,
-            isWebSearchEnabled: false,
+            isOpenaiWebSearchEnabled: false,
             groqModelId: Object.values(MODELS.GROQ).flat().filter(element => typeof element === 'object').find((element) => element.selected)?.modelId,
+            chutesModelId: 'deepseek-ai/DeepSeek-R1',
+            isOpenrouterWebSearchEnabled: false,
             openrouterModelId: 'qwen/qwen3-235b-a22b',
             isBilingualEnabled: false,
             systemInstruction: SystemInstructions.GPT4OMINI,
@@ -264,6 +267,87 @@ class Translation {
             ...options
         };
         switch (options.translatorId) {
+            case Translators.CHUTES_TRANSLATE:
+                this.translateText = async (resolve) => {
+                    const { chutesModelId, CHUTES_API_TOKEN, systemInstruction, temperature, topP, topK } = options;
+                    const prompt = this.getPrompt(systemInstruction, this.text);
+                    /* eslint-disable */
+                    const response = await fetch("https://llm.chutes.ai/v1/chat/completions", {
+                        method: "POST",
+                        headers: {
+                            "Authorization": `Bearer ${CHUTES_API_TOKEN}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            "model": chutesModelId,
+                            "messages": [
+                                ...this.getSystemInstructions(systemInstruction, this.text, this.originalLanguage, this.destinationLanguage, options).map(element => ({
+                                    "role": "system",
+                                    "content": element
+                                })),
+                                {
+                                    "role": "user",
+                                    "content": prompt
+                                }
+                            ],
+                            "stream": true,
+                            "temperature": temperature > -1 ? temperature : 0.7,
+                            ...topP > -1 ? { "top_p": topP } : {},
+                            ...topK > -1 ? { "top_k": topK } : {}
+                        }),
+                        signal: this.abortController.signal
+                    });
+                    const data = await response.json();
+                    console.log(data);
+                    let responseText = '';
+                    const reader = response.body?.getReader();
+                    if (reader == null) {
+                        throw new Error('Response body is not readable');
+                    }
+                    const decoder = new TextDecoder();
+                    let buffer = '';
+                    try {
+                        while (true) {
+                            const { done, value } = await reader.read();
+                            if (done)
+                                break;
+                            // Append new chunk to buffer
+                            buffer += decoder.decode(value, { stream: true });
+                            // Process complete lines from buffer
+                            while (true) {
+                                const lineEnd = buffer.indexOf('\n');
+                                if (lineEnd === -1)
+                                    break;
+                                const line = buffer.slice(0, lineEnd).trim();
+                                buffer = buffer.slice(lineEnd + 1);
+                                if (line.startsWith('data: ')) {
+                                    const data = line.slice(6);
+                                    if (data === '[DONE]')
+                                        break;
+                                    try {
+                                        const parsed = JSON.parse(data);
+                                        const content = parsed.choices[0].delta.content;
+                                        if (content != null) {
+                                            responseText += content;
+                                            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(responseText, prompt) : responseText;
+                                            if (this.translatedText.length === 0)
+                                                continue;
+                                            if (this.abortController.signal.aborted)
+                                                return;
+                                            resolve(this.translatedText, this.text, options);
+                                        }
+                                    }
+                                    catch {
+                                        // Ignore invalid JSON
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    finally {
+                        await reader.cancel();
+                    }
+                };
             case Translators.GROQ_TRANSLATE: {
                 const { groqModelId, GROQ_API_KEY, systemInstruction, temperature, topP } = options;
                 const groq = new Groq({ apiKey: GROQ_API_KEY, dangerouslyAllowBrowser: true });
@@ -301,7 +385,7 @@ class Translation {
             }
             case Translators.OPENAI_TRANSLATOR:
                 this.translateText = async (resolve) => {
-                    const { openaiModelId, effort, isWebSearchEnabled, systemInstruction, temperature, topP } = options;
+                    const { openaiModelId, effort, isOpenaiWebSearchEnabled, systemInstruction, temperature, topP } = options;
                     const prompt = this.getPrompt(systemInstruction, this.text);
                     await fetch('https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1/responses', {
                         body: JSON.stringify({
@@ -333,7 +417,7 @@ class Translation {
                             },
                             reasoning: { ...MODELS.OPENAI.Reasoning.includes(openaiModelId) && effort !== 'medium' ? { "effort": effort } : {} },
                             tools: [
-                                ...isWebSearchEnabled
+                                ...isOpenaiWebSearchEnabled
                                     ? [{
                                             "type": "web_search_preview",
                                             "user_location": {
@@ -368,7 +452,7 @@ class Translation {
                 };
                 break;
             case Translators.OPENROUTER_TRANSLATE: {
-                const { openrouterModelId, OPENROUTER_API_KEY, systemInstruction, temperature, topP, topK } = options;
+                const { openrouterModelId, isOpenrouterWebSearchEnabled, OPENROUTER_API_KEY, systemInstruction, temperature, topP, topK } = options;
                 const openai = new OpenAI({
                     baseURL: "https://openrouter.ai/api/v1",
                     apiKey: OPENROUTER_API_KEY,
@@ -392,6 +476,7 @@ class Translation {
                         ...topP > -1 ? { top_p: topP } : {},
                         ...topK > -1 ? { top_k: topK } : {},
                         reasoning: { "exclude": true },
+                        ...isOpenrouterWebSearchEnabled ? { plugins: [{ "id": "web" }] } : {},
                     }, { signal: this.abortController.signal });
                     const responseText = completion.choices[0].message?.content;
                     this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(responseText, prompt) : responseText;
@@ -582,4 +667,4 @@ class Translation {
         return '';
     }
 }
-export { Domains, Efforts, MODELS, SystemInstructions, Tones, Translation, Translators };
+export { Domains, Efforts, MODELS, SystemInstructions, Tones, Translation };

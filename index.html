@@ -233,6 +233,10 @@
                           Groq Dịch
                           <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
                         </button></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-translator-value="chutesTranslate">
+                          Chutes Dịch
+                          <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
+                        </button></li>
                         <li><button class="align-items-center d-flex dropdown-item" type="button" data-translator-value="openrouterTranslate">
                           OpenRouter Dịch
                           <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
@@ -294,12 +298,27 @@
                         </div>
                       </div>
                       <div class="accordion-item">
+                        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-target="#chutes-collapse" data-bs-toggle="collapse">Chutes</button></h2>
+                        <div class="accordion-collapse collapse" id="chutes-collapse" data-bs-parent="#translator-accordion">
+                          <div class="accordion-body">
+                            <div class="mb-3">
+                              <label class="form-check-label" for="chutes-model-text">Mô hình:</label>
+                              <input class="form-control string-value-option" id="chutes-model-text" placeholder="ID mô hình" type="text" value="deepseek-ai/DeepSeek-R1">
+                            </div>
+                            <div>
+                              <label class="form-label" for="chutes-api-token-text">Chutes API Token:</label>
+                              <input class="form-control api-key-text" id="chutes-api-token-text" placeholder="cpk_..." type="text">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="accordion-item">
                         <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-target="#openrouter-collapse" data-bs-toggle="collapse">OpenRouter</button></h2>
                         <div class="accordion-collapse collapse" id="openrouter-collapse" data-bs-parent="#translator-accordion">
                           <div class="accordion-body">
                             <div class="mb-3">
                               <label class="form-check-label" for="openrouter-model-text">Mô hình:</label>
-                              <input class="form-control string-value-option" id="openrouter-model-text" placeholder="ID mô hình" type="text" value="qwen/qwen3-235b-a22b">
+                              <input class="form-control string-value-option" id="openrouter-model-text" placeholder="ID mô hình" type="text" value="openai/gpt-4o">
                             </div>
                             <div>
                               <label class="form-label" for="openrouter-api-key-text">OpenRouter API Key:</label>
@@ -438,6 +457,7 @@
                         <li><button class="align-items-center d-flex dropdown-item" type="button" data-translation-translator-value="googleGenaiTranslate">Google Gen AI Dịch</button></li>
                         <li><button class="align-items-center d-flex dropdown-item" type="button" data-translation-translator-value="openaiTranslator">Trình dịch OpenAI</button></li>
                         <li><button class="align-items-center d-flex dropdown-item" type="button" data-translation-translator-value="groqTranslate">Groq Dịch</button></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-translation-translator-value="chutesTranslate">Chutes Dịch</button></li>
                         <li><button class="align-items-center d-flex dropdown-item" type="button" data-translation-translator-value="openrouterTranslate">OpenRouter Dịch</button></li>
                         <li><h6 class="align-items-center d-flex dropdown-header">Tìm kiếm trên...</h6></li>
                         <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="https://www.google.com/search?q=%s">Google</button></li>
@@ -448,12 +468,12 @@
                         <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="http://vdict.com/%s,1,0,0.html">VDict</button></li>
                         <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="https://www.oed.com/search/dictionary/?scope=Entries&q=%s">Oxford English Dictionary</button></li>
                         <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="https://dictionary.cambridge.org/vi/dictionary/english-vietnamese/%s">Cambridge Dictionary</button></li>
+                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="https://mazii.net/vi-VN/search/word/javi/%s">Mazii</button></li>
                         <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="https://hanzii.net/search/word/%s?hl=vi">Hanzii</button></li>
                         <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="https://nomfoundation.org/nom-tools/Nom-Lookup-Tool/Nom-Lookup-Tool?uiLang=vn&inputText=%s">Tra cứu chữ Nôm</button></li>
                         <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="https://hvdic.thivien.net/whv/%s">Từ điển Hán Nôm</button></li>
                         <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="https://www.mdbg.net/chinese/dictionary?page=worddict&wdqb=%s">CC-CEDICT</button></li>
                         <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="https://www.zdic.net/hans/%s">ZDIC</button></li>
-                        <li><button class="align-items-center d-flex dropdown-item" type="button" data-define-url="https://mazii.net/vi-VN/search/word/javi/%s">Mazii</button></li>
                       </ul>
                     </div>
                     <div class="mb-3">
@@ -526,8 +546,8 @@
                               </select>
                             </div>
                             <div class="form-check form-switch">
-                              <input class="form-check-input" id="web-search-switch" type="checkbox" role="switch">
-                              <label class="form-check-label" for="web-search-switch">Tìm kiếm mạng</label>
+                              <input class="form-check-input" id="openai-web-search-switch" type="checkbox" role="switch">
+                              <label class="form-check-label" for="openai-web-search-switch">Tìm kiếm mạng</label>
                             </div>
                           </div>
                         </div>
@@ -544,12 +564,27 @@
                         </div>
                       </div>
                       <div class="accordion-item">
+                        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-target="#dictionary-chutes-collapse" data-bs-toggle="collapse">Chutes</button></h2>
+                        <div class="accordion-collapse collapse" id="dictionary-chutes-collapse" data-bs-parent="#dictionary-translator-accordion">
+                          <div class="accordion-body">
+                            <div>
+                              <label class="form-check-label" for="dictionary-chutes-model-text">Mô hình:</label>
+                              <input class="form-control" id="dictionary-chutes-model-text" placeholder="ID mô hình" type="text" value="deepseek-ai/DeepSeek-R1">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="accordion-item">
                         <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-target="#dictionary-openrouter-collapse" data-bs-toggle="collapse">OpenRouter</button></h2>
                         <div class="accordion-collapse collapse" id="dictionary-openrouter-collapse" data-bs-parent="#dictionary-translator-accordion">
                           <div class="accordion-body">
-                            <div>
+                            <div class="mb-3">
                               <label class="form-check-label" for="dictionary-openrouter-model-text">Mô hình:</label>
-                              <input class="form-control" id="dictionary-openrouter-model-text" placeholder="ID mô hình" type="text" value="qwen/qwen3-235b-a22b">
+                              <input class="form-control" id="dictionary-openrouter-model-text" placeholder="ID mô hình" type="text" value="openai/gpt-4o">
+                            </div>
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" id="openrouter-web-search-switch" type="checkbox" role="switch">
+                              <label class="form-check-label" for="openrouter-web-search-switch">Tìm kiếm mạng</label>
                             </div>
                           </div>
                         </div>
