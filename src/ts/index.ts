@@ -271,7 +271,7 @@ $translationTranslators.on( "click", function () {
     isOpenaiWebSearchEnabled: $( "#openai-web-search-switch" ).prop( "checked" ),
     groqModelId: $( "#dictionary-groq-model-select" ).val() as string,
     GROQ_API_KEY: $groqApiKeyText.val() as string,
-    chutesModelId: $( "#dictionary-chutes-model-select" ).val() as string,
+    chutesModelId: $( "#dictionary-chutes-model-text" ).val() as string,
     CHUTES_API_TOKEN: $chutesApiTokenText.val() as string,
     openrouterModelId: $( "#dictionary-openrouter-model-text" ).val() as string,
     isOpenrouterWebSearchEnabled: $( "#openrouter-web-search-switch" ).prop( "checked" ),
