@@ -6,7 +6,7 @@ import Utils from './Utils.js'
 const $addWordButton = $('#add-word-button')
 const $apiKeyTexts = $('.api-key-text')
 const $boldTextSwitch = $('#bold-text-switch')
-const $chutesModelSelect = $('#chutes-model-select')
+const $chutesModelText = $('#chutes-model-text')
 const $chutesApiTokenText = $('#chutes-api-token-text')
 const $copyButtons = $('.copy-button')
 const $customDictionarySwitch = $('#custom-dictionary-switch')
@@ -22,7 +22,7 @@ const $inputTextarea = $('#input-textarea')
 const $justifyTextSwitch = $('#justify-text-switch')
 const $lineHeightText = $('#line-height-text')
 const $openaiModelSelect = $('#openai-model-select')
-const $openrouterModelSelect = $('#openrouter-model-select')
+const $openrouterModelText = $('#openrouter-model-text')
 const $openrouterApiKeyText = $('#openrouter-api-key-text')
 const $outputTextarea = $('#output-textarea')
 const $retranslateButton = $('#retranslate-button')
@@ -40,8 +40,8 @@ const translationStorage = {
   googleGenaiModel: $googleGenaiModelSelect.val(),
   openaiModel: $openaiModelSelect.val(),
   groqModel: $groqModelSelect.val(),
-  chutesModel: $chutesModelSelect.val(),
-  openrouterModel: $openrouterModelSelect.val(),
+  chutesModel: $chutesModelText.val(),
+  openrouterModel: $openrouterModelText.val(),
   systemInstruction: $systemInstructionSelect.val(),
   ...JSON.parse(localStorage.getItem('translation') ?? '{}')
 }
@@ -401,9 +401,9 @@ $translateButton.on('click', function () {
         effort: $('#effort-select').val(),
         groqModelId: $groqModelSelect.val(),
         GROQ_API_KEY: $groqApiKeyText.val(),
-        chutesModelId: $chutesModelSelect.val(),
+        chutesModelId: $chutesModelText.val(),
         CHUTES_API_TOKEN: $chutesApiTokenText.val(),
-        openrouterModelId: $openrouterModelSelect.val(),
+        openrouterModelId: $openrouterModelText.val(),
         OPENROUTER_API_KEY: $openrouterApiKeyText.val(),
         isBilingualEnabled: $('#bilingual-switch').prop('checked'),
         systemInstruction: $systemInstructionSelect.val(),
