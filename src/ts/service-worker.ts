@@ -1,5 +1,5 @@
 'use strict'
-/* global addEventListener, caches, fetch */
+/* global caches, fetch */
 const cacheName = 'Dịch thuật'
 const precachedResources: string[] = [
   '/',
