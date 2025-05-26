@@ -270,7 +270,7 @@ $translationTranslators.on('click', function () {
     isOpenaiWebSearchEnabled: $('#openai-web-search-switch').prop('checked'),
     groqModelId: $('#dictionary-groq-model-select').val(),
     GROQ_API_KEY: $groqApiKeyText.val(),
-    chutesModelId: $('#dictionary-chutes-model-select').val(),
+    chutesModelId: $('#dictionary-chutes-model-text').val(),
     CHUTES_API_TOKEN: $chutesApiTokenText.val(),
     openrouterModelId: $('#dictionary-openrouter-model-text').val(),
     isOpenrouterWebSearchEnabled: $('#openrouter-web-search-switch').prop('checked'),
