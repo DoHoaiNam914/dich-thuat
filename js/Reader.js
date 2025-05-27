@@ -302,4 +302,4 @@ Reader.FONT_MAP = Object.entries({
   TBMincho: 'tbmincho',
   Thonburi: 'thonburi-ttf'
 })
-export { Reader }
+export default Reader

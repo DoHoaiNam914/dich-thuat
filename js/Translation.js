@@ -8,6 +8,8 @@ import {
 import { Groq } from 'https://esm.run/groq-sdk'
 // @ts-expect-error openai
 import OpenAI from 'https://esm.run/openai'
+// // @ts-expect-error @tavily/core
+// import { tavily } from 'https://esm.run/@tavily/core';
 import Utils from './Utils.js'
 const MODELS = {
   GOOGLE_GENAI: {
@@ -251,7 +253,9 @@ class Translation {
       effort: Efforts.MEDIUM,
       isOpenaiWebSearchEnabled: false,
       groqModelId: Object.values(MODELS.GROQ).flat().filter(element => typeof element === 'object').find((element) => element.selected)?.modelId,
+      isGroqWebSearchEnabled: false,
       chutesModelId: 'deepseek-ai/DeepSeek-R1',
+      isChutesWebSearchEnabled: false,
       openrouterModelId: 'openai/gpt-4o',
       isOpenrouterWebSearchEnabled: false,
       isBilingualEnabled: false,
@@ -267,10 +271,11 @@ class Translation {
       customPrompt: '',
       ...options
     }
+    const { TVLY_API_KEY, systemInstruction, temperature, topP, topK } = options
     switch (options.translatorId) {
       case Translators.CHUTES_TRANSLATE:
         this.translateText = async (resolve) => {
-          const { chutesModelId, CHUTES_API_TOKEN, systemInstruction, temperature, topP, topK } = options
+          const { chutesModelId, isChutesWebSearchEnabled, CHUTES_API_TOKEN } = options
           const prompt = this.getPrompt(systemInstruction, this.text)
           /* eslint-disable no-mixed-spaces-and-tabs */
           const response = await fetch('https://llm.chutes.ai/v1/chat/completions', {
@@ -283,6 +288,12 @@ class Translation {
               model: chutesModelId,
               messages: [
                 /* eslint-enable no-mixed-spaces-and-tabs */
+                ...isChutesWebSearchEnabled
+                  ? await this.webSearchWithTavily(this.text, TVLY_API_KEY, this.abortController.signal).then(value => value.map(element => ({
+                    role: 'assistant',
+                    content: element
+                  })))
+                  : [],
                 ...this.getSystemInstructions(systemInstruction, this.text, this.originalLanguage, this.destinationLanguage, options).map(element => ({
                   role: 'system',
                   content: element
@@ -330,6 +341,7 @@ class Translation {
                     const content = parsed.choices[0].delta.content
                     if (content) {
                       responseText += content
+                      if (responseText.startsWith('<think>') && !/<\/think>\n/.test(responseText)) { continue } else if (responseText.startsWith('<think>')) { responseText = responseText.replace(/^<think>\n[\s\S]+\n<\/think>\n/, '') }
                       this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(responseText, prompt) : responseText
                       if (this.translatedText.length === 0) { continue }
                       if (this.abortController.signal.aborted) { return }
@@ -347,12 +359,18 @@ class Translation {
         } // eslint-disable-line no-mixed-spaces-and-tabs
         break
       case Translators.GROQ_TRANSLATE: {
-        const { groqModelId, GROQ_API_KEY, systemInstruction, temperature, topP } = options
+        const { groqModelId, isGroqWebSearchEnabled, GROQ_API_KEY } = options
         const groq = new Groq({ apiKey: GROQ_API_KEY, dangerouslyAllowBrowser: true })
         this.translateText = async (resolve) => {
           const prompt = this.getPrompt(systemInstruction, this.text)
           const chatCompletion = await groq.chat.completions.create({
             messages: [
+              ...isGroqWebSearchEnabled
+                ? await this.webSearchWithTavily(this.text, TVLY_API_KEY, this.abortController.signal).then(value => value.map(element => ({
+                  role: 'assistant',
+                  content: element
+                })))
+                : [],
               ...this.getSystemInstructions(systemInstruction, this.text, this.originalLanguage, this.destinationLanguage, options).map(element => ({
                 role: 'system',
                 content: element
@@ -366,7 +384,8 @@ class Translation {
             temperature: temperature === -1 ? 1 : temperature,
             top_p: topP === -1 ? 1 : topP,
             stream: true,
-            stop: null
+            stop: null,
+            ...['qwen-qwq-32b', 'deepseek-r1-distill-llama-70b'].some(element => element === groqModelId) ? { reasoning_format: 'hidden' } : {}
           })
           let responseText = ''
           for await (const chunk of chatCompletion) {
@@ -381,7 +400,7 @@ class Translation {
       }
       case Translators.OPENAI_TRANSLATOR:
         this.translateText = async (resolve) => {
-          const { openaiModelId, effort, isOpenaiWebSearchEnabled, systemInstruction, temperature, topP } = options
+          const { openaiModelId, effort, isOpenaiWebSearchEnabled } = options
           const prompt = this.getPrompt(systemInstruction, this.text)
           await fetch('https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1/responses', {
             body: JSON.stringify({
@@ -438,7 +457,7 @@ class Translation {
             },
             method: 'POST',
             signal: this.abortController.signal
-          }).then(async (value) => await value.json()).then(value => {
+          }).then(value => value.json()).then(value => {
             const responseText = value.output.filter((element) => element.type === 'message')[0].content[0].text
             this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(responseText, prompt) : responseText
             if (this.abortController.signal.aborted) { return }
@@ -447,7 +466,7 @@ class Translation {
         }
         break
       case Translators.OPENROUTER_TRANSLATE: {
-        const { openrouterModelId, isOpenrouterWebSearchEnabled, OPENROUTER_API_KEY, systemInstruction, temperature, topP, topK } = options
+        const { openrouterModelId, isOpenrouterWebSearchEnabled, OPENROUTER_API_KEY } = options
         const openai = new OpenAI({
           baseURL: 'https://openrouter.ai/api/v1',
           apiKey: OPENROUTER_API_KEY,
@@ -483,7 +502,7 @@ class Translation {
       case Translators.GOOGLE_GENAI_TRANSLATE:
       default:
         this.translateText = async (resolve) => {
-          const { googleGenaiModelId, isThinkingModeEnabled, isGroundingWithGoogleSearchEnabled, GEMINI_API_KEY, systemInstruction, temperature, topP, topK } = options
+          const { googleGenaiModelId, isThinkingModeEnabled, isGroundingWithGoogleSearchEnabled, GEMINI_API_KEY } = options
           const ai = new GoogleGenAI({
             apiKey: GEMINI_API_KEY
           })
@@ -553,6 +572,21 @@ class Translation {
           }
         }
     }
+  }
+
+  async webSearchWithTavily (query, apiKey, signal = new AbortSignal()) {
+    // const client = tavily({ apiKey: TVLY_API_KEY });
+    // return await client.search(query)
+    // .then((value: { results: { title: string, content: string }[] }) => value.results.map(({ title, content }) => `# ${title}\n${content}`)) ?? [];
+    const options = {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+      body: `{"query":"${query}"}`,
+      signal
+    }
+    return await fetch('https://api.tavily.com/search', options)
+      .then(response => response.json())
+      .then((response) => response.results.map(({ title, content }) => `# ${title}\n${content}`))
   }
 
   getPrompt (systemInstruction, text) {

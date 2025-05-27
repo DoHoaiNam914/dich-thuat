@@ -43,7 +43,8 @@
   overflow-y: auto;
 }
 
-body:not(.bg-body) .textarea > .form-control, body:not(.bg-body) .textarea > .form-control::placeholder {
+body:not(.bg-body) .textarea > .form-control,
+body:not(.bg-body) .textarea > .form-control::placeholder {
   color: var(--reader-color);
 }
 
@@ -83,11 +84,13 @@ body:not(.bg-body) .textarea > .form-control, body:not(.bg-body) .textarea > .fo
   max-width: 4.044em;
 }
 
-.reader-theme-toggle .bi, .translator-toggle .bi {
+.reader-theme-toggle .bi,
+.translator-toggle .bi {
   width: 1em;
   height: 1em;
 }
 
-.reader-theme-toggle .dropdown-menu .active .bi, .translator-toggle .dropdown-menu .active .bi {
+.reader-theme-toggle .dropdown-menu .active .bi,
+.translator-toggle .dropdown-menu .active .bi {
   display: block !important;
 }

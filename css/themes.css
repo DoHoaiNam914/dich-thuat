@@ -1,4 +1,5 @@
-.com-amazon-kindle-white, .jp-co-amazon-kindle-white {
+.com-amazon-kindle-white,
+.jp-co-amazon-kindle-white {
   --reader-color: #000;
   --reader-hyperlink-color: #00f;
   background-color: #fff;
@@ -119,14 +120,14 @@
 }
 
 .calibre-sepia-dark {
-  --reader-color: #F6F3E9;
-  background-color: #39322B;
+  --reader-color: #f6f3e9;
+  background-color: #39322b;
   --reader-hyperlink-color: #4f81bd;
 }
 
 .calibre-sepia-light {
-  --reader-color: #39322B;
-  background-color: #F6F3E9;
+  --reader-color: #39322b;
+  background-color: #f6f3e9;
 }
 
 [data-bs-theme="light"] .calibre-system {
@@ -190,21 +191,21 @@
 
 .readium-day {
   --reader-color: #121212;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 
 .readium-night {
-  --reader-color: #FEFEFE;
+  --reader-color: #fefefe;
   background-color: #000000;
   --reader-hyperlink-color: #63caff;
-  --reader-visited-hyperlink-color: #0099E5;
+  --reader-visited-hyperlink-color: #0099e5;
 }
 
 .readium-sepia {
   --reader-color: #121212;
   background-color: #faf4e8;
-  --reader-hyperlink-color: #0000EE;
-  --reader-visited-hyperlink-color: #551A8B;
+  --reader-hyperlink-color: #0000ee;
+  --reader-visited-hyperlink-color: #551a8b;
 }
 
 .waka-white {
