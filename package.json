@@ -9,11 +9,12 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@types/jquery": "^3.5.32",
-    "eslint": "^8.57.1",
+    "@types/jquery": "latest",
+    "eslint": "latest",
     "eslint-js": "github:eslint/js",
-    "standard": "^17.1.2",
-    "typescript": "^5.8.3",
-    "typescript-eslint": "^8.32.1"
+    "prettier": "latest",
+    "standard": "latest",
+    "typescript": "latest",
+    "typescript-eslint": "latest"
   }
 }

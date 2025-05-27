@@ -23,7 +23,7 @@ interface ThemeGroup {
   title: string
 }
 type ThemeItem = ThemeGroup | Theme
-class Reader {
+export default class Reader {
   public static readonly THEMES: ThemeItem[] = [
     {
       name: 'Bootstrap 5',
@@ -327,4 +327,3 @@ class Reader {
     return fontFamily?.replace(/['"]/g, '').split(/, */).filter(element => element.length > 0).map(element => Reader.FONT_MAP.find(([first, second]) => first === element || second === element)?.[1] ?? element).join(', ')
   }
 }
-export { Reader, Theme }

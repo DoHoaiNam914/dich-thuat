@@ -1,12 +1,11 @@
 'use strict'
-/* global $, confirm, localStorage, open, Papa */
-import { Reader, Theme } from './Reader.js'
+/* global $, confirm, localStorage, open, Papa, sessionStorage */
+import Reader from './Reader.js'
 import { DictionaryEntry, Domains, Efforts, MODELS, Options, SystemInstructions, Tones, Translation } from './Translation.js'
 import Utils from './Utils.js'
 const $addWordButton = $( "#add-word-button" )
 const $apiKeyTexts = $( ".api-key-text" )
 const $boldTextSwitch = $( "#bold-text-switch" )
-const $chutesModelText = $( "#chutes-model-text" )
 const $chutesApiTokenText = $( "#chutes-api-token-text" )
 const $copyButtons = $( ".copy-button" )
 const $customDictionarySwitch = $( "#custom-dictionary-switch" )
@@ -15,21 +14,15 @@ const $domainSelect = $( "#domain-select" )
 const $fontFamilyText = $( "#font-family-text" )
 const $fontSizeText = $( "#font-size-text" )
 const $geminiApiKeyText = $( "#gemini-api-key-text" )
-const $googleGenaiModelSelect = $( "#google-genai-model-select" )
-const $groqModelSelect = $( "#groq-model-select" )
 const $groqApiKeyText = $( "#groq-api-key-text" )
 const $inputTextarea = $( "#input-textarea" )
 const $justifyTextSwitch = $( "#justify-text-switch" )
 const $lineHeightText = $( "#line-height-text" )
-const $openaiModelSelect = $( "#openai-model-select" )
-const $openrouterModelText = $( "#openrouter-model-text" )
 const $openrouterApiKeyText = $( "#openrouter-api-key-text" )
 const $outputTextarea = $( "#output-textarea" )
 const $retranslateButton = $( "#retranslate-button" )
 const $sourceText = $( "#source-text" )
 const $sourceTextLanguageSelect = $( "#source-text-language-select" )
-const $stringValueOptions = $( ".string-value-option" )
-const $systemInstructionSelect = $( "#system-instruction-select" )
 const $targetTextarea = $( "#target-textarea" )
 const $targetTextLanguageSelect = $( "#target-text-language-select" )
 const $translateButton = $( "#translate-button" )
@@ -37,23 +30,17 @@ const $translationTranslators = $( "[data-translation-translator-value]" )
 const $translators = $( "[data-translator-value]" )
 const translationStorage = {
   translator: $translators.filter( ".active" ).data( "translator-value" ),
-  googleGenaiModel: $googleGenaiModelSelect.val(),
-  openaiModel: $openaiModelSelect.val(),
-  groqModel: $groqModelSelect.val(),
-  chutesModel: $chutesModelText.val(),
-  openrouterModel: $openrouterModelText.val(),
-  systemInstruction: $systemInstructionSelect.val(),
-  ...JSON.parse(localStorage.getItem('translation') ?? '{}')
+  ...JSON.parse(sessionStorage.getItem('translation') ?? '{}')
 }
 let customDictionary: DictionaryEntry[] = []
 let textareaTranslation: Translation | null = null
 let dictionaryTranslation: Translation | null = null
 function setReaderTheme (readerTheme: string, prevReaderTheme = null): void {
-  $( document.body ).removeClass( prevReaderTheme ?? (Reader.THEMES[0] as Theme).value ).addClass( readerTheme )
-  const $readerTheme = $( `[data-reader-theme-value="${readerTheme}"]` )
+  let $readerTheme = $( "[data-reader-theme-value]" )
+  $( document.body ).removeClass( prevReaderTheme ?? $readerTheme.filter( ".active" ).data( "reader-theme-value" ) ).addClass( readerTheme )
+  $readerTheme = $readerTheme.filter( `[data-reader-theme-value="${readerTheme}"]` )
   $( document.body ).css( "--reader-font-weight", $readerTheme.data( "reader-theme-font-weight" ) ?? "" )
-  const fontFamily = $readerTheme.data( "reader-theme-font-family" )
-  if (fontFamily != null && ($fontFamilyText.val() as string).length === 0) $fontFamilyText.val( fontFamily ).change()
+  $fontFamilyText.val( $readerTheme.data( "reader-theme-font-family" ) ).change()
   $fontSizeText.val( $readerTheme.data( "reader-theme-font-size" ) ).change()
   const lineHeight = $readerTheme.data( "reader-theme-line-height" )
   if (typeof lineHeight === 'string' && lineHeight.startsWith('--')) {
@@ -64,7 +51,7 @@ function setReaderTheme (readerTheme: string, prevReaderTheme = null): void {
     $lineHeightText.removeAttr( "readonly" )
     $lineHeightText.val( lineHeight ).change()
   }
-  $boldTextSwitch.prop( "checked", $readerTheme.data( "reader-theme-bold-text" ) ).change()
+  $boldTextSwitch.prop( "checked", $readerTheme.data( "reader-theme-bold-text" ) ?? false ).change()
   $justifyTextSwitch.prop( "checked", $readerTheme.data( "reader-theme-justify-text" ) ?? false ).change()
 }
 function showActiveReaderTheme (readerTheme: string, focus = false): void {
@@ -137,10 +124,14 @@ $( window ).on( "unload", () => {
 $( document ).ready(() => {
   Reader.loadReaderThemesOptions($( ".reader-theme-toggle .dropdown-menu" ))
   const $readerThemes = $( "[data-reader-theme-value]" )
+  const preferredReaderTheme = sessionStorage.getItem('readerTheme') ?? $readerThemes.filter( ".active" ).data( "reader-theme-value" )
+  setReaderTheme(preferredReaderTheme)
+  showActiveReaderTheme(preferredReaderTheme)
   $readerThemes.on( "click", function () {
     const readerTheme = $( this ).data( "reader-theme-value" )
     setReaderTheme(readerTheme, $readerThemes.filter( ".active" ).data( "reader-theme-value" ))
     showActiveReaderTheme(readerTheme, true)
+    sessionStorage.setItem('readerTheme', readerTheme)
   })
   showActiveTranslator(translationStorage.translator)
   const $modelSelects = $( ".model-select" )
@@ -164,13 +155,15 @@ $( document ).ready(() => {
       $( a ).append( optgroup )
     })
   })
-  $stringValueOptions.each((_index, element) => {
-    $( element ).val(translationStorage[($( element ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')])
+  $('.value-option').each((_index, element) => {
+    $( element ).val( translationStorage[($( element ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')] ?? $( element ).val() )
+  })
+  $('.checked-option').each((_index, element) => {
+    $( element ).prop( "checked", translationStorage[($( element ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')] ?? $( element ).prop( "checked" ) )
   })
   $apiKeyTexts.each((index, element) => {
-    $( element ).val(localStorage.getItem($( element ).prop( "id" ).split('-').slice(0, -1).join('_').toUpperCase()) ?? '')
+    $( element ).val( localStorage.getItem($( element ).prop( "id" ).split('-').slice(0, -1).join('_').toUpperCase()) ?? "" )
   })
-  $systemInstructionSelect.val(translationStorage.systemInstruction)
   customDictionary = JSON.parse(localStorage.getItem('customDictionary') ?? '[]')
   setStoredCustomDictionaryAndReloadCounter(customDictionary)
 })
@@ -202,21 +195,26 @@ $justifyTextSwitch.on( "change", function () {
 })
 $translators.on( "click", function () {
   const translator = $( this ).data( "translator-value" )
-  localStorage.setItem('translation', JSON.stringify({ ...translationStorage, translator }))
+  sessionStorage.setItem('translation', JSON.stringify({ ...translationStorage, translator }))
   showActiveTranslator(translator, true)
 })
-$stringValueOptions.on( "change", function () {
+$( ".string-value-option" ).on( "change", function () {
   translationStorage[($( this ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')] = $( this ).val()
-  localStorage.setItem('translation', JSON.stringify(translationStorage))
+  sessionStorage.setItem('translation', JSON.stringify(translationStorage))
+})
+$( ".number-value-option" ).on( "change", function () {
+  translationStorage[($( this ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')] = parseFloat($( this ).val() as string)
+  sessionStorage.setItem('translation', JSON.stringify(translationStorage))
+})
+$( ".checked-option" ).on( "change", function () {
+  translationStorage[($( this ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')] = $( this ).prop( "checked" )
+  sessionStorage.setItem('translation', JSON.stringify(translationStorage))
 })
 $apiKeyTexts.on( "change", function () {
   localStorage.setItem($( this ).prop( "id" ).split('-').slice(0, -1).join('_').toUpperCase(), $( this ).val() as string)
 })
-$systemInstructionSelect.on( "change", function () {
-  localStorage.setItem('translation', JSON.stringify({ ...translationStorage, systemInstruction: $( this ).val() }))
-})
 $domainSelect.on( "change", function () {
-  $( `#dictionary-${$( this ).prop( "id" )}` ).val( $( this ).val() as string )
+  $( `#dictionary-${$( this ).prop( "id" )}` ).val( $( this ).val() as string ).change()
 })
 $( "#dictionary-modal" ).on( "hide.bs.modal", () => {
   if (dictionaryTranslation != null) dictionaryTranslation.abortController.abort()
@@ -270,12 +268,15 @@ $translationTranslators.on( "click", function () {
     effort: $( "#dictionary-effort-select" ).val() as Efforts,
     isOpenaiWebSearchEnabled: $( "#openai-web-search-switch" ).prop( "checked" ),
     groqModelId: $( "#dictionary-groq-model-select" ).val() as string,
+    isGroqWebSearchEnabled: $( "#groq-web-search-switch" ).prop( "checked" ),
     GROQ_API_KEY: $groqApiKeyText.val() as string,
     chutesModelId: $( "#dictionary-chutes-model-text" ).val() as string,
+    isChutesWebSearchEnabled: $( "#chutes-web-search-switch" ).prop( "checked" ),
     CHUTES_API_TOKEN: $chutesApiTokenText.val() as string,
     openrouterModelId: $( "#dictionary-openrouter-model-text" ).val() as string,
     isOpenrouterWebSearchEnabled: $( "#openrouter-web-search-switch" ).prop( "checked" ),
     OPENROUTER_API_KEY: $openrouterApiKeyText.val() as string,
+    TVLY_API_KEY: $( "#tvly-api-key-text" ).val() as string,
     systemInstruction: $( "#dictionary-system-instruction-select" ).val() as SystemInstructions,
     temperature: parseFloat($( "#dictionary-temperature-text" ).val() as string),
     topP: parseFloat($( "#dictionary-top-p-text" ).val() as string),
@@ -384,6 +385,11 @@ $( ".paste-button" ).on( "click", function () {
 $retranslateButton.on( "click", () => {
   if (confirm('Bạn có chắc chắn muốn dịch lại?')) $translateButton.click().click()
 })
+$( ".language-select" ).on( "change", function () {
+  const $textLanguageSelect = $( ".text-language-select" ).filter( `#${$( this ).prop( "id" ).replace('original', 'source-text').replace('destination', 'target-text')}` )
+  const value = $( this ).val() as string
+  $textLanguageSelect.val( value !== 'null' ? value : $textLanguageSelect.val() as string ).change()
+})
 $translateButton.on( "click", function () {
   const $textareaCopyButton = $copyButtons.filter( `[data-target="#${$inputTextarea.prop( "id" ) as string}"]` )
   switch ($( this ).text()) {
@@ -396,19 +402,19 @@ $translateButton.on( "click", function () {
       $( this ).text( "Huỷ" )
       textareaTranslation = new Translation(inputText, $( "#destination-language-select" ).val() as string, $( "#original-language-select" ).val() as string | null, {
         translatorId: $translators.filter( ".active" ).data( "translator-value" ),
-        googleGenaiModelId: $googleGenaiModelSelect.val() as string,
+        googleGenaiModelId: $( "#google-genai-model-select" ).val() as string,
         isThinkingModeEnabled: $( "#thinking-mode-switch" ).prop( "checked" ),
         GEMINI_API_KEY: $geminiApiKeyText.val() as string,
-        openaiModelId: $openaiModelSelect.val() as string,
+        openaiModelId: $( "#openai-model-select" ).val() as string,
         effort: $( "#effort-select" ).val() as Efforts,
-        groqModelId: $groqModelSelect.val() as string,
+        groqModelId: $( "#groq-model-select" ).val() as string,
         GROQ_API_KEY: $groqApiKeyText.val() as string,
-        chutesModelId: $chutesModelText.val() as string,
+        chutesModelId: $( "#chutes-model-text" ).val() as string,
         CHUTES_API_TOKEN: $chutesApiTokenText.val() as string,
-        openrouterModelId: $openrouterModelText.val() as string,
+        openrouterModelId: $( "#openrouter-model-text" ).val() as string,
         OPENROUTER_API_KEY: $openrouterApiKeyText.val() as string,
         isBilingualEnabled: $( "#bilingual-switch" ).prop( "checked" ),
-        systemInstruction: $systemInstructionSelect.val() as SystemInstructions,
+        systemInstruction: $( "#system-instruction-select" ).val() as SystemInstructions,
         temperature: parseFloat($( "#temperature-text" ).val() as string),
         topP: parseFloat($( "#top-p-text" ).val() as string),
         topK: parseFloat($( "#top-k-text" ).val() as string),
