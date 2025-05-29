@@ -236,7 +236,7 @@ enum Tones {
   ROMANTIC = 'Romantic'
 }
 interface Options {
-  chutesModelId?: string,
+  chutesModelId?: string
   CHUTES_API_TOKEN?: string
   customDictionary?: DictionaryEntry[]
   customPrompt?: string
@@ -292,37 +292,37 @@ class Translation {
     this.originalLanguage = originalLanguage
     this.abortController = new AbortController()
     options = {
-      translatorId: Translators.GOOGLE_GENAI_TRANSLATE,
-      googleGenaiModelId: (Object.values(MODELS.GOOGLE_GENAI) as ModelEntry[][]).flat().filter(element => typeof element === 'object').find((element: Model) => element.selected)?.modelId,
-      isThinkingModeEnabled: true,
-      isGroundingWithGoogleSearchEnabled: false,
-      openaiModelId: (Object.values(MODELS.OPENAI) as ModelEntry[][]).flat().filter(element => typeof element === 'object').find((element: Model) => element.selected)?.modelId,
-      effort: Efforts.MEDIUM,
-      isOpenaiWebSearchEnabled: false,
-      groqModelId: (Object.values(MODELS.GROQ) as ModelEntry[][]).flat().filter(element => typeof element === 'object').find((element: Model) => element.selected)?.modelId,
-      isGroqWebSearchEnabled: false,
       chutesModelId: 'deepseek-ai/DeepSeek-R1',
-      isChutesWebSearchEnabled: false,
-      openrouterModelId: 'openai/gpt-4o',
-      isOpenrouterWebSearchEnabled: false,
+      customDictionary: [],
+      customPrompt: '',
+      domain: Domains.NONE,
+      effort: Efforts.MEDIUM,
+      googleGenaiModelId: (Object.values(MODELS.GOOGLE_GENAI) as ModelEntry[][]).flat().filter(element => typeof element === 'object').find((element: Model) => element.selected)?.modelId,
+      groqModelId: (Object.values(MODELS.GROQ) as ModelEntry[][]).flat().filter(element => typeof element === 'object').find((element: Model) => element.selected)?.modelId,
       isBilingualEnabled: false,
+      isChutesWebSearchEnabled: false,
+      isCustomDictionaryEnabled: false,
+      isCustomPromptEnabled: false,
+      isGroqWebSearchEnabled: false,
+      isGroundingWithGoogleSearchEnabled: false,
+      isOpenaiWebSearchEnabled: false,
+      isOpenrouterWebSearchEnabled: false,
+      isThinkingModeEnabled: true,
+      openaiModelId: (Object.values(MODELS.OPENAI) as ModelEntry[][]).flat().filter(element => typeof element === 'object').find((element: Model) => element.selected)?.modelId,
+      openrouterModelId: 'openai/gpt-4o',
       systemInstruction: SystemInstructions.GPT4OMINI,
       temperature: 0.1,
+      tone: Tones.SERIOUS,
       topP: 0.95,
       topK: -1,
-      tone: Tones.SERIOUS,
-      domain: Domains.NONE,
-      isCustomDictionaryEnabled: false,
-      customDictionary: [],
-      isCustomPromptEnabled: false,
-      customPrompt: '',
+      translatorId: Translators.GOOGLE_GENAI_TRANSLATE,
       ...options
     }
-    const { TVLY_API_KEY, systemInstruction, temperature, topP, topK } = options
+    const { systemInstruction, temperature, topP, topK, TVLY_API_KEY } = options
     switch (options.translatorId) {
       case Translators.CHUTES_TRANSLATE:
         this.translateText = async (resolve) => {
-          const { chutesModelId, isChutesWebSearchEnabled, CHUTES_API_TOKEN } = options
+          const { chutesModelId, CHUTES_API_TOKEN, isChutesWebSearchEnabled } = options
           const prompt = this.getPrompt(systemInstruction as SystemInstructions, this.text)
           /* eslint-disable no-mixed-spaces-and-tabs */
         			const response = await fetch("https://llm.chutes.ai/v1/chat/completions", {
@@ -335,16 +335,22 @@ class Translation {
         			  "model": chutesModelId,
         			  "messages": [
                   /* eslint-enable no-mixed-spaces-and-tabs */
-                  ...isChutesWebSearchEnabled
-                    ? await this.webSearchWithTavily(this.text, TVLY_API_KEY as string, this.abortController.signal).then(value => value.map(element => ({
-                        "role": "assistant",
-                        "content": element
-                      })))
-                    : [],
                   ...this.getSystemInstructions(systemInstruction as SystemInstructions, this.text, this.originalLanguage, this.destinationLanguage, options).map(element => ({
                     "role": "system",
                     "content": element
                   })),
+                  ...isChutesWebSearchEnabled
+                    ? [
+                        {
+                          "role": "user",
+                          "content": prompt
+                        },
+                        {
+                          "role": "assistant",
+                          "content": await this.webSearchWithTavily(this.text, TVLY_API_KEY as string, this.abortController.signal).then(value => value.map((element, index) => `[webpage ${index + 1} begin]${element}[webpage ${index + 1} end]`).join('\n'))
+                        }
+                      ]
+                    : [],
                   {
                     "role": "user",
                     "content": prompt
@@ -357,6 +363,7 @@ class Translation {
                     ...topP as number > -1 ? { "top_p": topP } : {},
                     ...topK as number > -1 ? { "top_k": topK } : {}
         			}), // eslint-disable-line no-mixed-spaces-and-tabs
+                keepalive: true,
                 signal: this.abortController.signal
                 /* eslint-disable no-mixed-spaces-and-tabs */
         			});
@@ -396,8 +403,8 @@ class Translation {
                     const content = parsed.choices[0].delta.content;
                     if (content) {
                       responseText += content
-                      if (responseText.startsWith('<think>') && !/<\/think>\n/.test(responseText)) continue
-                      else if (responseText.startsWith('<think>')) responseText = responseText.replace(/^<think>\n[\s\S]+\n<\/think>\n/, '')
+                      if (responseText.startsWith('<think>') && !/<\/think>\n{2}/.test(responseText)) continue
+                      else if (responseText.startsWith('<think>')) responseText = responseText.replace(/^<think>\n[\s\S]+\n<\/think>\n{2}/, '')
                       this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(responseText, prompt) : responseText
                       if (this.translatedText.length === 0) continue
                       if (this.abortController.signal.aborted as boolean) return
@@ -415,22 +422,28 @@ class Translation {
     		}  // eslint-disable-line no-mixed-spaces-and-tabs
         break
       case Translators.GROQ_TRANSLATE: {
-        const { groqModelId, isGroqWebSearchEnabled, GROQ_API_KEY } = options
+        const { groqModelId, GROQ_API_KEY, isGroqWebSearchEnabled } = options
         const groq = new Groq({ apiKey: GROQ_API_KEY, dangerouslyAllowBrowser: true });
         this.translateText = async (resolve) => {
           const prompt = this.getPrompt(systemInstruction as SystemInstructions, this.text)
           const chatCompletion = await groq.chat.completions.create({
             "messages": [
-              ...isGroqWebSearchEnabled
-                ? await this.webSearchWithTavily(this.text, TVLY_API_KEY as string, this.abortController.signal).then(value => value.map(element => ({
-                    "role": "assistant",
-                    "content": element
-                  })))
-                : [],
               ...this.getSystemInstructions(systemInstruction as SystemInstructions, this.text, this.originalLanguage, this.destinationLanguage, options).map(element => ({
                 "role": "system",
                 "content": element
               })),
+              ...isGroqWebSearchEnabled
+                ? [
+                    {
+                      "role": "user",
+                      "content": prompt
+                    },
+                    {
+                      "role": "assistant",
+                      "content": await this.webSearchWithTavily(this.text, TVLY_API_KEY as string, this.abortController.signal).then(value => value.map((element, index) => `[webpage ${index + 1} begin]${element}[webpage ${index + 1} end]`).join('\n'))
+                    }
+                  ]
+                : [],
               {
                 "role": "user",
                 "content": prompt
@@ -457,7 +470,7 @@ class Translation {
       }
       case Translators.OPENAI_TRANSLATOR:
         this.translateText = async (resolve) => {
-          const { openaiModelId, effort, isOpenaiWebSearchEnabled } = options
+          const { effort, isOpenaiWebSearchEnabled, openaiModelId } = options
           const prompt = this.getPrompt(systemInstruction as SystemInstructions, this.text)
           await fetch('https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1/responses', {
             body: JSON.stringify({
@@ -512,6 +525,7 @@ class Translation {
               'accept-language': 'vi-VN,vi;q=0.9',
               'air-user-id': crypto.randomUUID()
             },
+            keepalive: true,
             method: 'POST',
             signal: this.abortController.signal
           }).then(value => value.json()).then(value => {
@@ -523,7 +537,7 @@ class Translation {
         }
         break
       case Translators.OPENROUTER_TRANSLATE: {
-        const { openrouterModelId, isOpenrouterWebSearchEnabled, OPENROUTER_API_KEY } = options
+        const { isOpenrouterWebSearchEnabled, openrouterModelId, OPENROUTER_API_KEY } = options
         const openai = new OpenAI({
           baseURL: "https://openrouter.ai/api/v1",
           apiKey: OPENROUTER_API_KEY,
@@ -548,7 +562,7 @@ class Translation {
             ...topK as number > -1 ? { top_k: topK } : {},
             reasoning: { "exclude": true },
             ...isOpenrouterWebSearchEnabled ? { plugins: [{ "id": "web" }] } : {},
-          }, { signal: this.abortController.signal });
+          }, { keepalive: true, signal: this.abortController.signal });
         
           const responseText = completion.choices[0].message?.content
           this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(responseText, prompt) : responseText
@@ -560,7 +574,7 @@ class Translation {
       case Translators.GOOGLE_GENAI_TRANSLATE:
       default:
         this.translateText = async (resolve) => {
-          const { googleGenaiModelId, isThinkingModeEnabled, isGroundingWithGoogleSearchEnabled, GEMINI_API_KEY } = options
+          const { GEMINI_API_KEY, googleGenaiModelId, isGroundingWithGoogleSearchEnabled, isThinkingModeEnabled } = options
           const ai = new GoogleGenAI({
             apiKey: GEMINI_API_KEY,
           });
@@ -645,7 +659,7 @@ class Translation {
     
     return await fetch('https://api.tavily.com/search', options)
       .then(response => response.json())
-      .then((response: { results: { title: string, content: string }[] }) => response.results.map(({ title, content }) => `# ${title}\n${content}`));
+      .then((response: { results: { content: string }[] }) => response.results.map(({ content }) => content));
   }
   private getPrompt (systemInstruction: SystemInstructions, text: string): string {
     switch (systemInstruction) {

@@ -28,10 +28,6 @@ const $targetTextLanguageSelect = $( "#target-text-language-select" )
 const $translateButton = $( "#translate-button" )
 const $translationTranslators = $( "[data-translation-translator-value]" )
 const $translators = $( "[data-translator-value]" )
-const translationStorage = {
-  translator: $translators.filter( ".active" ).data( "translator-value" ),
-  ...JSON.parse(sessionStorage.getItem('translation') ?? '{}')
-}
 let customDictionary: DictionaryEntry[] = []
 let textareaTranslation: Translation | null = null
 let dictionaryTranslation: Translation | null = null
@@ -95,19 +91,25 @@ function appendTranslatedTextIntoOutputTextarea (translatedText: string, text: s
     const translatedLines = translatedText.split('\n')
     text.split('\n').forEach((element, index) => {
       const paragraph = document.createElement('p')
-      if (element.replace(/^\s+/g, '').length === 0) {
+      if (element.replace(/^\s+/, '').length === 0) {
         $( paragraph ).append( document.createElement('br') )
       } else if (/^\p{P}+$/u.test(translatedLines[index])) {
         $( paragraph ).text( element )
       } else {
-        $( paragraph ).append( element, document.createElement('br'), translatedLines[index] )
+        const span = document.createElement('span')
+        $( span ).text( element )
+        $( span ).on( "dblclick", function () {
+          $( "[data-bs-target='#dictionary-modal']").click()
+          $sourceText.val( $( this ).text() )
+        })
+        $( paragraph ).append( span, document.createElement('br'), translatedLines[index] )
       }
       $outputTextarea.append( paragraph )
     })
   } else {
     translatedText.split('\n').forEach(element => {
       const paragraph = document.createElement('p')
-      if (element.replace(/^\s+/g, '').length === 0) {
+      if (element.replace(/^\s+/, '').length === 0) {
         $( paragraph ).append( document.createElement('br') )
       } else {
         $( paragraph ).text( element )
@@ -133,7 +135,7 @@ $( document ).ready(() => {
     showActiveReaderTheme(readerTheme, true)
     sessionStorage.setItem('readerTheme', readerTheme)
   })
-  showActiveTranslator(translationStorage.translator)
+  showActiveTranslator(sessionStorage.getItem('translator') ?? $translators.filter( ".active" ).data( "translator-value" ))
   const $modelSelects = $( ".model-select" )
   $modelSelects.each((index, a) => {
     $( a ).empty()
@@ -155,11 +157,14 @@ $( document ).ready(() => {
       $( a ).append( optgroup )
     })
   })
-  $('.value-option').each((_index, element) => {
-    $( element ).val( translationStorage[($( element ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')] ?? $( element ).val() )
+  $('.string-value-option').each((_index, element) => {
+    $( element ).val( sessionStorage.getItem(($( element ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')) ?? $( element ).val() as string )
+  })
+  $('.number-value-option').each((_index, element) => {
+    $( element ).val( parseFloat(sessionStorage.getItem(($( element ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')) ?? $( element ).val() as string) )
   })
   $('.checked-option').each((_index, element) => {
-    $( element ).prop( "checked", translationStorage[($( element ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')] ?? $( element ).prop( "checked" ) )
+    $( element ).prop( "checked", sessionStorage.getItem(($( element ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')) ?? $( element ).prop( "checked" ) )
   })
   $apiKeyTexts.each((index, element) => {
     $( element ).val( localStorage.getItem($( element ).prop( "id" ).split('-').slice(0, -1).join('_').toUpperCase()) ?? "" )
@@ -195,20 +200,14 @@ $justifyTextSwitch.on( "change", function () {
 })
 $translators.on( "click", function () {
   const translator = $( this ).data( "translator-value" )
-  sessionStorage.setItem('translation', JSON.stringify({ ...translationStorage, translator }))
   showActiveTranslator(translator, true)
+  sessionStorage.setItem('translator', translator)
 })
-$( ".string-value-option" ).on( "change", function () {
-  translationStorage[($( this ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')] = $( this ).val()
-  sessionStorage.setItem('translation', JSON.stringify(translationStorage))
-})
-$( ".number-value-option" ).on( "change", function () {
-  translationStorage[($( this ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')] = parseFloat($( this ).val() as string)
-  sessionStorage.setItem('translation', JSON.stringify(translationStorage))
+$( ".value-option" ).on( "change", function () {
+  sessionStorage.setItem(($( this ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join(''), $( this ).val() as string )
 })
 $( ".checked-option" ).on( "change", function () {
-  translationStorage[($( this ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')] = $( this ).prop( "checked" )
-  sessionStorage.setItem('translation', JSON.stringify(translationStorage))
+  sessionStorage.setItem(($( this ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join(''), $( this ).prop( "checked" ))
 })
 $apiKeyTexts.on( "change", function () {
   localStorage.setItem($( this ).prop( "id" ).split('-').slice(0, -1).join('_').toUpperCase(), $( this ).val() as string)
@@ -259,31 +258,31 @@ $translationTranslators.on( "click", function () {
   $( "#source-text, #target-textarea" ).prop( "readOnly", true )
   $( "[data-translation-translator-value], #add-word-button, #delete-button" ).addClass( "disabled" )
   dictionaryTranslation = new Translation(sourceText, $targetTextLanguageSelect.val() as string, $sourceTextLanguageSelect.val() as string | null, {
+    GEMINI_API_KEY: $geminiApiKeyText.val() as string,
+    GROQ_API_KEY: $groqApiKeyText.val() as string,
+    CHUTES_API_TOKEN: $chutesApiTokenText.val() as string,
+    OPENROUTER_API_KEY: $openrouterApiKeyText.val() as string,
+    TVLY_API_KEY: $( "#tvly-api-key-text" ).val() as string,
+    isCustomDictionaryEnabled: $customDictionarySwitch.prop( "checked" ),
     translatorId: $( this ).data( "translation-translator-value" ),
     googleGenaiModelId: $( "#dictionary-google-genai-model-select" ).val() as string,
     isThinkingModeEnabled: $( "#dictionary-thinking-mode-switch" ).prop( "checked" ),
     isGroundingWithGoogleSearchEnabled: $( "#grounding-with-google-search-switch" ).prop( "checked" ),
-    GEMINI_API_KEY: $geminiApiKeyText.val() as string,
     openaiModelId: $( "#dictionary-openai-model-select" ).val() as string,
     effort: $( "#dictionary-effort-select" ).val() as Efforts,
     isOpenaiWebSearchEnabled: $( "#openai-web-search-switch" ).prop( "checked" ),
     groqModelId: $( "#dictionary-groq-model-select" ).val() as string,
     isGroqWebSearchEnabled: $( "#groq-web-search-switch" ).prop( "checked" ),
-    GROQ_API_KEY: $groqApiKeyText.val() as string,
     chutesModelId: $( "#dictionary-chutes-model-text" ).val() as string,
     isChutesWebSearchEnabled: $( "#chutes-web-search-switch" ).prop( "checked" ),
-    CHUTES_API_TOKEN: $chutesApiTokenText.val() as string,
     openrouterModelId: $( "#dictionary-openrouter-model-text" ).val() as string,
     isOpenrouterWebSearchEnabled: $( "#openrouter-web-search-switch" ).prop( "checked" ),
-    OPENROUTER_API_KEY: $openrouterApiKeyText.val() as string,
-    TVLY_API_KEY: $( "#tvly-api-key-text" ).val() as string,
     systemInstruction: $( "#dictionary-system-instruction-select" ).val() as SystemInstructions,
     temperature: parseFloat($( "#dictionary-temperature-text" ).val() as string),
     topP: parseFloat($( "#dictionary-top-p-text" ).val() as string),
     topK: parseFloat($( "#dictionary-top-k-text" ).val() as string),
     tone: $( "#dictionary-tone-select" ).val() as Tones,
     domain: $( `#dictionary-${$domainSelect.prop( "id" )}` ).val() as Domains,
-    isCustomDictionaryEnabled: $customDictionarySwitch.prop( "checked" ),
     customDictionary,
     isCustomPromptEnabled: $( "#dictionary-custom-prompt-switch" ).prop( "checked" ),
     customPrompt: $( "#dictionary-custom-prompt-textarea" ).val() as string
@@ -420,10 +419,10 @@ $translateButton.on( "click", function () {
         topK: parseFloat($( "#top-k-text" ).val() as string),
         tone: $( "#tone-select" ).val() as Tones,
         domain: $domainSelect.val() as Domains,
-        isCustomDictionaryEnabled: $customDictionarySwitch.prop( "checked" ),
         customDictionary,
         isCustomPromptEnabled: $( "#custom-prompt-switch" ).prop( "checked" ),
-        customPrompt: $( "#custom-prompt-textarea" ).val() as string
+        customPrompt: $( "#custom-prompt-textarea" ).val() as string,
+        isCustomDictionaryEnabled: $customDictionarySwitch.prop( "checked" )
       })
       textareaTranslation.translateText(appendTranslatedTextIntoOutputTextarea).then(() => {
         if (textareaTranslation?.abortController.signal.aborted as boolean) return
