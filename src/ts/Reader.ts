@@ -324,6 +324,6 @@ export default class Reader {
     $dropdownMenu.html( unorderedList.innerHTML )
   }
   public static fontMapper (fontFamily: string): string {
-    return fontFamily?.replace(/['"]/g, '').split(/, */).filter(element => element.length > 0).map(element => Reader.FONT_MAP.find(([first, second]) => first === element || second === element)?.[1] ?? element).join(', ')
+    return fontFamily.replace(/['"]/g, '').split(/, */).filter(element => element.length > 0).map(element => Reader.FONT_MAP.find(([first, second]) => first === element || second === element)?.[1] ?? element).join(', ')
   }
 }

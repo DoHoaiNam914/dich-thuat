@@ -290,7 +290,7 @@ $translationTranslators.on( "click", function () {
   dictionaryTranslation.translateText(translatedText => {
     $targetTextarea.val( translatedText ).trigger( "input" )
   }).catch(() => {
-    if (!(textareaTranslation?.abortController.signal.aborted as boolean)) $targetTextarea.val( previousTargetText )
+    if (!((textareaTranslation as Translation).abortController.signal.aborted as boolean)) $targetTextarea.val( previousTargetText )
   }).finally(() => {
     $( "#source-text, #target-textarea" ).prop( "readOnly", false )
     $( "[data-translation-translator-value], .text-language-select, #add-word-button, #delete-button" ).removeClass( "disabled" )
@@ -425,18 +425,18 @@ $translateButton.on( "click", function () {
         isCustomDictionaryEnabled: $customDictionarySwitch.prop( "checked" )
       })
       textareaTranslation.translateText(appendTranslatedTextIntoOutputTextarea).then(() => {
-        if (textareaTranslation?.abortController.signal.aborted as boolean) return
+        if ((textareaTranslation as Translation).abortController.signal.aborted as boolean) return
         $( this ).text( "Sửa" )
         $textareaCopyButton.data( "target", "textareaTranslation" )
-        sessionStorage.setItem('responseText', textareaTranslation?.responseText as string)
+        sessionStorage.setItem('responseText', (textareaTranslation as Translation).responseText as string)
         $retranslateButton.removeClass( "disabled" )
       }).catch(() => {
-        if (!(textareaTranslation?.abortController.signal.aborted as boolean)) $( this ).click()
+        if (!((textareaTranslation as Translation).abortController.signal.aborted as boolean)) $( this ).click()
       })
       break
     }
     case 'Huỷ':
-      textareaTranslation?.abortController.abort()
+      (textareaTranslation as Translation).abortController.abort()
       // fallthrough
     case 'Sửa':
       $outputTextarea.text( "" )
