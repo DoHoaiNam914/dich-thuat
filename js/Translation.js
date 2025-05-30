@@ -277,6 +277,15 @@ class Translation {
                 this.translateText = async (resolve) => {
                     const { chutesModelId, CHUTES_API_TOKEN, isChutesWebSearchEnabled } = options;
                     const prompt = this.getPrompt(systemInstruction, this.text);
+                    const isNotDeepseekModel = !chutesModelId.startsWith('deepseek-ai/');
+                    const searchResults = await this.webSearchWithTavily(this.text, TVLY_API_KEY, this.abortController.signal).then(value => value.map((element, index) => `[webpage ${index + 1} begin]${element}[webpage ${index + 1} end]`).join('\n'));
+                    const date = new Date();
+                    const dateTimeFormat = new Intl.DateTimeFormat(isNotDeepseekModel ? 'en' : 'zh-CN', {
+                        day: 'numeric',
+                        month: 'long',
+                        weekday: 'long',
+                        year: 'numeric'
+                    });
                     /* eslint-disable no-mixed-spaces-and-tabs */
                     const response = await fetch("https://llm.chutes.ai/v1/chat/completions", {
                         method: "POST",
@@ -292,21 +301,9 @@ class Translation {
                                     "role": "system",
                                     "content": element
                                 })),
-                                ...isChutesWebSearchEnabled
-                                    ? [
-                                        {
-                                            "role": "user",
-                                            "content": prompt
-                                        },
-                                        {
-                                            "role": "assistant",
-                                            "content": await this.webSearchWithTavily(this.text, TVLY_API_KEY, this.abortController.signal).then(value => value.map((element, index) => `[webpage ${index + 1} begin]${element}[webpage ${index + 1} end]`).join('\n'))
-                                        }
-                                    ]
-                                    : [],
                                 {
                                     "role": "user",
-                                    "content": prompt
+                                    "content": isChutesWebSearchEnabled ? (isNotDeepseekModel ? `# The following contents are the search results related to the user's message:\n${searchResults}\nIn the search results I provide to you, each result is formatted as [webpage X begin]...[webpage X end], where X represents the numerical index of each article. Please cite the context at the end of the relevant sentence when appropriate. Use the citation format [citation:X] in the corresponding part of your answer. If a sentence is derived from multiple contexts, list all relevant citation numbers, such as [citation:3][citation:5]. Be sure not to cluster all citations at the end; instead, include them in the corresponding parts of the answer.\nWhen responding, please keep the following points in mind:\n- Today is ${dateTimeFormat.format(date)}.\n- Not all content in the search results is closely related to the user's question. You need to evaluate and filter the search results based on the question.\n- For listing-type questions (e.g., listing all flight information), try to limit the answer to 10 key points and inform the user that they can refer to the search sources for complete information. Prioritize providing the most complete and relevant items in the list. Avoid mentioning content not provided in the search results unless necessary.\n- For creative tasks (e.g., writing an essay), ensure that references are cited within the body of the text, such as [citation:3][citation:5], rather than only at the end of the text. You need to interpret and summarize the user's requirements, choose an appropriate format, fully utilize the search results, extract key information, and generate an answer that is insightful, creative, and professional. Extend the length of your response as much as possible, addressing each point in detail and from multiple perspectives, ensuring the content is rich and thorough.\n- If the response is lengthy, structure it well and summarize it in paragraphs. If a point-by-point format is needed, try to limit it to 5 points and merge related content.\n- For objective Q&A, if the answer is very brief, you may add one or two related sentences to enrich the content.\n- Choose an appropriate and visually appealing format for your response based on the user's requirements and the content of the answer, ensuring strong readability.\n- Your answer should synthesize information from multiple relevant webpages and avoid repeatedly citing the same webpage.\n- Unless the user requests otherwise, your response should be in the same language as the user's question.\n# The user's message is:\n${prompt}` : `# 以下内容是基于用户发送的消息的搜索结果:\n${searchResults}\n在我给你的搜索结果中，每个结果都是[webpage X begin]...[webpage X end]格式的，X代表每篇文章的数字索引。请在适当的情况下在句子末尾引用上下文。请按照引用编号[citation:X]的格式在答案中对应部分引用上下文。如果一句话源自多个上下文，请列出所有相关的引用编号，例如[citation:3][citation:5]，切记不要将引用集中在最后返回引用编号，而是在答案对应部分列出。\n在回答时，请注意以下几点：\n- 今天${dateTimeFormat.format(date).replace(' ', '，')}。\n- 并非搜索结果的所有内容都与用户的问题密切相关，你需要结合问题，对搜索结果进行甄别、筛选。\n- 对于列举类的问题（如列举所有航班信息），尽量将答案控制在10个要点以内，并告诉用户可以查看搜索来源、获得完整信息。优先提供信息完整、最相关的列举项；如非必要，不要主动告诉用户搜索结果未提供的内容。\n- 对于创作类的问题（如写论文），请务必在正文的段落中引用对应的参考编号，例如[citation:3][citation:5]，不能只在文章末尾引用。你需要解读并概括用户的题目要求，选择合适的格式，充分利用搜索结果并抽取重要信息，生成符合用户要求、极具思想深度、富有创造力与专业性的答案。你的创作篇幅需要尽可能延长，对于每一个要点的论述要推测用户的意图，给出尽可能多角度的回答要点，且务必信息量大、论述详尽。\n- 如果回答很长，请尽量结构化、分段落总结。如果需要分点作答，尽量控制在5个点以内，并合并相关的内容。\n- 对于客观类的问答，如果问题的答案非常简短，可以适当补充一到两句相关信息，以丰富内容。\n- 你需要根据用户要求和回答内容选择合适、美观的回答格式，确保可读性强。\n- 你的回答应该综合多个相关网页来回答，不能重复引用一个网页。\n- 除非用户要求，否则你回答的语言需要和用户提问的语言保持一致。\n# 用户消息为：\n${prompt}`) : prompt
                                 }
                                 /* eslint-disable no-mixed-spaces-and-tabs */
                             ],
@@ -350,10 +347,10 @@ class Translation {
                                         const content = parsed.choices[0].delta.content;
                                         if (content) {
                                             this.responseText += content;
-                                            if (this.responseText.startsWith('<think>') && !/<\/think>\n{2}/.test(this.responseText))
+                                            if (this.responseText.startsWith('<think>') && !/<\/think>\n{1,2}/.test(this.responseText))
                                                 continue;
                                             else if (this.responseText.startsWith('<think>'))
-                                                this.responseText = this.responseText.replace(/^<think>\n[\s\S]+\n<\/think>\n{2}/, '');
+                                                this.responseText = this.responseText.replace(/^<think>\n[\s\S]+\n<\/think>\n{1,2}/, '');
                                             this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(this.responseText, prompt) : this.responseText;
                                             if (this.translatedText.length === 0)
                                                 continue;
@@ -379,6 +376,15 @@ class Translation {
                 const groq = new Groq({ apiKey: GROQ_API_KEY, dangerouslyAllowBrowser: true });
                 this.translateText = async (resolve) => {
                     const prompt = this.getPrompt(systemInstruction, this.text);
+                    const isNotDeepseekModel = groqModelId !== 'deepseek-r1-distill-llama-70b';
+                    const searchResults = await this.webSearchWithTavily(this.text, TVLY_API_KEY, this.abortController.signal).then(value => value.map((element, index) => `[webpage ${index + 1} begin]${element}[webpage ${index + 1} end]`).join('\n'));
+                    const date = new Date();
+                    const dateTimeFormat = new Intl.DateTimeFormat(isNotDeepseekModel ? 'en' : 'zh-CN', {
+                        day: 'numeric',
+                        month: 'long',
+                        weekday: 'long',
+                        year: 'numeric'
+                    });
                     const chatCompletion = await groq.chat.completions.create({
                         "messages": [
                             ...this.getSystemInstructions(systemInstruction, this.text, this.originalLanguage, this.destinationLanguage, options).map(element => ({
@@ -399,7 +405,7 @@ class Translation {
                                 : [],
                             {
                                 "role": "user",
-                                "content": prompt
+                                "content": isGroqWebSearchEnabled ? (isNotDeepseekModel ? `# The following contents are the search results related to the user's message:\n${searchResults}\nIn the search results I provide to you, each result is formatted as [webpage X begin]...[webpage X end], where X represents the numerical index of each article. Please cite the context at the end of the relevant sentence when appropriate. Use the citation format [citation:X] in the corresponding part of your answer. If a sentence is derived from multiple contexts, list all relevant citation numbers, such as [citation:3][citation:5]. Be sure not to cluster all citations at the end; instead, include them in the corresponding parts of the answer.\nWhen responding, please keep the following points in mind:\n- Today is ${dateTimeFormat.format(date)}.\n- Not all content in the search results is closely related to the user's question. You need to evaluate and filter the search results based on the question.\n- For listing-type questions (e.g., listing all flight information), try to limit the answer to 10 key points and inform the user that they can refer to the search sources for complete information. Prioritize providing the most complete and relevant items in the list. Avoid mentioning content not provided in the search results unless necessary.\n- For creative tasks (e.g., writing an essay), ensure that references are cited within the body of the text, such as [citation:3][citation:5], rather than only at the end of the text. You need to interpret and summarize the user's requirements, choose an appropriate format, fully utilize the search results, extract key information, and generate an answer that is insightful, creative, and professional. Extend the length of your response as much as possible, addressing each point in detail and from multiple perspectives, ensuring the content is rich and thorough.\n- If the response is lengthy, structure it well and summarize it in paragraphs. If a point-by-point format is needed, try to limit it to 5 points and merge related content.\n- For objective Q&A, if the answer is very brief, you may add one or two related sentences to enrich the content.\n- Choose an appropriate and visually appealing format for your response based on the user's requirements and the content of the answer, ensuring strong readability.\n- Your answer should synthesize information from multiple relevant webpages and avoid repeatedly citing the same webpage.\n- Unless the user requests otherwise, your response should be in the same language as the user's question.\n# The user's message is:\n${prompt}` : `# 以下内容是基于用户发送的消息的搜索结果:\n${searchResults}\n在我给你的搜索结果中，每个结果都是[webpage X begin]...[webpage X end]格式的，X代表每篇文章的数字索引。请在适当的情况下在句子末尾引用上下文。请按照引用编号[citation:X]的格式在答案中对应部分引用上下文。如果一句话源自多个上下文，请列出所有相关的引用编号，例如[citation:3][citation:5]，切记不要将引用集中在最后返回引用编号，而是在答案对应部分列出。\n在回答时，请注意以下几点：\n- 今天${dateTimeFormat.format(date).replace(' ', '，')}。\n- 并非搜索结果的所有内容都与用户的问题密切相关，你需要结合问题，对搜索结果进行甄别、筛选。\n- 对于列举类的问题（如列举所有航班信息），尽量将答案控制在10个要点以内，并告诉用户可以查看搜索来源、获得完整信息。优先提供信息完整、最相关的列举项；如非必要，不要主动告诉用户搜索结果未提供的内容。\n- 对于创作类的问题（如写论文），请务必在正文的段落中引用对应的参考编号，例如[citation:3][citation:5]，不能只在文章末尾引用。你需要解读并概括用户的题目要求，选择合适的格式，充分利用搜索结果并抽取重要信息，生成符合用户要求、极具思想深度、富有创造力与专业性的答案。你的创作篇幅需要尽可能延长，对于每一个要点的论述要推测用户的意图，给出尽可能多角度的回答要点，且务必信息量大、论述详尽。\n- 如果回答很长，请尽量结构化、分段落总结。如果需要分点作答，尽量控制在5个点以内，并合并相关的内容。\n- 对于客观类的问答，如果问题的答案非常简短，可以适当补充一到两句相关信息，以丰富内容。\n- 你需要根据用户要求和回答内容选择合适、美观的回答格式，确保可读性强。\n- 你的回答应该综合多个相关网页来回答，不能重复引用一个网页。\n- 除非用户要求，否则你回答的语言需要和用户提问的语言保持一致。\n# 用户消息为：\n${prompt}`) : prompt
                             }
                         ],
                         "model": groqModelId,
