@@ -256,7 +256,7 @@ $translationTranslators.on( "click", function () {
   const previousTargetText = $targetTextarea.val() as string
   $targetTextarea.val( "Đang dịch..." )
   $( "#source-text, #target-textarea" ).prop( "readOnly", true )
-  $( "[data-translation-translator-value], #add-word-button, #delete-button" ).addClass( "disabled" )
+  $( "[data-translation-translator-value], .text-language-select, #add-word-button, #delete-button" ).addClass( "disabled" )
   dictionaryTranslation = new Translation(sourceText, $targetTextLanguageSelect.val() as string, $sourceTextLanguageSelect.val() as string | null, {
     GEMINI_API_KEY: $geminiApiKeyText.val() as string,
     GROQ_API_KEY: $groqApiKeyText.val() as string,
@@ -293,7 +293,7 @@ $translationTranslators.on( "click", function () {
     if (!(textareaTranslation?.abortController.signal.aborted as boolean)) $targetTextarea.val( previousTargetText )
   }).finally(() => {
     $( "#source-text, #target-textarea" ).prop( "readOnly", false )
-    $( "[data-translation-translator-value], #add-word-button, #delete-button" ).removeClass( "disabled" )
+    $( "[data-translation-translator-value], .text-language-select, #add-word-button, #delete-button" ).removeClass( "disabled" )
   })
 })
 $( "[data-define-url]" ).on( "click", function () {
@@ -428,6 +428,7 @@ $translateButton.on( "click", function () {
         if (textareaTranslation?.abortController.signal.aborted as boolean) return
         $( this ).text( "Sửa" )
         $textareaCopyButton.data( "target", "textareaTranslation" )
+        sessionStorage.setItem('responseText', textareaTranslation?.responseText as string)
         $retranslateButton.removeClass( "disabled" )
       }).catch(() => {
         if (!(textareaTranslation?.abortController.signal.aborted as boolean)) $( this ).click()
