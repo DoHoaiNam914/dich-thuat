@@ -277,7 +277,7 @@ $translationTranslators.on("click", function () {
     const previousTargetText = $targetTextarea.val();
     $targetTextarea.val("Đang dịch...");
     $("#source-text, #target-textarea").prop("readOnly", true);
-    $("[data-translation-translator-value], #add-word-button, #delete-button").addClass("disabled");
+    $("[data-translation-translator-value], .text-language-select, #add-word-button, #delete-button").addClass("disabled");
     dictionaryTranslation = new Translation(sourceText, $targetTextLanguageSelect.val(), $sourceTextLanguageSelect.val(), {
         GEMINI_API_KEY: $geminiApiKeyText.val(),
         GROQ_API_KEY: $groqApiKeyText.val(),
@@ -315,7 +315,7 @@ $translationTranslators.on("click", function () {
             $targetTextarea.val(previousTargetText);
     }).finally(() => {
         $("#source-text, #target-textarea").prop("readOnly", false);
-        $("[data-translation-translator-value], #add-word-button, #delete-button").removeClass("disabled");
+        $("[data-translation-translator-value], .text-language-select, #add-word-button, #delete-button").removeClass("disabled");
     });
 });
 $("[data-define-url]").on("click", function () {
@@ -463,6 +463,7 @@ $translateButton.on("click", function () {
                     return;
                 $(this).text("Sửa");
                 $textareaCopyButton.data("target", "textareaTranslation");
+                sessionStorage.setItem('responseText', textareaTranslation?.responseText);
                 $retranslateButton.removeClass("disabled");
             }).catch(() => {
                 if (!textareaTranslation?.abortController.signal.aborted)

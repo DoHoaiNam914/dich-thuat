@@ -238,6 +238,7 @@ var Translators;
 })(Translators || (Translators = {}));
 class Translation {
     constructor(text, destinationLanguage, originalLanguage = null, options = {}) {
+        this.responseText = '';
         this.translatedText = '';
         this.text = text;
         this.destinationLanguage = destinationLanguage;
@@ -320,7 +321,6 @@ class Translation {
                         /* eslint-disable no-mixed-spaces-and-tabs */
                     });
                     /* eslint-enable no-mixed-spaces-and-tabs */
-                    let responseText = '';
                     const reader = response.body?.getReader();
                     if (!reader) {
                         throw new Error('Response body is not readable');
@@ -349,12 +349,12 @@ class Translation {
                                         const parsed = JSON.parse(data);
                                         const content = parsed.choices[0].delta.content;
                                         if (content) {
-                                            responseText += content;
-                                            if (responseText.startsWith('<think>') && !/<\/think>\n{2}/.test(responseText))
+                                            this.responseText += content;
+                                            if (this.responseText.startsWith('<think>') && !/<\/think>\n{2}/.test(this.responseText))
                                                 continue;
-                                            else if (responseText.startsWith('<think>'))
-                                                responseText = responseText.replace(/^<think>\n[\s\S]+\n<\/think>\n{2}/, '');
-                                            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(responseText, prompt) : responseText;
+                                            else if (this.responseText.startsWith('<think>'))
+                                                this.responseText = this.responseText.replace(/^<think>\n[\s\S]+\n<\/think>\n{2}/, '');
+                                            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(this.responseText, prompt) : this.responseText;
                                             if (this.translatedText.length === 0)
                                                 continue;
                                             if (this.abortController.signal.aborted)
@@ -409,10 +409,9 @@ class Translation {
                         "stop": null,
                         ...['qwen-qwq-32b', 'deepseek-r1-distill-llama-70b'].some(element => element === groqModelId) ? { "reasoning_format": "hidden" } : {}
                     });
-                    let responseText = '';
                     for await (const chunk of chatCompletion) {
-                        responseText += chunk.choices[0]?.delta?.content || '';
-                        this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(responseText, prompt) : responseText;
+                        this.responseText += chunk.choices[0]?.delta?.content || '';
+                        this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(this.responseText, prompt) : this.responseText;
                         if (this.translatedText.length === 0)
                             continue;
                         if (this.abortController.signal.aborted)
@@ -483,8 +482,8 @@ class Translation {
                         method: 'POST',
                         signal: this.abortController.signal
                     }).then(value => value.json()).then(value => {
-                        const responseText = value.output.filter((element) => element.type === 'message')[0].content[0].text;
-                        this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(responseText, prompt) : responseText;
+                        this.responseText = value.output.filter((element) => element.type === 'message')[0].content[0].text;
+                        this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(this.responseText, prompt) : this.responseText;
                         if (this.abortController.signal.aborted)
                             return;
                         resolve(this.translatedText, this.text, options);
@@ -518,8 +517,8 @@ class Translation {
                         reasoning: { "exclude": true },
                         ...isOpenrouterWebSearchEnabled ? { plugins: [{ "id": "web" }] } : {},
                     }, { keepalive: true, signal: this.abortController.signal });
-                    const responseText = completion.choices[0].message?.content;
-                    this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(responseText, prompt) : responseText;
+                    this.responseText = completion.choices[0].message?.content;
+                    this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(this.responseText, prompt) : this.responseText;
                     if (this.abortController.signal.aborted)
                         return;
                     resolve(this.translatedText, this.text, options);
@@ -589,10 +588,9 @@ class Translation {
                         config,
                         contents,
                     });
-                    let responseText = '';
                     for await (const chunk of response) {
-                        responseText += chunk.text;
-                        this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(responseText, prompt) : responseText;
+                        this.responseText += chunk.text;
+                        this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(this.responseText, prompt) : this.responseText;
                         if (this.translatedText.length === 0)
                             continue;
                         if (this.abortController.signal.aborted)
