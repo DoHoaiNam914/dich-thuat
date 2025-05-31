@@ -1,5 +1,5 @@
 'use strict'
-/* global $, confirm, localStorage, open, Papa, sessionStorage */
+/* global $, confirm, fetch, localStorage, open, Papa, sessionStorage */
 import Reader from './Reader.js'
 import { MODELS, Translation } from './Translation.js'
 import Utils from './Utils.js'
