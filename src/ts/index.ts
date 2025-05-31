@@ -19,6 +19,7 @@ const $inputTextarea = $( "#input-textarea" )
 const $justifyTextSwitch = $( "#justify-text-switch" )
 const $lineHeightText = $( "#line-height-text" )
 const $openrouterApiKeyText = $( "#openrouter-api-key-text" )
+const $originalLanguageSelect = $( "#original-language-select" )
 const $outputTextarea = $( "#output-textarea" )
 const $retranslateButton = $( "#retranslate-button" )
 const $sourceText = $( "#source-text" )
@@ -30,6 +31,7 @@ const $textLanguageSelects = $( ".text-language-select" )
 const $translationTranslators = $( "[data-translation-translator-value]" )
 const $translators = $( "[data-translator-value]" )
 let customDictionary: DictionaryEntry[] = []
+let b2bAuthToken: string | undefined = undefined
 let textareaTranslation: Translation | null = null
 let dictionaryTranslation: Translation | null = null
 function setReaderTheme (readerTheme: string, prevReaderTheme = null): void {
@@ -70,15 +72,15 @@ function setStoredCustomDictionaryAndReloadCounter (customDictionary: Dictionary
   $( "#custom-dictionary-count-number" ).text( customDictionary.length )
   if (customDictionary.length > 0) {
     customDictionary.sort((a, b) => {
-      const originalLanguageDifference = a.originalLanguage.localeCompare(b.originalLanguage)
+      const originalLanguageDifference = a.ori_lang.localeCompare(b.ori_lang)
       if (originalLanguageDifference !== 0) return originalLanguageDifference
-      const destinationLanguageDifference = a.destinationLanguage.localeCompare(b.destinationLanguage)
+      const destinationLanguageDifference = a.des_lang.localeCompare(b.des_lang)
       if (destinationLanguageDifference !== 0) return destinationLanguageDifference
-      const wordLengthDifference = a.originalWord.split(/(?:)/u).length - b.originalWord.split(/(?:)/u).length
+      const wordLengthDifference = a.ori_word.split(/(?:)/u).length - b.ori_word.split(/(?:)/u).length
       if (wordLengthDifference !== 0) return wordLengthDifference
-      const destinationWordDifference = a.destinationWord.localeCompare(b.destinationWord, 'vi', { ignorePunctuation: true })
+      const destinationWordDifference = a.des_word.localeCompare(b.des_word, 'vi', { ignorePunctuation: true })
       if (destinationWordDifference !== 0) return destinationWordDifference
-      return a.originalWord.localeCompare(b.originalWord, 'vi', { ignorePunctuation: true })
+      return a.ori_word.localeCompare(b.ori_word, 'vi', { ignorePunctuation: true })
     })
     localStorage.setItem('customDictionary', JSON.stringify(customDictionary))
   } else {
@@ -172,6 +174,12 @@ $( document ).ready(() => {
   })
   customDictionary = JSON.parse(localStorage.getItem('customDictionary') ?? '[]')
   setStoredCustomDictionaryAndReloadCounter(customDictionary)
+  fetch(`${Utils.CORS_HEADER_PROXY}https://lingvanex.com/lingvanex_demo_page/js/api-base.js`).then(value => value.text()).then(value => {
+    b2bAuthToken = value.match(/B2B_AUTH_TOKEN="([^"]+)"/)?.[1]
+  }).catch(() => {
+    if ($originalLanguageSelect.val() === 'null') $originalLanguageSelect.val( "en" )
+    $originalLanguageSelect.find( "option[value='null']" ).remove()
+  })
 })
 $fontFamilyText.on( "change", function () {
   const fontFamily = Reader.fontMapper($( this ).val() as string)
@@ -229,12 +237,12 @@ $( "#custom-dictionary-input" ).on( "change", function () {
     complete: (results: { data: Record<string, string>[] }) => {
       customDictionary = results.data.map(a => {
         const COLUMN_NAME_MAP: Record<string, keyof DictionaryEntry> = {
-          'Original language': 'originalLanguage',
-          'Destination language': 'destinationLanguage',
-          'Original word': 'originalWord',
-          'Destination word': 'destinationWord'
+          'Original language': 'ori_lang',
+          'Destination language': 'des_lang',
+          'Original word': 'ori_word',
+          'Destination word': 'des_word'
         }
-        const row: DictionaryEntry = { originalLanguage: '', destinationLanguage: '', originalWord: '', destinationWord: '' }
+        const row: DictionaryEntry = { ori_lang: '', des_lang: '', ori_word: '', des_word: '' }
         Object.keys(COLUMN_NAME_MAP).forEach(b => {
           row[COLUMN_NAME_MAP[b]] = a[b]
         })
@@ -259,7 +267,7 @@ $translationTranslators.on( "click", function () {
   $targetTextarea.val( "Đang dịch..." )
   $( "#source-text, #target-textarea" ).prop( "readOnly", true )
   $( "[data-translation-translator-value], #add-word-button, #delete-button" ).addClass( "disabled" )
-  dictionaryTranslation = new Translation(sourceText, $targetTextLanguageSelect.val() as string, $sourceTextLanguageSelect.val() as string | null, {
+  dictionaryTranslation = new Translation(sourceText, $targetTextLanguageSelect.val() as string, $sourceTextLanguageSelect.val() as string || null, {
     GEMINI_API_KEY: $geminiApiKeyText.val() as string,
     GROQ_API_KEY: $groqApiKeyText.val() as string,
     CHUTES_API_TOKEN: $chutesApiTokenText.val() as string,
@@ -307,7 +315,7 @@ $textLanguageSelects.on( "change", () => {
   $sourceText.trigger( "input" )
 })
 $sourceText.on( "input", function () {
-  $targetTextarea.val( customDictionary.find(({ originalLanguage, destinationLanguage, originalWord }) => originalLanguage === $sourceTextLanguageSelect.val() && destinationLanguage === $targetTextLanguageSelect.val() && originalWord === $( this ).val())?.destinationWord ?? $targetTextarea.val() as string )
+  $targetTextarea.val( customDictionary.find(({ ori_lang, des_lang, ori_word }) => ori_lang === $sourceTextLanguageSelect.val() && des_lang === $targetTextLanguageSelect.val() && ori_word === $( this ).val())?.des_word ?? $targetTextarea.val() as string ) // eslint-disable-line camelcase
 })
 $targetTextarea.on( "input", function () {
   $( this ).val( ($( this ).val() as string).replace(/\n/g, ' ') )
@@ -318,19 +326,19 @@ $addWordButton.on( "click", () => {
   const originalWord = $sourceText.val() as string
   const destinationWord = $targetTextarea.val() as string
   if (originalWord.length === 0 || destinationWord.length === 0) return
-  const wordIndex = customDictionary.findIndex(element => element.originalLanguage === originalLanguage && element.destinationLanguage === destinationLanguage && element.originalWord === originalWord)
+  const wordIndex = customDictionary.findIndex(({ ori_lang, des_lang, ori_word }) => ori_lang === originalLanguage && des_lang === destinationLanguage && ori_word === originalWord) // eslint-disable-line camelcase
   if (wordIndex !== -1) customDictionary.splice(wordIndex, 1)
   customDictionary.push({
-    originalLanguage: $sourceTextLanguageSelect.val() as string,
-    destinationLanguage: $targetTextLanguageSelect.val() as string,
-    originalWord,
-    destinationWord
+    ori_lang: originalLanguage,
+    des_lang: destinationLanguage,
+    ori_word: originalWord,
+    des_word: destinationWord
   })
   $( "#source-text, #target-textarea" ).val( "" )
   setStoredCustomDictionaryAndReloadCounter(customDictionary)
 })
 $deleteButton.on( "click", () => {
-  const wordIndex = customDictionary.findIndex(({ originalLanguage, destinationLanguage, originalWord }) => originalLanguage === $sourceTextLanguageSelect.val() && destinationLanguage === $targetTextLanguageSelect.val() && originalWord === $sourceText.val())
+  const wordIndex = customDictionary.findIndex(({ ori_lang, des_lang, ori_word }) => ori_lang === $sourceTextLanguageSelect.val() && des_lang === $targetTextLanguageSelect.val() && ori_word === $sourceText.val()) // eslint-disable-line camelcase
   if (wordIndex === -1 || !confirm('Bạn có chắc chắn muốn xoá từ này?')) return
   customDictionary.splice(wordIndex, 1)
   setStoredCustomDictionaryAndReloadCounter(customDictionary)
@@ -342,10 +350,10 @@ $( "#copy-csv-button" ).on( "click", () => {
       // @ts-expect-error Papaparse
       await navigator.clipboard.writeText(Papa.unparse(customDictionary.map(a => {
         const COLUMN_NAME_MAP: Record<string, string> = {
-          originalLanguage: 'Original language',
-          originalWord: 'Original word',
-          destinationLanguage: 'Destination language',
-          destinationWord: 'Destination word'
+          ori_lang: 'Original language',
+          ori_word: 'Original word',
+          des_lang: 'Destination language',
+          des_word: 'Destination word'
         }
         const row: Record<string, string> = {}
         Object.keys(COLUMN_NAME_MAP).forEach(b => {
@@ -402,7 +410,7 @@ $translateButton.on( "click", function () {
       $inputTextarea.hide()
       $outputTextarea.show()
       $( this ).text( "Huỷ" )
-      textareaTranslation = new Translation(inputText, $( "#destination-language-select" ).val() as string, $( "#original-language-select" ).val() as string | null, {
+      textareaTranslation = new Translation(inputText, $( "#destination-language-select" ).val() as string, $originalLanguageSelect.val() as string | null, {
         translatorId: $translators.filter( ".active" ).data( "translator-value" ),
         googleGenaiModelId: $( "#google-genai-model-select" ).val() as string,
         isThinkingModeEnabled: $( "#thinking-mode-switch" ).prop( "checked" ),
@@ -425,7 +433,8 @@ $translateButton.on( "click", function () {
         customDictionary,
         isCustomPromptEnabled: $( "#custom-prompt-switch" ).prop( "checked" ),
         customPrompt: $( "#custom-prompt-textarea" ).val() as string,
-        isCustomDictionaryEnabled: $customDictionarySwitch.prop( "checked" )
+        isCustomDictionaryEnabled: $customDictionarySwitch.prop( "checked" ),
+        B2B_AUTH_TOKEN: b2bAuthToken
       })
       textareaTranslation.translateText(appendTranslatedTextIntoOutputTextarea).then(() => {
         if ((textareaTranslation as Translation).abortController.signal.aborted as boolean) return
