@@ -390,7 +390,7 @@ $retranslateButton.on( "click", () => {
 $( ".language-select" ).on( "change", function () {
   const $textLanguageSelect = $textLanguageSelects.filter( `#${$( this ).prop( "id" ).replace('original', 'source-text').replace('destination', 'target-text')}` )
   const value = $( this ).val() as string
-  $textLanguageSelect.val( $textLanguageSelect.prop( "disabled" ) !== false && value !== 'null' ? value : $textLanguageSelect.val() as string ).change()
+  $textLanguageSelect.val( value !== 'null' ? value : $textLanguageSelect.val() as string ).change()
 })
 $translateButton.on( "click", function () {
   const $textareaCopyButton = $copyButtons.filter( `[data-target="#${$inputTextarea.prop( "id" ) as string}"]` )
