@@ -238,12 +238,12 @@ let Translators;
   Translators.PAPAGO = 'papago'
 })(Translators || (Translators = {}))
 class Translation {
-  constructor (text, destinationLanguage, originalLanguage = null, options = {}) {
+  constructor (text, destLang, originalLang = null, options = {}) {
     this.responseText = ''
     this.translatedText = ''
     this.text = text
-    this.destinationLanguage = destinationLanguage
-    this.originalLanguage = originalLanguage
+    this.destLang = destLang
+    this.originalLang = originalLang
     this.abortController = new AbortController()
     options = {
       chutesModelId: 'deepseek-ai/DeepSeek-R1',
@@ -272,15 +272,17 @@ class Translation {
       translatorId: Translators.GOOGLE_GENAI_TRANSLATE,
       ...options
     }
-    const { systemInstruction, temperature, topP, topK, TVLY_API_KEY } = options
+    const { B2B_AUTH_TOKEN, systemInstruction, temperature, topP, topK, TVLY_API_KEY } = options
+    this.B2B_AUTH_TOKEN = B2B_AUTH_TOKEN
+    this.TVLY_API_KEY = TVLY_API_KEY
+    const prompt = this.getPrompt(systemInstruction)
+    const date = new Date()
     switch (options.translatorId) {
       case Translators.CHUTES_TRANSLATE:
         this.translateText = async (resolve) => {
           const { chutesModelId, CHUTES_API_TOKEN, isChutesWebSearchEnabled } = options
-          const prompt = this.getPrompt(systemInstruction, this.text)
           const isNotDeepseekModel = !chutesModelId.startsWith('deepseek-ai/')
-          const searchResults = isChutesWebSearchEnabled ? await this.webSearchWithTavily(this.text, TVLY_API_KEY, this.abortController.signal).then(value => value.map((element, index) => `[webpage ${index + 1} begin]${element}[webpage ${index + 1} end]`).join('\n')) : ''
-          const date = new Date()
+          const searchResults = isChutesWebSearchEnabled ? await this.webSearchWithTavily().then(value => value.map((element, index) => `[webpage ${index + 1} begin]${element}[webpage ${index + 1} end]`).join('\n')) : ''
           const dateTimeFormat = new Intl.DateTimeFormat(isNotDeepseekModel ? 'en' : 'zh-CN', {
             day: 'numeric',
             month: 'long',
@@ -298,13 +300,45 @@ class Translation {
               model: chutesModelId,
               messages: [
                 /* eslint-enable no-mixed-spaces-and-tabs */
-                ...this.getSystemInstructions(systemInstruction, this.text, this.originalLanguage, this.destinationLanguage, options).map(element => ({
+                ...await this.getSystemInstructions(options).then(value => value.map(element => ({
                   role: 'system',
                   content: element
-                })),
+                }))),
                 {
                   role: 'user',
-                  content: searchResults.length > 0 ? (isNotDeepseekModel ? `# The following contents are the search results related to the user's message:\n${searchResults}\nIn the search results I provide to you, each result is formatted as [webpage X begin]...[webpage X end], where X represents the numerical index of each article. Please cite the context at the end of the relevant sentence when appropriate. Use the citation format [citation:X] in the corresponding part of your answer. If a sentence is derived from multiple contexts, list all relevant citation numbers, such as [citation:3][citation:5]. Be sure not to cluster all citations at the end; instead, include them in the corresponding parts of the answer.\nWhen responding, please keep the following points in mind:\n- Today is ${dateTimeFormat.format(date)}.\n- Not all content in the search results is closely related to the user's question. You need to evaluate and filter the search results based on the question.\n- For listing-type questions (e.g., listing all flight information), try to limit the answer to 10 key points and inform the user that they can refer to the search sources for complete information. Prioritize providing the most complete and relevant items in the list. Avoid mentioning content not provided in the search results unless necessary.\n- For creative tasks (e.g., writing an essay), ensure that references are cited within the body of the text, such as [citation:3][citation:5], rather than only at the end of the text. You need to interpret and summarize the user's requirements, choose an appropriate format, fully utilize the search results, extract key information, and generate an answer that is insightful, creative, and professional. Extend the length of your response as much as possible, addressing each point in detail and from multiple perspectives, ensuring the content is rich and thorough.\n- If the response is lengthy, structure it well and summarize it in paragraphs. If a point-by-point format is needed, try to limit it to 5 points and merge related content.\n- For objective Q&A, if the answer is very brief, you may add one or two related sentences to enrich the content.\n- Choose an appropriate and visually appealing format for your response based on the user's requirements and the content of the answer, ensuring strong readability.\n- Your answer should synthesize information from multiple relevant webpages and avoid repeatedly citing the same webpage.\n- Unless the user requests otherwise, your response should be in the same language as the user's question.\n# The user's message is:\n${prompt}` : `# 以下内容是基于用户发送的消息的搜索结果:\n${searchResults}\n在我给你的搜索结果中，每个结果都是[webpage X begin]...[webpage X end]格式的，X代表每篇文章的数字索引。请在适当的情况下在句子末尾引用上下文。请按照引用编号[citation:X]的格式在答案中对应部分引用上下文。如果一句话源自多个上下文，请列出所有相关的引用编号，例如[citation:3][citation:5]，切记不要将引用集中在最后返回引用编号，而是在答案对应部分列出。\n在回答时，请注意以下几点：\n- 今天${dateTimeFormat.format(date).replace(' ', '，')}。\n- 并非搜索结果的所有内容都与用户的问题密切相关，你需要结合问题，对搜索结果进行甄别、筛选。\n- 对于列举类的问题（如列举所有航班信息），尽量将答案控制在10个要点以内，并告诉用户可以查看搜索来源、获得完整信息。优先提供信息完整、最相关的列举项；如非必要，不要主动告诉用户搜索结果未提供的内容。\n- 对于创作类的问题（如写论文），请务必在正文的段落中引用对应的参考编号，例如[citation:3][citation:5]，不能只在文章末尾引用。你需要解读并概括用户的题目要求，选择合适的格式，充分利用搜索结果并抽取重要信息，生成符合用户要求、极具思想深度、富有创造力与专业性的答案。你的创作篇幅需要尽可能延长，对于每一个要点的论述要推测用户的意图，给出尽可能多角度的回答要点，且务必信息量大、论述详尽。\n- 如果回答很长，请尽量结构化、分段落总结。如果需要分点作答，尽量控制在5个点以内，并合并相关的内容。\n- 对于客观类的问答，如果问题的答案非常简短，可以适当补充一到两句相关信息，以丰富内容。\n- 你需要根据用户要求和回答内容选择合适、美观的回答格式，确保可读性强。\n- 你的回答应该综合多个相关网页来回答，不能重复引用一个网页。\n- 除非用户要求，否则你回答的语言需要和用户提问的语言保持一致。\n# 用户消息为：\n${prompt}`) : prompt
+                  content: searchResults.length > 0
+                    ? (isNotDeepseekModel
+                        ? `# The following contents are the search results related to the user's message:
+${searchResults}
+In the search results I provide to you, each result is formatted as [webpage X begin]...[webpage X end], where X represents the numerical index of each article. Please cite the context at the end of the relevant sentence when appropriate. Use the citation format [citation:X] in the corresponding part of your answer. If a sentence is derived from multiple contexts, list all relevant citation numbers, such as [citation:3][citation:5]. Be sure not to cluster all citations at the end; instead, include them in the corresponding parts of the answer.
+When responding, please keep the following points in mind:
+- Today is ${dateTimeFormat.format(date)}.
+- Not all content in the search results is closely related to the user's question. You need to evaluate and filter the search results based on the question.
+- For listing-type questions (e.g., listing all flight information), try to limit the answer to 10 key points and inform the user that they can refer to the search sources for complete information. Prioritize providing the most complete and relevant items in the list. Avoid mentioning content not provided in the search results unless necessary.
+- For creative tasks (e.g., writing an essay), ensure that references are cited within the body of the text, such as [citation:3][citation:5], rather than only at the end of the text. You need to interpret and summarize the user's requirements, choose an appropriate format, fully utilize the search results, extract key information, and generate an answer that is insightful, creative, and professional. Extend the length of your response as much as possible, addressing each point in detail and from multiple perspectives, ensuring the content is rich and thorough.
+- If the response is lengthy, structure it well and summarize it in paragraphs. If a point-by-point format is needed, try to limit it to 5 points and merge related content.
+- For objective Q&A, if the answer is very brief, you may add one or two related sentences to enrich the content.
+- Choose an appropriate and visually appealing format for your response based on the user's requirements and the content of the answer, ensuring strong readability.
+- Your answer should synthesize information from multiple relevant webpages and avoid repeatedly citing the same webpage.
+- Unless the user requests otherwise, your response should be in the same language as the user's question.
+# The user's message is:
+${prompt}`
+                        : `# 以下内容是基于用户发送的消息的搜索结果:
+${searchResults}
+在我给你的搜索结果中，每个结果都是[webpage X begin]...[webpage X end]格式的，X代表每篇文章的数字索引。请在适当的情况下在句子末尾引用上下文。请按照引用编号[citation:X]的格式在答案中对应部分引用上下文。如果一句话源自多个上下文，请列出所有相关的引用编号，例如[citation:3][citation:5]，切记不要将引用集中在最后返回引用编号，而是在答案对应部分列出。
+在回答时，请注意以下几点：
+- 今天${dateTimeFormat.format(date).replace(' ', '，')}。
+- 并非搜索结果的所有内容都与用户的问题密切相关，你需要结合问题，对搜索结果进行甄别、筛选。
+- 对于列举类的问题（如列举所有航班信息），尽量将答案控制在10个要点以内，并告诉用户可以查看搜索来源、获得完整信息。优先提供信息完整、最相关的列举项；如非必要，不要主动告诉用户搜索结果未提供的内容。
+- 对于创作类的问题（如写论文），请务必在正文的段落中引用对应的参考编号，例如[citation:3][citation:5]，不能只在文章末尾引用。你需要解读并概括用户的题目要求，选择合适的格式，充分利用搜索结果并抽取重要信息，生成符合用户要求、极具思想深度、富有创造力与专业性的答案。你的创作篇幅需要尽可能延长，对于每一个要点的论述要推测用户的意图，给出尽可能多角度的回答要点，且务必信息量大、论述详尽。
+- 如果回答很长，请尽量结构化、分段落总结。如果需要分点作答，尽量控制在5个点以内，并合并相关的内容。
+- 对于客观类的问答，如果问题的答案非常简短，可以适当补充一到两句相关信息，以丰富内容。
+- 你需要根据用户要求和回答内容选择合适、美观的回答格式，确保可读性强。
+- 你的回答应该综合多个相关网页来回答，不能重复引用一个网页。
+- 除非用户要求，否则你回答的语言需要和用户提问的语言保持一致。
+# 用户消息为：
+${prompt}`)
+                    : prompt
                 }
                 /* eslint-disable no-mixed-spaces-and-tabs */
               ],
@@ -366,10 +400,8 @@ class Translation {
         const { groqModelId, GROQ_API_KEY, isGroqWebSearchEnabled } = options
         const groq = new Groq({ apiKey: GROQ_API_KEY, dangerouslyAllowBrowser: true })
         this.translateText = async (resolve) => {
-          const prompt = this.getPrompt(systemInstruction, this.text)
           const isNotDeepseekModel = groqModelId !== 'deepseek-r1-distill-llama-70b'
-          const searchResults = isGroqWebSearchEnabled ? await this.webSearchWithTavily(this.text, TVLY_API_KEY, this.abortController.signal).then(value => value.map((element, index) => `[webpage ${index + 1} begin]${element}[webpage ${index + 1} end]`).join('\n')) : ''
-          const date = new Date()
+          const searchResults = isGroqWebSearchEnabled ? await this.webSearchWithTavily().then(value => value.map((element, index) => `[webpage ${index + 1} begin]${element}[webpage ${index + 1} end]`).join('\n')) : ''
           const dateTimeFormat = new Intl.DateTimeFormat(isNotDeepseekModel ? 'en' : 'zh-CN', {
             day: 'numeric',
             month: 'long',
@@ -378,13 +410,45 @@ class Translation {
           })
           const chatCompletion = await groq.chat.completions.create({
             messages: [
-              ...this.getSystemInstructions(systemInstruction, this.text, this.originalLanguage, this.destinationLanguage, options).map(element => ({
+              ...await this.getSystemInstructions(options).then(value => value.map(element => ({
                 role: 'system',
                 content: element
-              })),
+              }))),
               {
                 role: 'user',
-                content: searchResults.length > 0 ? (isNotDeepseekModel ? `# The following contents are the search results related to the user's message:\n${searchResults}\nIn the search results I provide to you, each result is formatted as [webpage X begin]...[webpage X end], where X represents the numerical index of each article. Please cite the context at the end of the relevant sentence when appropriate. Use the citation format [citation:X] in the corresponding part of your answer. If a sentence is derived from multiple contexts, list all relevant citation numbers, such as [citation:3][citation:5]. Be sure not to cluster all citations at the end; instead, include them in the corresponding parts of the answer.\nWhen responding, please keep the following points in mind:\n- Today is ${dateTimeFormat.format(date)}.\n- Not all content in the search results is closely related to the user's question. You need to evaluate and filter the search results based on the question.\n- For listing-type questions (e.g., listing all flight information), try to limit the answer to 10 key points and inform the user that they can refer to the search sources for complete information. Prioritize providing the most complete and relevant items in the list. Avoid mentioning content not provided in the search results unless necessary.\n- For creative tasks (e.g., writing an essay), ensure that references are cited within the body of the text, such as [citation:3][citation:5], rather than only at the end of the text. You need to interpret and summarize the user's requirements, choose an appropriate format, fully utilize the search results, extract key information, and generate an answer that is insightful, creative, and professional. Extend the length of your response as much as possible, addressing each point in detail and from multiple perspectives, ensuring the content is rich and thorough.\n- If the response is lengthy, structure it well and summarize it in paragraphs. If a point-by-point format is needed, try to limit it to 5 points and merge related content.\n- For objective Q&A, if the answer is very brief, you may add one or two related sentences to enrich the content.\n- Choose an appropriate and visually appealing format for your response based on the user's requirements and the content of the answer, ensuring strong readability.\n- Your answer should synthesize information from multiple relevant webpages and avoid repeatedly citing the same webpage.\n- Unless the user requests otherwise, your response should be in the same language as the user's question.\n# The user's message is:\n${prompt}` : `# 以下内容是基于用户发送的消息的搜索结果:\n${searchResults}\n在我给你的搜索结果中，每个结果都是[webpage X begin]...[webpage X end]格式的，X代表每篇文章的数字索引。请在适当的情况下在句子末尾引用上下文。请按照引用编号[citation:X]的格式在答案中对应部分引用上下文。如果一句话源自多个上下文，请列出所有相关的引用编号，例如[citation:3][citation:5]，切记不要将引用集中在最后返回引用编号，而是在答案对应部分列出。\n在回答时，请注意以下几点：\n- 今天${dateTimeFormat.format(date).replace(' ', '，')}。\n- 并非搜索结果的所有内容都与用户的问题密切相关，你需要结合问题，对搜索结果进行甄别、筛选。\n- 对于列举类的问题（如列举所有航班信息），尽量将答案控制在10个要点以内，并告诉用户可以查看搜索来源、获得完整信息。优先提供信息完整、最相关的列举项；如非必要，不要主动告诉用户搜索结果未提供的内容。\n- 对于创作类的问题（如写论文），请务必在正文的段落中引用对应的参考编号，例如[citation:3][citation:5]，不能只在文章末尾引用。你需要解读并概括用户的题目要求，选择合适的格式，充分利用搜索结果并抽取重要信息，生成符合用户要求、极具思想深度、富有创造力与专业性的答案。你的创作篇幅需要尽可能延长，对于每一个要点的论述要推测用户的意图，给出尽可能多角度的回答要点，且务必信息量大、论述详尽。\n- 如果回答很长，请尽量结构化、分段落总结。如果需要分点作答，尽量控制在5个点以内，并合并相关的内容。\n- 对于客观类的问答，如果问题的答案非常简短，可以适当补充一到两句相关信息，以丰富内容。\n- 你需要根据用户要求和回答内容选择合适、美观的回答格式，确保可读性强。\n- 你的回答应该综合多个相关网页来回答，不能重复引用一个网页。\n- 除非用户要求，否则你回答的语言需要和用户提问的语言保持一致。\n# 用户消息为：\n${prompt}`) : prompt
+                content: searchResults.length > 0
+                  ? (isNotDeepseekModel
+                      ? `# The following contents are the search results related to the user's message:
+${searchResults}
+In the search results I provide to you, each result is formatted as [webpage X begin]...[webpage X end], where X represents the numerical index of each article. Please cite the context at the end of the relevant sentence when appropriate. Use the citation format [citation:X] in the corresponding part of your answer. If a sentence is derived from multiple contexts, list all relevant citation numbers, such as [citation:3][citation:5]. Be sure not to cluster all citations at the end; instead, include them in the corresponding parts of the answer.
+When responding, please keep the following points in mind:
+- Today is ${dateTimeFormat.format(date)}.
+- Not all content in the search results is closely related to the user's question. You need to evaluate and filter the search results based on the question.
+- For listing-type questions (e.g., listing all flight information), try to limit the answer to 10 key points and inform the user that they can refer to the search sources for complete information. Prioritize providing the most complete and relevant items in the list. Avoid mentioning content not provided in the search results unless necessary.
+- For creative tasks (e.g., writing an essay), ensure that references are cited within the body of the text, such as [citation:3][citation:5], rather than only at the end of the text. You need to interpret and summarize the user's requirements, choose an appropriate format, fully utilize the search results, extract key information, and generate an answer that is insightful, creative, and professional. Extend the length of your response as much as possible, addressing each point in detail and from multiple perspectives, ensuring the content is rich and thorough.
+- If the response is lengthy, structure it well and summarize it in paragraphs. If a point-by-point format is needed, try to limit it to 5 points and merge related content.
+- For objective Q&A, if the answer is very brief, you may add one or two related sentences to enrich the content.
+- Choose an appropriate and visually appealing format for your response based on the user's requirements and the content of the answer, ensuring strong readability.
+- Your answer should synthesize information from multiple relevant webpages and avoid repeatedly citing the same webpage.
+- Unless the user requests otherwise, your response should be in the same language as the user's question.
+# The user's message is:
+${prompt}`
+                      : `# 以下内容是基于用户发送的消息的搜索结果:
+${searchResults}
+在我给你的搜索结果中，每个结果都是[webpage X begin]...[webpage X end]格式的，X代表每篇文章的数字索引。请在适当的情况下在句子末尾引用上下文。请按照引用编号[citation:X]的格式在答案中对应部分引用上下文。如果一句话源自多个上下文，请列出所有相关的引用编号，例如[citation:3][citation:5]，切记不要将引用集中在最后返回引用编号，而是在答案对应部分列出。
+在回答时，请注意以下几点：
+- 今天${dateTimeFormat.format(date).replace(' ', '，')}。
+- 并非搜索结果的所有内容都与用户的问题密切相关，你需要结合问题，对搜索结果进行甄别、筛选。
+- 对于列举类的问题（如列举所有航班信息），尽量将答案控制在10个要点以内，并告诉用户可以查看搜索来源、获得完整信息。优先提供信息完整、最相关的列举项；如非必要，不要主动告诉用户搜索结果未提供的内容。
+- 对于创作类的问题（如写论文），请务必在正文的段落中引用对应的参考编号，例如[citation:3][citation:5]，不能只在文章末尾引用。你需要解读并概括用户的题目要求，选择合适的格式，充分利用搜索结果并抽取重要信息，生成符合用户要求、极具思想深度、富有创造力与专业性的答案。你的创作篇幅需要尽可能延长，对于每一个要点的论述要推测用户的意图，给出尽可能多角度的回答要点，且务必信息量大、论述详尽。
+- 如果回答很长，请尽量结构化、分段落总结。如果需要分点作答，尽量控制在5个点以内，并合并相关的内容。
+- 对于客观类的问答，如果问题的答案非常简短，可以适当补充一到两句相关信息，以丰富内容。
+- 你需要根据用户要求和回答内容选择合适、美观的回答格式，确保可读性强。
+- 你的回答应该综合多个相关网页来回答，不能重复引用一个网页。
+- 除非用户要求，否则你回答的语言需要和用户提问的语言保持一致。
+# 用户消息为：
+${prompt}`)
+                  : prompt
               }
             ],
             model: groqModelId,
@@ -407,12 +471,11 @@ class Translation {
       case Translators.OPENAI_TRANSLATOR:
         this.translateText = async (resolve) => {
           const { effort, isOpenaiWebSearchEnabled, openaiModelId } = options
-          const prompt = this.getPrompt(systemInstruction, this.text)
           await fetch('https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1/responses', {
             body: JSON.stringify({
               model: openaiModelId,
               input: [
-                ...this.getSystemInstructions(systemInstruction, this.text, this.originalLanguage, this.destinationLanguage, options).map(element => ({
+                ...await this.getSystemInstructions(options).then(value => value.map(element => ({
                   role: MODELS.OPENAI.Reasoning.includes(openaiModelId) ? (openaiModelId.startsWith('o1-mini') ? 'user' : 'developer') : 'system',
                   content: [
                     {
@@ -420,7 +483,7 @@ class Translation {
                       text: element
                     }
                   ]
-                })),
+                }))),
                 {
                   role: 'user',
                   content: [
@@ -480,14 +543,13 @@ class Translation {
           dangerouslyAllowBrowser: true
         })
         this.translateText = async (resolve) => {
-          const prompt = this.getPrompt(systemInstruction, this.text)
           const completion = await openai.chat.completions.create({
             model: openrouterModelId,
             messages: [
-              ...this.getSystemInstructions(systemInstruction, this.text, this.originalLanguage, this.destinationLanguage, options).map(element => ({
+              ...await this.getSystemInstructions(options).then(value => value.map(element => ({
                 role: 'system',
                 content: element
-              })),
+              }))),
               {
                 role: 'user',
                 content: prompt
@@ -548,12 +610,11 @@ class Translation {
             ],
             ...tools.length > 0 ? { tools } : {},
             responseMimeType: 'text/plain',
-            systemInstruction: this.getSystemInstructions(systemInstruction, this.text, this.originalLanguage, this.destinationLanguage, options).map(element => ({
+            systemInstruction: await this.getSystemInstructions(options).then(value => value.map(element => ({
               text: element
-            }))
+            })))
           }
           const model = options.googleGenaiModelId
-          const prompt = this.getPrompt(systemInstruction, this.text)
           const contents = [
             {
               role: 'user',
@@ -580,25 +641,25 @@ class Translation {
     }
   }
 
-  async webSearchWithTavily (query, apiKey, signal = new AbortSignal()) {
+  async webSearchWithTavily () {
     // const client = tavily({ apiKey: TVLY_API_KEY });
-    // return await client.search(query)
+    // return await client.search(this.text)
     // .then((value: { results: { title: string, content: string }[] }) => value.results.map(({ title, content }) => `# ${title}\n${content}`)) ?? [];
     const options = {
       method: 'POST',
-      headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-      body: `{"query":"${query}"}`,
-      signal
+      headers: { Authorization: `Bearer ${this.TVLY_API_KEY}`, 'Content-Type': 'application/json' },
+      body: `{"query":"${this.text}"}`,
+      signal: this.abortController.signal
     }
     return await fetch('https://api.tavily.com/search', options)
       .then(response => response.json())
       .then((response) => response.results.map(({ content }) => content))
   }
 
-  getPrompt (systemInstruction, text) {
+  getPrompt (systemInstruction) {
     switch (systemInstruction) {
       case SystemInstructions.DOCTRANSLATE_IO:
-        return `### TEXT SENTENCE WITH UUID:\n${text.split('\n').map((element) => {
+        return `### TEXT SENTENCE WITH UUID:\n${this.text.split('\n').map((element) => {
                     if (element.replace(/^\s+/, '').length > 0) {
                         const partedUuid = crypto.randomUUID().split('-')
                         return `${partedUuid[0]}#${partedUuid[2].substring(1)}: ${element}`
@@ -606,13 +667,150 @@ class Translation {
                     return ''
                 }).join('\n')}\n### TRANSLATED TEXT WITH UUID:`
       default:
-        return text.split('\n').filter(element => element.replace(/^\s+/, '').length > 0).join('\n')
+        return this.text.split('\n').filter(element => element.replace(/^\s+/, '').length > 0).join('\n')
     }
   }
 
-  getSystemInstructions (systemInstruction, text, originalLanguage, destinationLanguage, options) {
+  async detectLanguage () {
+    const options = {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/json',
+        Authorization: this.B2B_AUTH_TOKEN
+      },
+      body: JSON.stringify({ q: this.text }),
+      signal: this.abortController.signal
+    }
+    return await fetch('https://api-gl.lingvanex.com/language/translate/v2/detect', options)
+      .then(res => res.json())
+      .then(res => res.data.detections[0][0].language.replace('-Hans', '-cn').replace('-Hant', '-tw'))
+  }
+
+  getDomainInstruction (domain, originalLang) {
+    const LANGUAGE_MAP = {
+      en: 'English',
+      vi: 'Vietnamese',
+      ja: 'Japanese',
+      'zh-cn': 'Chinese (simplified)',
+      'zh-tw': 'Chinese (traditional)'
+    }
+    const lowerCaseOriginalLanguage = (LANGUAGE_MAP[originalLang] ?? LANGUAGE_MAP.en).toLowerCase()
+    const lowerCaseDestinationLanguage = LANGUAGE_MAP[this.destLang].toLowerCase()
+    let specialRequirements = 'What are the special requirements to keep in mind when translating?'
+    let specialAttentionConsiderations = 'What are the linguistic, grammatical, and terminology considerations that need special attention when translating?'
+    let focusAreas = `What needs to be focused on to ensure the document in the target language is correct? Especially technical specifications, units of measurement, technical standards, unit standards that differ between ${lowerCaseOriginalLanguage} and ${lowerCaseDestinationLanguage}. Give examples.`
+    let notedIssues = `When translating the document from ${lowerCaseOriginalLanguage} into ${lowerCaseDestinationLanguage} in the domain ${domain}, what issues should be noted about proper names and proper nouns?`
+    let additionalIssues = 'In addition to the above issues, are there any other issues to keep in mind when translating?'
+    if (domain === Domains.FICTION && originalLang === 'en' && this.destLang === 'vi') {
+      additionalIssues += ' If so, list them all and answer as many and in as much detail as possible.'
+      specialRequirements += `
+- Maintaining the author's unique voice and style is crucial in fiction translation.
+- Preserving the emotional tone and atmosphere of the original text is essential for reader engagement.
+- Ensuring consistency in character portrayal, world-building details, and plot elements throughout the translation is vital.
+- Adapting cultural nuances and references so they resonate with the Vietnamese audience without losing the original meaning or context is a key requirement.
+- Capturing the rhythm and flow of dialogue to sound natural and authentic in Vietnamese is important.`
+      specialAttentionConsiderations += `
+- Differences in sentence structure between English (often subject-verb-object) and Vietnamese (more flexible, often topic-comment) require careful restructuring to sound natural.
+- Vietnamese has a complex system of politeness levels and kinship terms used in address, which must be carefully chosen based on character relationships and social context, often requiring significant adaptation from English pronouns and address forms.
+- Idioms, slang, and colloquialisms are highly culture-specific and require creative adaptation or finding Vietnamese equivalents that convey similar meaning and tone.
+- Genre-specific terminology (e.g., fantasy spells, sci-fi technology, historical ranks) must be translated consistently and appropriately within the established world of the fiction.
+- The use of articles (a, an, the) in English has no direct equivalent in Vietnamese and requires careful consideration of context to determine definiteness or indefiniteness.`
+      focusAreas += `
+- Ensuring the accuracy of technical specifications and standards mentioned in the text requires careful research to find corresponding Vietnamese or international standards if applicable, or maintaining the original if no direct equivalent exists or is relevant to the plot.
+- Units of measurement often differ, with English using Imperial/US customary units and Vietnamese using the Metric system; conversion is necessary for clarity and understanding.
+- For units of measurement, convert Imperial/US customary units to their Metric equivalents with precise calculations.
+- Example: "He was six feet tall." Convert 6 feet to meters. 1 foot = 0.3048 meters. 6 feet * 0.3048 m/foot = 1.8288 meters. The translation should reflect this converted value, e.g., "Anh ta cao khoảng 1.83 mét."
+- Example: "The car sped at 60 miles per hour." Convert 60 mph to kilometers per hour. 1 mile = 1.60934 kilometers. 60 miles/hour * 1.60934 km/mile = 96.5604 km/hour. The translation should reflect this converted value, e.g., "Chiếc xe phóng đi với tốc độ khoảng 96.6 km/giờ."
+- For currencies, if the specific currency mentioned (e.g., USD, GBP) cannot be translated into a commonly understood Vietnamese term without ambiguity or arbitrary conversion, use the three-letter currency code.
+- Example: "He paid $50." Use the currency code: "Anh ta trả 50 USD." Do not convert to VND unless explicitly required by the narrative context (which is rare and risky in fiction).`
+      notedIssues += `
+- Proper names of characters are typically transliterated phonetically into Vietnamese, maintaining consistency throughout the text.
+- Proper names of real people (historical figures, celebrities) should use their established Vietnamese names if they exist.
+- Proper nouns for fictional places (cities, countries, planets) are usually transliterated, ensuring consistent spelling.
+- Proper nouns for real places (cities, countries) should use their established Vietnamese names.
+- Names of organizations (fictional or real) should be handled based on context; fictional ones are usually transliterated, while real ones might use established Vietnamese translations or abbreviations if common.
+- Titles (Mr., Ms., Dr., Lord, King) require careful consideration of Vietnamese social hierarchy and address terms, often needing adaptation rather than direct translation or transliteration.`
+      additionalIssues += `
+- Cultural references: Allusions to specific cultural events, historical figures, literature, or media that may not be known to a Vietnamese audience need careful handling to ensure the intended meaning or impact is conveyed.
+- Humor: Jokes, puns, sarcasm, and irony are highly culture and language-dependent and often require significant adaptation or creative solutions to elicit a similar reaction in the target audience.
+- Interjections and Onomatopoeia: Sounds and exclamations differ between languages and need to be translated using Vietnamese equivalents that feel natural and convey the right emotion or sound.
+- Dialogue Naturalness: Ensuring that character dialogue sounds like real people speaking Vietnamese, reflecting their personality, background, and relationship dynamics, is crucial for believable characters.
+- Maintaining Suspense and Pacing: The translator must pay attention to sentence length, structure, and word choice to preserve the original text's pacing and build-up of suspense or tension.
+- Figurative Language: Metaphors, similes, symbolism, and other figures of speech need to be translated in a way that preserves their meaning and impact, sometimes requiring adaptation if a direct translation is culturally inappropriate or nonsensical.
+- Swear words and profanity: These are highly sensitive and require careful consideration of the target audience and the character's intent to choose appropriate Vietnamese equivalents that match the intensity and context.
+- Abbreviations and Acronyms: Fictional abbreviations should usually be kept or transliterated unless the author provides a meaning that can be translated; real-world abbreviations should use established Vietnamese equivalents if they exist, otherwise keep the original.
+- Sensory Details: Descriptions involving sights, sounds, smells, tastes, and textures must be translated vividly to allow the Vietnamese reader to experience the fictional world fully.`
+    } else if (domain === Domains.FICTION && originalLang === 'ja' && this.destLang === 'vi') {
+      specialRequirements += `
+- Special requirements when translating Fiction include capturing the author's unique voice and style, maintaining the intended tone and atmosphere (e.g., suspenseful, humorous, romantic), accurately conveying character personalities through dialogue and internal monologue, preserving cultural nuances and references relevant to the plot or setting, and ensuring the narrative flows naturally and engages the Vietnamese reader while respecting the original pacing and structure.`
+      specialAttentionConsiderations += `
+- Linguistic and grammatical considerations include adapting Japanese sentence structures (Subject-Object-Verb) to Vietnamese (Subject-Verb-Object) while maintaining natural flow, handling complex Japanese politeness levels (keigo) by using appropriate Vietnamese honorifics or relationship-based language, translating Japanese onomatopoeia and mimetic words effectively to convey sensory details or actions, and addressing terminology specific to the genre (e.g., fantasy terms, sci-fi concepts, specific cultural items) which may require research or careful adaptation.`
+      focusAreas += `
+- To ensure correctness, focus on consistency in terminology and character representation, accurately rendering factual details mentioned in the narrative, and handling technical specifications, units of measurement, and standards by prioritizing real-world context and equivalence in Vietnamese.
+- For currencies, if the Japanese currency (e.g., 円) cannot be directly translated or understood, use the currency code (JPY) instead of arbitrarily converting to another currency.
+- For units of measurement, if Japanese units (like 尺 shaku, 寸 sun, 貫 kan) or non-metric units appear and cannot be easily understood in Vietnamese context, convert them to the equivalent metric system units commonly used in Vietnam, ensuring precise calculation.
+- Example: If a character mentions a sword is "三尺 (san shaku)" long, convert it to meters or centimeters. 1 shaku is approximately 0.303 meters or 30.3 centimeters. So, 三尺 would be approximately 0.909 meters or 90.9 centimeters. The translation should use the metric equivalent like "khoảng 90.9 cm" or "gần một mét".
+- Example: If a weight is given as "一貫 (ichi kan)", convert it to kilograms. 1 kan is approximately 3.75 kilograms. The translation should use "khoảng 3.75 kg".`
+      notedIssues += `
+- Issues regarding proper names and proper nouns include deciding whether to transliterate Japanese character names, place names, and organization names into Vietnamese script (using standard romanization and then converting to Vietnamese pronunciation approximations) or to keep them in their original romanized form, maintaining consistency in the chosen method throughout the text, handling titles of works (books, songs, movies mentioned within the story) by either translating the title or keeping the original title and potentially adding a transliteration or brief description, and being mindful of names that might have unintended or awkward meanings when transliterated into Vietnamese.`
+      additionalIssues += `
+- Other issues to keep in mind include translating cultural references such as specific foods, festivals, social customs, and historical events in a way that is understandable to the Vietnamese audience without losing the original context.
+- Handling Japanese honorifics (-san, -chan, -kun, -sama, -sensei) by finding appropriate Vietnamese equivalents or using context to convey the relationship and level of respect/familiarity between characters.
+- Translating humor, puns, and wordplay, which are often highly language-specific and may require creative adaptation to land effectively in Vietnamese.
+- Dealing with regional dialects or character-specific speech patterns (like rough speech, formal speech, childish speech) to reflect the character's background or personality in Vietnamese.
+- Rendering interjections, exclamations, and sounds accurately to convey emotion and reaction.
+- Maintaining the emotional impact and subtext present in the original Japanese text.
+- Ensuring consistency in the translation of recurring motifs, symbols, or specific narrative devices used by the author.`
+    } else if (domain === Domains.FICTION && originalLang === 'zh-cn' && this.destLang === 'vi') {
+      specialRequirements += `
+- Maintaining the author's unique voice, tone, and style throughout the translation is crucial for fiction.
+- Accurately conveying the emotional depth, nuances, and subtext present in the original Chinese text is essential.
+- Adapting cultural references and context so they resonate with a Vietnamese audience without losing the original meaning or flavor.
+- Ensuring consistency in character portrayal, plot points, and world-building elements established in the source text.
+- Understanding the specific genre conventions (e.g., Wuxia, Xianxia, Romance, Sci-Fi) and applying appropriate linguistic and stylistic choices in Vietnamese.`
+      specialAttentionConsiderations += `
+- Handling differences in sentence structure and flow between Chinese and Vietnamese to create natural-sounding prose.
+- Translating idiomatic expressions, slang, and colloquialisms accurately while finding equivalent or understandable Vietnamese phrases.
+- Navigating the complex system of honorifics and terms of address in both languages to reflect character relationships and social hierarchy correctly.
+- Addressing specific terminology related to the fiction's genre, such as martial arts techniques, cultivation levels, magical spells, or historical ranks, ensuring consistency and clarity.
+- Paying attention to grammatical nuances like classifiers, verb aspects, and particle usage that differ significantly between the two languages.`
+      focusAreas += `
+- Ensuring accuracy in factual details, even within a fictional context, such as historical periods, geographical locations, or scientific concepts mentioned.
+- For units of measurement, convert Chinese units (市制) to their metric equivalents commonly used in Vietnam, providing precise calculations.
+- Example: 1 斤 (jin) is approximately 0.5 kilograms (kg). If a character buys 5 斤 of rice, translate it as 2.5 kg of rice.
+- Example: 1 亩 (mu) is approximately 666.67 square meters (m²). If a character owns 10 亩 of land, translate it as 6666.7 m² of land.
+- Example: 1 里 (li) is approximately 500 meters (m). If a character travels 3 里, translate it as 1500 m or 1.5 km.
+- For currencies, if the currency is a real-world currency like Chinese Yuan, use the currency code CNY.
+- If the currency is fictional, maintain the fictional name consistently throughout the translation.
+- Technical specifications or standards, if mentioned, should be translated accurately based on their real-world meaning or maintained consistently if they are fictional constructs within the story.`
+      notedIssues += `
+- Deciding whether to transliterate character names (based on Mandarin pronunciation, often using Pinyin as a guide) or find culturally resonant Vietnamese equivalents, and maintaining consistency once a method is chosen.
+- Handling names of places, organizations, and fictional entities (like sects, clans, magical items) by either transliterating, translating their meaning, or using a combination, ensuring clarity and consistency.
+- Being mindful of potential unintended meanings or pronunciations when transliterating names into Vietnamese.
+- Ensuring that the chosen translation method for names aligns with the genre and overall tone of the fiction.
+- Maintaining a glossary of names and terms to ensure absolute consistency throughout the entire work, especially for long series.`
+      additionalIssues += `
+- Translating cultural references, proverbs, idioms, and historical allusions in a way that is understandable and impactful for a Vietnamese audience, potentially requiring adaptation rather than direct translation.
+- Capturing the intended humor, sarcasm, or irony, which often relies heavily on cultural context and linguistic nuances.
+- Ensuring dialogue sounds natural and reflects the characters' personalities, social status, and relationships accurately in Vietnamese.
+- Maintaining the pacing and rhythm of the original narrative, especially during action sequences or emotionally charged scenes.
+- Handling onomatopoeia and descriptive sounds, finding appropriate Vietnamese equivalents that convey the same sensory experience.
+- Addressing potential sensitivities related to cultural, historical, or political content, ensuring the translation is appropriate for the target audience and market.`
+    } else {
+      specialRequirements += '\n'
+      specialAttentionConsiderations += '\n'
+      focusAreas += '\n'
+      notedIssues += '\n'
+      additionalIssues += '\n'
+    }
+    return `${specialRequirements}\n\n${specialAttentionConsiderations}\n\n${focusAreas}\n\n${notedIssues}\n\n${additionalIssues}`
+  }
+
+  async getSystemInstructions (options) {
     const systemInstructions = []
-    switch (systemInstruction) {
+    const detectedLanguage = this.originalLang == null ? await this.detectLanguage() : ''
+    switch (options.systemInstruction) {
       case SystemInstructions.COCCOC_EDU: {
         const LANGUAGE_MAP = {
           en: 'English',
@@ -621,10 +819,14 @@ class Translation {
           'zh-cn': 'Chinese (Simplified)',
           'zh-tw': 'Chinese (Traditional)'
         }
-        const toLanguage = LANGUAGE_MAP[destinationLanguage]
-        const fromLanguage = LANGUAGE_MAP[originalLanguage ?? '']
-        systemInstructions.push(`I want you to act as a ${toLanguage} translator.\nYou are trained on data up to October 2023.`)
-        systemInstructions.push(`I will speak to you in ${fromLanguage != null ? `${fromLanguage} and you will ` : 'any language and you will detect the language, '}translate it and answer in the corrected version of my text, exclusively in ${toLanguage}, while keeping the format.\nYour translations must convey all the content in the original text and cannot involve explanations or other unnecessary information.\nPlease ensure that the translated text is natural for native speakers with correct grammar and proper word choices.\nYour output must only contain the translated text and cannot include explanations or other information.`)
+        const toLanguage = LANGUAGE_MAP[this.destLang]
+        const fromLanguage = LANGUAGE_MAP[this.originalLang ?? detectedLanguage]
+        systemInstructions.push(`I want you to act as a ${toLanguage} translator.
+You are trained on data up to October 2023.`)
+        systemInstructions.push(`I will speak to you in ${fromLanguage != null ? `${fromLanguage} and you will ` : 'any language and you will detect the language, '}translate it and answer in the corrected version of my text, exclusively in ${toLanguage}, while keeping the format.
+Your translations must convey all the content in the original text and cannot involve explanations or other unnecessary information.
+Please ensure that the translated text is natural for native speakers with correct grammar and proper word choices.
+Your output must only contain the translated text and cannot include explanations or other information.`)
         break
       }
       case SystemInstructions.DOCTRANSLATE_IO: {
@@ -635,26 +837,110 @@ class Translation {
           'zh-cn': 'Chinese (simplified)',
           'zh-tw': 'Chinese (traditional)'
         }
-        const originalLang = (LANGUAGE_MAP[originalLanguage ?? ''] ?? LANGUAGE_MAP.en).toUpperCase()
-        const destLang = LANGUAGE_MAP[destinationLanguage].toUpperCase()
+        const originalLanguage = this.originalLang ?? detectedLanguage
+        const upperCaseDestinationLanguage = LANGUAGE_MAP[this.destLang].toUpperCase()
         const domain = options.domain.replace(Domains.NONE, 'Lifestyle')
-        const DOMAIN_INSTRUCTION_MAP = {
-          'Economics - Finance': '- focus on presenting and analyzing information related to the domain.\n- use technical terminology that is precise, clear, neutral, and objective.\n- sentence structure is coherent, presenting information in a logical order.',
-          'Literature - Arts': '- use local words/dialect words/slang/jargon, morphological function words - express emotions/feelings/attitudes.\n- sentences have a structured arrangement, words are selected and polished to create artistic and aesthetic value.\n- use words that are appropriate to the setting and timeline of the story.\n- use words that are easy to understand, easy to visualize, and bring emotions to the reader.\n- make sure the words and sentences flow together like a story from beginning to end.\n- the relationships between characters must be clearly defined and not confused.\n- character names, minor character names, the way characters address each other, and the way the narrator addresses and refers to other characters must be consistent from beginning to end of the story and cannot be changed arbitrarily.\n- the writing is always carefully crafted, emotional, and brings indescribable emotions to the reader.',
-          'Science - Technology': '- use a system of scientific terms, literal, univocal words, complex but standard sentence structures, systems of symbols, formulas, diagrams, models, tables, etc.\n- sentences must have complex structures to fully present the multifaceted content of concepts and theorems. prioritize the use of equal sentences, passive sentences, sentences with missing subjects and sentences with indefinite subjects.',
-          'Administrative documents': '- arranged according to the prescribed format.\n- administrative and objective terms, clear syntax. prioritize the use of declarative sentences, not interrogative or expressive.',
-          Lifestyle: '- the text is simple, close and easy to understand.\n- use the easiest words possible.'
-        }
         const tone = options.tone.replace(Tones.NONE, Tones.SERIOUS)
         const TONE_INSTRUCTION_MAP = {
-          Serious: '\n    - Language should be neutral, precise and technical, avoiding emotional elements.\n    - Make everything clear and logical.',
-          Friendly: '\n    - Use language that is warm, approachable, and conversational.\n    - Ensure the language feels natural and relaxed.',
-          Humorous: '\n    - Language must be fun, light and humorous. Use jokes or creative expressions.\n    - Must use entertaining words, wordplay, trendy words, words that young people often use.',
-          Formal: '\n    - Utilize language that is formal, respectful, and professional. Employ complex sentence structures and maintain a formal register.\n    - Choose polite, precise, and refined vocabulary.\n    - Incorporate metaphors, idioms, parallel structures, and couplets where appropriate. Ensure that dialogue between characters is formal and well-ordered.\n    - When relevant, use selectively chosen archaic or classical words, especially if the context pertains to historical or ancient settings.',
-          Romantic: '\n    - Language must be emotional, poetic and artistic.\n    - Choose flowery, sentimental, and erotic words.\n    - The writing is gentle, focusing on subtle feelings about love and deep character emotions.'
+          Serious: `
+    - Language should be neutral, precise and technical, avoiding emotional elements.
+    - Make everything clear and logical.`,
+          Friendly: `
+    - Use language that is warm, approachable, and conversational.
+    - Ensure the language feels natural and relaxed.`,
+          Humorous: `
+    - Language must be fun, light and humorous. Use jokes or creative expressions.
+    - Must use entertaining words, wordplay, trendy words, words that young people often use.`,
+          Formal: `
+    - Utilize language that is formal, respectful, and professional. Employ complex sentence structures and maintain a formal register.
+    - Choose polite, precise, and refined vocabulary.
+    - Incorporate metaphors, idioms, parallel structures, and couplets where appropriate. Ensure that dialogue between characters is formal and well-ordered.
+    - When relevant, use selectively chosen archaic or classical words, especially if the context pertains to historical or ancient settings.`,
+          Romantic: `
+    - Language must be emotional, poetic and artistic.
+    - Choose flowery, sentimental, and erotic words.
+    - The writing is gentle, focusing on subtle feelings about love and deep character emotions.`
         }
         const { isCustomDictionaryEnabled, customDictionary, isCustomPromptEnabled, customPrompt } = options
-        systemInstructions.push(`### ROLE:\nYou are a translation professional with many years of experience, able to translate accurately and naturally between languages. You have a good understanding of the grammar, vocabulary and style of both ${originalLang} and ${destLang}. You also know how to maintain the original meaning and emotion of the text when translating.\n\n### INSTRUCTION:\n- Translate the following paragraphs into ${destLang}, ensuring each sentence is fully understood and free from confusion.\n- Avoid adding any new information, explaining or changing the meaning of the original text.\n- Each translated text segment must have a UUID that exactly matches the UUID of the original text segment.\n- The UUIDs must exactly correspond to the UUIDs in the original text. Do not make up your own UUIDs or confuse the UUIDs of one text with those of another.\n- Only translated into ${destLang} language, not into any other language other than ${destLang}\n- The only priority is translation, do not arbitrarily add your own thoughts and explanations that are not in the original text.\n- Do not insert additional notes or explanations with the words in the translation.\n- Spaces and line breaks must be kept intact, not changed or replaced with /t /n\n- If UUID not have text to translate, just return ""\n- Follow the instruction for translate with domain ${domain}:\n${DOMAIN_INSTRUCTION_MAP[[Domains.BANKING, Domains.ACCOUNTING, Domains.MANAGEMENT, Domains.LAW, Domains.LOGISTICS, Domains.MARKETING, Domains.SECURITIES_AND_INVESTMENT, Domains.INSURANCE, Domains.REAL_ESTATE].some(element => domain === element) ? 'Economics - Finance' : ([Domains.MUSIC, Domains.PAINTING, Domains.THEATER_AND_CINEMA, Domains.POETRY, Domains.EPIC, Domains.CHILDRENS_STORIES, Domains.HISTORICAL_STORIES, Domains.FICTION, Domains.SHORT_STORIES].some(element => domain === element) ? 'Literature - Arts' : ([Domains.PHYSICS, Domains.CHEMISTRY, Domains.INFORMATICS, Domains.ELECTRONICS, Domains.MEDICINE, Domains.MECHANICS, Domains.METEOROLOGY_AND_HYDROLOGY, Domains.AGRICULTURE].some(element => domain === element) ? 'Science - Technology' : ([Domains.LEGAL_DOCUMENTS, Domains.INTERNAL_DOCUMENTS, Domains.EMAIL].some(element => domain === element) ? 'Administrative documents' : 'Lifestyle')))]}\n- Handle special case:\n+ Numbers: Maintain the original numeric values, but adapt formats if necessary (e.g., decimal separators, digit grouping).\n+ Currencies: Convert currency symbols or codes as appropriate for the target language and region.\n+ Dates: Adjust date formats to match the conventions of the target language and culture.\n+ Proper nouns: Generally, do not translate names of people, places, or organizations unless there's a widely accepted equivalent in the target language.\n+ Units of measurement: if they cannot be translated into ${destLang}, convert the unit of measurement to an equivalent system in ${destLang}, but precise calculations are required when converting units and detailed\n### CHAIN OF THOUGHT: Lets thinks step by step to translate but only return the translation:\n1.  Depend on the Input text, find the context and insight of the text by answer all the question below:\n- What is this document about, what is its purpose, who is it for, what is the domain of this document\n- What should be noted when translating this document from ${originalLang} to ${destLang} to ensure the translation is accurate. Especially the technical parameters, measurement units, acronym, technical standards, unit standards are different between ${originalLang} and ${destLang}\n- What is ${originalLang} abbreviations in the context of the document should be understood correctly and translated accurately into ${destLang}. It is necessary to clearly understand the meaning of the abbreviation and not to mistake a ${originalLang} abbreviation for an ${destLang} word.\n- Always make sure that users of the language ${destLang} do not find it difficult to understand when reading\n2. Based on the instructions and rules in INSTRUCTION and what you learned in step 1, proceed to translate the text.\n3. Acting as a reader, give comments on the translation based on the following criteria:\n- Do you understand what the translation is talking about\n- Does the translation follow the rules given in the INSTRUCTION\n- Is the translation really good, perfect? \u200b\u200bIf not good, what is not good, what needs improvement?\n4. Based on the comments in step 3, revise the translation (if necessary).\n### STYLE INSTRUCTION:\n\n        The style of the output must be ${tone}:\n        -${TONE_INSTRUCTION_MAP[tone]}\n\n\n### ADVANCED MISSION (HIGHEST PRIORITY):\n${isCustomDictionaryEnabled ? customDictionary.filter(element => element.originalLanguage === originalLanguage && element.destinationLanguage === destinationLanguage && text.includes(element.originalWord)).map(({ originalWord, destinationWord }) => `Must translate: ${originalWord} into ${destinationWord}`).join('\n') : ''}\n- Follow the instruction below when translate:\n${isCustomPromptEnabled ? customPrompt : ''}\n### OUTPUT FORMAT MUST BE IN JSON:\n{\n"insight": "[In-depth understanding of the text from the analysis step]",\n"rule": "[Rules followed during translation]",\n"translated_string": "uuid: ${destLang} translation of the sentence when using rule\\n  uuid: ${destLang.replace(/E$/, 'e')} translation of the sentence when using rule\\n  .."\n}`)
+        systemInstructions.push(`### ROLE:
+You are a translation professional with many years of experience, able to translate accurately and naturally between languages. You have a good understanding of the grammar, vocabulary and style of both ${originalLanguage} and ${upperCaseDestinationLanguage}. You also know how to maintain the original meaning and emotion of the text when translating.
+
+### INSTRUCTION:
+- Translate the following paragraphs into ${upperCaseDestinationLanguage}, ensuring each sentence is fully understood and free from confusion.
+- Avoid adding any new information, explaining or changing the meaning of the original text.
+- Each translated text segment must have a UUID that exactly matches the UUID of the original text segment.
+- The UUIDs must exactly correspond to the UUIDs in the original text. Do not make up your own UUIDs or confuse the UUIDs of one text with those of another.
+- Only translated into ${upperCaseDestinationLanguage} language, not into any other language other than ${upperCaseDestinationLanguage}
+- The only priority is translation, do not arbitrarily add your own thoughts and explanations that are not in the original text.
+- Do not insert additional notes or explanations with the words in the translation.
+- Spaces and line breaks must be kept intact, not changed or replaced with /t /n
+- If UUID not have text to translate, just return ""
+- Each UUID must seperate with other UUID only by 
+, MUST not use other characters or symbols to separate UUID
+- There can only be 1 translation for 1 word, do not arbitrarily insert multiple translations/versions for 1 word For example: "you" must translate into "bạn" or "cậu", must not translate into "bạn/cậu"
+- Follow the instruction for translate with domain ${domain}:
+${this.getDomainInstruction(domain, originalLanguage)}
+- Handle special case:
++ Numbers: Maintain the original numeric values, but adapt formats if necessary (e.g., decimal separators, digit grouping).
++ Currencies: Convert currency symbols or codes as appropriate for the target language and region.
++ Dates: Adjust date formats to match the conventions of the target language and culture.
++ Proper nouns: Generally, do not translate names of people, places, or organizations unless there's a widely accepted equivalent in the target language.
++ Units of measurement: if they cannot be translated into ${upperCaseDestinationLanguage}, convert the unit of measurement to an equivalent system in ${upperCaseDestinationLanguage}, but precise calculations are required when converting units and detailed
+### PROCESSING OF FORM OF ADDRESS BETWEEN CHARACTERS (HIGHEST PRIORITY):
+- All proper names and place names must be fully translated into ${upperCaseDestinationLanguage} if there is a common transliteration in ${upperCaseDestinationLanguage} and it would make the translation easier for readers in the ${upperCaseDestinationLanguage} language to understand.
+- All pronouns and forms of address in all person of all characters must be EXTREMELY appropriate to the position and role of the characters as determined.
+- Ensure ABSOLUTE CONSISTENT in the form of address, proper names, place names in the entire translated text, do not translate differently with the same word
+- Ensure ABSOLUTE CONSISTENT the way characters address each other, only changing the way they address each other when the relationship between the characters changes significantly
+- The way characters address each other MUST accurately reflect their social position, role and relative relationship according to the Character Address Chart.
+- Ensure the way characters address each other is CORRECT and CONSISTENT according to the Character Address Table provided.
+- Strictly adhere to how characters address each other and themselves as defined in the Character Address Table.${['en', 'ja'].some(element => this.originalLang === element)
+                    ? `
+- The Character Address Table provides detailed information about:
++ How each character addresses themselves (first person pronouns) to each other
++ How each character addresses others (second person pronouns)
++ Relationships between characters (rank, social status, level of intimacy)
++ Special terms of address between characters
+- DO NOT change or create a form of address that differs from the Character Address Table provided.`
+                    : ''}
+- When a character speaks to multiple people or to a group of people, determine the appropriate form of address based on the Character Address Table.
+- When characters reminisce about the past, address each other in a way that is appropriate to the characters' relationship and circumstances at that point in the past
+- When a situation is unclear or not defined in the Address Table, use the closest form of address available in the Table for the same relationship.
+### CHAIN ​​OF THOUGHT: Think step by step to translate but only return the translation:${'' /* eslint-disable-line no-irregular-whitespace */}
+1. Based on the input text, find the context and understand the text deeply by answering all the questions below:
+
+- What is this text about, what is the purpose, who is it for, what is the field of this text
+- What should be noted when translating this text from ${originalLanguage} to ${upperCaseDestinationLanguage} to ensure accurate translation. Especially the specifications, units of measurement, abbreviations, technical standards, unit standards are different between ${originalLanguage} and ${upperCaseDestinationLanguage}
+- Abbreviations in ${originalLanguage} in the context of the text should be understood correctly and translated correctly into ${upperCaseDestinationLanguage}. It is necessary to clearly understand the meaning of the abbreviation and not confuse the abbreviation in ${originalLanguage} with the word in ${upperCaseDestinationLanguage}.
+
+- Always make sure that users of the ${upperCaseDestinationLanguage} language have no difficulty reading and understanding
+- Identify all characters and their relationships to apply the correct form of address according to the Character Address Table provided
+- Consider the cultural, time, and social context of the story to ensure appropriate and natural form of address
+- Are the characters' ways of addressing each other consistent (all persons and especially in dialogue): Highest priority${['zh-cn', 'zh-tw'].some(element => this.originalLang === element) ? '\n- Is the form of address between characters consistent with the Character Address Table?' : ''}
+2. Based on the instructions and rules in INSTRUCTION and what you learned in step 1, translate the text.
+3. Acting as a reader, comment on the translation based on the following criteria:
+- Do you understand what the translation is talking about?
+- Does the translation follow the rules stated in INSTRUCTION?
+- Is the translation really good, perfect? ​​If not good, what is not good, what needs to be improved?${'' /* eslint-disable-line no-irregular-whitespace */}
+- Are the characters' ways of addressing each other consistent (all persons and especially in dialogue): Highest priority
+- Is the form of address between characters consistent with the Character Address Table?
+4. Based on the comments in step 3, edit the translation (if necessary).
+### STYLE INSTRUCTION:
+
+        The style of the output must be ${tone}:
+        -${TONE_INSTRUCTION_MAP[tone]}
+
+        
+### ADVANCED MISSION (HIGHEST PRIORITY):
+${isCustomDictionaryEnabled ? customDictionary.filter(element => element.ori_lang === originalLanguage && element.des_lang === this.destLang && this.text.includes(element.ori_word)).map(({ ori_word, des_word }) => `Must translate: ${ori_word} into ${des_word}`).join('\n') : '' /* eslint-disable-line camelcase */}
+
+- Follow the instruction below when translate:
+${isCustomPromptEnabled ? customPrompt : ''}
+### OUTPUT FORMAT MUST BE IN JSON and must have only 3 fields:
+{
+"insight": "[In-depth understanding of the text from the analysis step]",
+"rule": "[Rules followed during translation]",
+"translated_string": "uuid: ${upperCaseDestinationLanguage} translation of the sentence when using rule ,\\nuuid: ${upperCaseDestinationLanguage.replace(/E$/, 'e')} translation of the sentence when using rule ,\\n  .."
+}`)
         break
       }
       case SystemInstructions.GPT4OMINI:
@@ -666,7 +952,7 @@ class Translation {
           ja: 'Japanese',
           vi: 'Vietnamese'
         }
-        systemInstructions.push(`You will be provided with a user input in ${LANGUAGE_MAP[originalLanguage ?? ''] ?? 'English'}.\nTranslate the text into ${LANGUAGE_MAP[destinationLanguage]}.\nOnly output the translated text, without any additional text.`)
+        systemInstructions.push(`You will be provided with a user input in ${LANGUAGE_MAP[this.originalLang ?? detectedLanguage] ?? LANGUAGE_MAP.en}.\nTranslate the text into ${LANGUAGE_MAP[this.destLang]}.\nOnly output the translated text, without any additional text.`)
       }
     }
     return systemInstructions
