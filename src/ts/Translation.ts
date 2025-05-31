@@ -745,7 +745,7 @@ ${prompt}`)
     
     return await fetch('https://api-gl.lingvanex.com/language/translate/v2/detect', options as RequestInit)
       .then(res => res.json())
-      .then(res => res.data.detections[0][0].language.replace('-Hans', '-cn').replace('-Hant', '-tw'))
+      .then(res => res.data.detections[0][0].language.replace('-Hans', '-cn').replace('-Hant', '-tw').replace(/^ms$/, 'ms-MY').replace(/^tl$/, 'fil').replace(/^cs$/, 'cs-CZ'))
   }
   private getDomainInstruction (domain: Domains, originalLang: string): string {
     const LANGUAGE_MAP: Record<string, string> = {
@@ -753,7 +753,33 @@ ${prompt}`)
       vi: 'Vietnamese',
       ja: 'Japanese',
       'zh-cn': 'Chinese (simplified)',
-      'zh-tw': 'Chinese (traditional)'
+      'zh-tw': 'Chinese (traditional)',
+      ko: 'Korean',
+      es: 'Spanish',
+      pt: 'Portuguese',
+      ru: 'Russian',
+      fr: 'French',
+      de: 'German',
+      it: 'Italian',
+      hi: 'Hindi',
+      th: 'Thai',
+      tr: 'Turkish',
+      el: 'Greek',
+      ar: 'Arabic',
+      nl: 'Dutch',
+      pl: 'Polish',
+      uk: 'Ukrainian',
+      sv: 'Swedish',
+      da: 'Danish',
+      no: 'Norwegian',
+      fi: 'Finnish',
+      hu: 'Hungarian',
+      id: 'Indonesian',
+      'ms-MY': 'Malaysian',
+      fil: 'Tagalog (Filipino)',
+      bn: 'Bengali (Bangladesh)',
+      lo: 'Lao',
+      'cs-CZ': 'Czech'
     }
     const lowerCaseOriginalLanguage = (LANGUAGE_MAP[originalLang] ?? LANGUAGE_MAP.en).toLowerCase()
     const lowerCaseDestinationLanguage = LANGUAGE_MAP[this.destLang].toLowerCase()
@@ -762,67 +788,68 @@ ${prompt}`)
     let focusAreas = `What needs to be focused on to ensure the document in the target language is correct? Especially technical specifications, units of measurement, technical standards, unit standards that differ between ${lowerCaseOriginalLanguage} and ${lowerCaseDestinationLanguage}. Give examples.`
     let notedIssues = `When translating the document from ${lowerCaseOriginalLanguage} into ${lowerCaseDestinationLanguage} in the domain ${domain}, what issues should be noted about proper names and proper nouns?`
     let additionalIssues = 'In addition to the above issues, are there any other issues to keep in mind when translating?'
-    if (domain === Domains.FICTION && originalLang === 'en' && this.destLang === 'vi') {
-      additionalIssues += ' If so, list them all and answer as many and in as much detail as possible.'
-      specialRequirements += `
-- Maintaining the author's unique voice and style is crucial in fiction translation.
-- Preserving the emotional tone and atmosphere of the original text is essential for reader engagement.
-- Ensuring consistency in character portrayal, world-building details, and plot elements throughout the translation is vital.
-- Adapting cultural nuances and references so they resonate with the Vietnamese audience without losing the original meaning or context is a key requirement.
-- Capturing the rhythm and flow of dialogue to sound natural and authentic in Vietnamese is important.`
-      specialAttentionConsiderations += `
-- Differences in sentence structure between English (often subject-verb-object) and Vietnamese (more flexible, often topic-comment) require careful restructuring to sound natural.
-- Vietnamese has a complex system of politeness levels and kinship terms used in address, which must be carefully chosen based on character relationships and social context, often requiring significant adaptation from English pronouns and address forms.
-- Idioms, slang, and colloquialisms are highly culture-specific and require creative adaptation or finding Vietnamese equivalents that convey similar meaning and tone.
-- Genre-specific terminology (e.g., fantasy spells, sci-fi technology, historical ranks) must be translated consistently and appropriately within the established world of the fiction.
-- The use of articles (a, an, the) in English has no direct equivalent in Vietnamese and requires careful consideration of context to determine definiteness or indefiniteness.`
-      focusAreas += `
-- Ensuring the accuracy of technical specifications and standards mentioned in the text requires careful research to find corresponding Vietnamese or international standards if applicable, or maintaining the original if no direct equivalent exists or is relevant to the plot.
-- Units of measurement often differ, with English using Imperial/US customary units and Vietnamese using the Metric system; conversion is necessary for clarity and understanding.
-- For units of measurement, convert Imperial/US customary units to their Metric equivalents with precise calculations.
-- Example: "He was six feet tall." Convert 6 feet to meters. 1 foot = 0.3048 meters. 6 feet * 0.3048 m/foot = 1.8288 meters. The translation should reflect this converted value, e.g., "Anh ta cao khoảng 1.83 mét."
-- Example: "The car sped at 60 miles per hour." Convert 60 mph to kilometers per hour. 1 mile = 1.60934 kilometers. 60 miles/hour * 1.60934 km/mile = 96.5604 km/hour. The translation should reflect this converted value, e.g., "Chiếc xe phóng đi với tốc độ khoảng 96.6 km/giờ."
-- For currencies, if the specific currency mentioned (e.g., USD, GBP) cannot be translated into a commonly understood Vietnamese term without ambiguity or arbitrary conversion, use the three-letter currency code.
-- Example: "He paid $50." Use the currency code: "Anh ta trả 50 USD." Do not convert to VND unless explicitly required by the narrative context (which is rare and risky in fiction).`
-      notedIssues += `
-- Proper names of characters are typically transliterated phonetically into Vietnamese, maintaining consistency throughout the text.
-- Proper names of real people (historical figures, celebrities) should use their established Vietnamese names if they exist.
-- Proper nouns for fictional places (cities, countries, planets) are usually transliterated, ensuring consistent spelling.
-- Proper nouns for real places (cities, countries) should use their established Vietnamese names.
-- Names of organizations (fictional or real) should be handled based on context; fictional ones are usually transliterated, while real ones might use established Vietnamese translations or abbreviations if common.
-- Titles (Mr., Ms., Dr., Lord, King) require careful consideration of Vietnamese social hierarchy and address terms, often needing adaptation rather than direct translation or transliteration.`
-      additionalIssues += `
-- Cultural references: Allusions to specific cultural events, historical figures, literature, or media that may not be known to a Vietnamese audience need careful handling to ensure the intended meaning or impact is conveyed.
-- Humor: Jokes, puns, sarcasm, and irony are highly culture and language-dependent and often require significant adaptation or creative solutions to elicit a similar reaction in the target audience.
-- Interjections and Onomatopoeia: Sounds and exclamations differ between languages and need to be translated using Vietnamese equivalents that feel natural and convey the right emotion or sound.
-- Dialogue Naturalness: Ensuring that character dialogue sounds like real people speaking Vietnamese, reflecting their personality, background, and relationship dynamics, is crucial for believable characters.
-- Maintaining Suspense and Pacing: The translator must pay attention to sentence length, structure, and word choice to preserve the original text's pacing and build-up of suspense or tension.
-- Figurative Language: Metaphors, similes, symbolism, and other figures of speech need to be translated in a way that preserves their meaning and impact, sometimes requiring adaptation if a direct translation is culturally inappropriate or nonsensical.
-- Swear words and profanity: These are highly sensitive and require careful consideration of the target audience and the character's intent to choose appropriate Vietnamese equivalents that match the intensity and context.
-- Abbreviations and Acronyms: Fictional abbreviations should usually be kept or transliterated unless the author provides a meaning that can be translated; real-world abbreviations should use established Vietnamese equivalents if they exist, otherwise keep the original.
-- Sensory Details: Descriptions involving sights, sounds, smells, tastes, and textures must be translated vividly to allow the Vietnamese reader to experience the fictional world fully.`
-    } else if (domain === Domains.FICTION && originalLang === 'ja' && this.destLang === 'vi') {
-      specialRequirements += `
-- Special requirements when translating Fiction include capturing the author's unique voice and style, maintaining the intended tone and atmosphere (e.g., suspenseful, humorous, romantic), accurately conveying character personalities through dialogue and internal monologue, preserving cultural nuances and references relevant to the plot or setting, and ensuring the narrative flows naturally and engages the Vietnamese reader while respecting the original pacing and structure.`
-      specialAttentionConsiderations += `
-- Linguistic and grammatical considerations include adapting Japanese sentence structures (Subject-Object-Verb) to Vietnamese (Subject-Verb-Object) while maintaining natural flow, handling complex Japanese politeness levels (keigo) by using appropriate Vietnamese honorifics or relationship-based language, translating Japanese onomatopoeia and mimetic words effectively to convey sensory details or actions, and addressing terminology specific to the genre (e.g., fantasy terms, sci-fi concepts, specific cultural items) which may require research or careful adaptation.`
-      focusAreas += `
-- To ensure correctness, focus on consistency in terminology and character representation, accurately rendering factual details mentioned in the narrative, and handling technical specifications, units of measurement, and standards by prioritizing real-world context and equivalence in Vietnamese.
-- For currencies, if the Japanese currency (e.g., 円) cannot be directly translated or understood, use the currency code (JPY) instead of arbitrarily converting to another currency.
-- For units of measurement, if Japanese units (like 尺 shaku, 寸 sun, 貫 kan) or non-metric units appear and cannot be easily understood in Vietnamese context, convert them to the equivalent metric system units commonly used in Vietnam, ensuring precise calculation.
-- Example: If a character mentions a sword is "三尺 (san shaku)" long, convert it to meters or centimeters. 1 shaku is approximately 0.303 meters or 30.3 centimeters. So, 三尺 would be approximately 0.909 meters or 90.9 centimeters. The translation should use the metric equivalent like "khoảng 90.9 cm" or "gần một mét".
-- Example: If a weight is given as "一貫 (ichi kan)", convert it to kilograms. 1 kan is approximately 3.75 kilograms. The translation should use "khoảng 3.75 kg".`
-      notedIssues += `
-- Issues regarding proper names and proper nouns include deciding whether to transliterate Japanese character names, place names, and organization names into Vietnamese script (using standard romanization and then converting to Vietnamese pronunciation approximations) or to keep them in their original romanized form, maintaining consistency in the chosen method throughout the text, handling titles of works (books, songs, movies mentioned within the story) by either translating the title or keeping the original title and potentially adding a transliteration or brief description, and being mindful of names that might have unintended or awkward meanings when transliterated into Vietnamese.`
-      additionalIssues += `
-- Other issues to keep in mind include translating cultural references such as specific foods, festivals, social customs, and historical events in a way that is understandable to the Vietnamese audience without losing the original context.
-- Handling Japanese honorifics (-san, -chan, -kun, -sama, -sensei) by finding appropriate Vietnamese equivalents or using context to convey the relationship and level of respect/familiarity between characters.
-- Translating humor, puns, and wordplay, which are often highly language-specific and may require creative adaptation to land effectively in Vietnamese.
-- Dealing with regional dialects or character-specific speech patterns (like rough speech, formal speech, childish speech) to reflect the character's background or personality in Vietnamese.
-- Rendering interjections, exclamations, and sounds accurately to convey emotion and reaction.
-- Maintaining the emotional impact and subtext present in the original Japanese text.
-- Ensuring consistency in the translation of recurring motifs, symbols, or specific narrative devices used by the author.`
-    } else if (domain === Domains.FICTION && originalLang === 'zh-cn' && this.destLang === 'vi') {
+//     if (domain === Domains.FICTION && originalLang === 'en' && this.destLang === 'vi') {
+//       additionalIssues += ' If so, list them all and answer as many and in as much detail as possible.'
+//       specialRequirements += `
+// - Maintaining the author's unique voice and style is crucial in fiction translation.
+// - Preserving the emotional tone and atmosphere of the original text is essential for reader engagement.
+// - Ensuring consistency in character portrayal, world-building details, and plot elements throughout the translation is vital.
+// - Adapting cultural nuances and references so they resonate with the Vietnamese audience without losing the original meaning or context is a key requirement.
+// - Capturing the rhythm and flow of dialogue to sound natural and authentic in Vietnamese is important.`
+//       specialAttentionConsiderations += `
+// - Differences in sentence structure between English (often subject-verb-object) and Vietnamese (more flexible, often topic-comment) require careful restructuring to sound natural.
+// - Vietnamese has a complex system of politeness levels and kinship terms used in address, which must be carefully chosen based on character relationships and social context, often requiring significant adaptation from English pronouns and address forms.
+// - Idioms, slang, and colloquialisms are highly culture-specific and require creative adaptation or finding Vietnamese equivalents that convey similar meaning and tone.
+// - Genre-specific terminology (e.g., fantasy spells, sci-fi technology, historical ranks) must be translated consistently and appropriately within the established world of the fiction.
+// - The use of articles (a, an, the) in English has no direct equivalent in Vietnamese and requires careful consideration of context to determine definiteness or indefiniteness.`
+//       focusAreas += `
+// - Ensuring the accuracy of technical specifications and standards mentioned in the text requires careful research to find corresponding Vietnamese or international standards if applicable, or maintaining the original if no direct equivalent exists or is relevant to the plot.
+// - Units of measurement often differ, with English using Imperial/US customary units and Vietnamese using the Metric system; conversion is necessary for clarity and understanding.
+// - For units of measurement, convert Imperial/US customary units to their Metric equivalents with precise calculations.
+// - Example: "He was six feet tall." Convert 6 feet to meters. 1 foot = 0.3048 meters. 6 feet * 0.3048 m/foot = 1.8288 meters. The translation should reflect this converted value, e.g., "Anh ta cao khoảng 1.83 mét."
+// - Example: "The car sped at 60 miles per hour." Convert 60 mph to kilometers per hour. 1 mile = 1.60934 kilometers. 60 miles/hour * 1.60934 km/mile = 96.5604 km/hour. The translation should reflect this converted value, e.g., "Chiếc xe phóng đi với tốc độ khoảng 96.6 km/giờ."
+// - For currencies, if the specific currency mentioned (e.g., USD, GBP) cannot be translated into a commonly understood Vietnamese term without ambiguity or arbitrary conversion, use the three-letter currency code.
+// - Example: "He paid $50." Use the currency code: "Anh ta trả 50 USD." Do not convert to VND unless explicitly required by the narrative context (which is rare and risky in fiction).`
+//       notedIssues += `
+// - Proper names of characters are typically transliterated phonetically into Vietnamese, maintaining consistency throughout the text.
+// - Proper names of real people (historical figures, celebrities) should use their established Vietnamese names if they exist.
+// - Proper nouns for fictional places (cities, countries, planets) are usually transliterated, ensuring consistent spelling.
+// - Proper nouns for real places (cities, countries) should use their established Vietnamese names.
+// - Names of organizations (fictional or real) should be handled based on context; fictional ones are usually transliterated, while real ones might use established Vietnamese translations or abbreviations if common.
+// - Titles (Mr., Ms., Dr., Lord, King) require careful consideration of Vietnamese social hierarchy and address terms, often needing adaptation rather than direct translation or transliteration.`
+//       additionalIssues += `
+// - Cultural references: Allusions to specific cultural events, historical figures, literature, or media that may not be known to a Vietnamese audience need careful handling to ensure the intended meaning or impact is conveyed.
+// - Humor: Jokes, puns, sarcasm, and irony are highly culture and language-dependent and often require significant adaptation or creative solutions to elicit a similar reaction in the target audience.
+// - Interjections and Onomatopoeia: Sounds and exclamations differ between languages and need to be translated using Vietnamese equivalents that feel natural and convey the right emotion or sound.
+// - Dialogue Naturalness: Ensuring that character dialogue sounds like real people speaking Vietnamese, reflecting their personality, background, and relationship dynamics, is crucial for believable characters.
+// - Maintaining Suspense and Pacing: The translator must pay attention to sentence length, structure, and word choice to preserve the original text's pacing and build-up of suspense or tension.
+// - Figurative Language: Metaphors, similes, symbolism, and other figures of speech need to be translated in a way that preserves their meaning and impact, sometimes requiring adaptation if a direct translation is culturally inappropriate or nonsensical.
+// - Swear words and profanity: These are highly sensitive and require careful consideration of the target audience and the character's intent to choose appropriate Vietnamese equivalents that match the intensity and context.
+// - Abbreviations and Acronyms: Fictional abbreviations should usually be kept or transliterated unless the author provides a meaning that can be translated; real-world abbreviations should use established Vietnamese equivalents if they exist, otherwise keep the original.
+// - Sensory Details: Descriptions involving sights, sounds, smells, tastes, and textures must be translated vividly to allow the Vietnamese reader to experience the fictional world fully.`
+//     } else if (domain === Domains.FICTION && originalLang === 'ja' && this.destLang === 'vi') {
+//       specialRequirements += `
+// - Special requirements when translating Fiction include capturing the author's unique voice and style, maintaining the intended tone and atmosphere (e.g., suspenseful, humorous, romantic), accurately conveying character personalities through dialogue and internal monologue, preserving cultural nuances and references relevant to the plot or setting, and ensuring the narrative flows naturally and engages the Vietnamese reader while respecting the original pacing and structure.`
+//       specialAttentionConsiderations += `
+// - Linguistic and grammatical considerations include adapting Japanese sentence structures (Subject-Object-Verb) to Vietnamese (Subject-Verb-Object) while maintaining natural flow, handling complex Japanese politeness levels (keigo) by using appropriate Vietnamese honorifics or relationship-based language, translating Japanese onomatopoeia and mimetic words effectively to convey sensory details or actions, and addressing terminology specific to the genre (e.g., fantasy terms, sci-fi concepts, specific cultural items) which may require research or careful adaptation.`
+//       focusAreas += `
+// - To ensure correctness, focus on consistency in terminology and character representation, accurately rendering factual details mentioned in the narrative, and handling technical specifications, units of measurement, and standards by prioritizing real-world context and equivalence in Vietnamese.
+// - For currencies, if the Japanese currency (e.g., 円) cannot be directly translated or understood, use the currency code (JPY) instead of arbitrarily converting to another currency.
+// - For units of measurement, if Japanese units (like 尺 shaku, 寸 sun, 貫 kan) or non-metric units appear and cannot be easily understood in Vietnamese context, convert them to the equivalent metric system units commonly used in Vietnam, ensuring precise calculation.
+// - Example: If a character mentions a sword is "三尺 (san shaku)" long, convert it to meters or centimeters. 1 shaku is approximately 0.303 meters or 30.3 centimeters. So, 三尺 would be approximately 0.909 meters or 90.9 centimeters. The translation should use the metric equivalent like "khoảng 90.9 cm" or "gần một mét".
+// - Example: If a weight is given as "一貫 (ichi kan)", convert it to kilograms. 1 kan is approximately 3.75 kilograms. The translation should use "khoảng 3.75 kg".`
+//       notedIssues += `
+// - Issues regarding proper names and proper nouns include deciding whether to transliterate Japanese character names, place names, and organization names into Vietnamese script (using standard romanization and then converting to Vietnamese pronunciation approximations) or to keep them in their original romanized form, maintaining consistency in the chosen method throughout the text, handling titles of works (books, songs, movies mentioned within the story) by either translating the title or keeping the original title and potentially adding a transliteration or brief description, and being mindful of names that might have unintended or awkward meanings when transliterated into Vietnamese.`
+//       additionalIssues += `
+// - Other issues to keep in mind include translating cultural references such as specific foods, festivals, social customs, and historical events in a way that is understandable to the Vietnamese audience without losing the original context.
+// - Handling Japanese honorifics (-san, -chan, -kun, -sama, -sensei) by finding appropriate Vietnamese equivalents or using context to convey the relationship and level of respect/familiarity between characters.
+// - Translating humor, puns, and wordplay, which are often highly language-specific and may require creative adaptation to land effectively in Vietnamese.
+// - Dealing with regional dialects or character-specific speech patterns (like rough speech, formal speech, childish speech) to reflect the character's background or personality in Vietnamese.
+// - Rendering interjections, exclamations, and sounds accurately to convey emotion and reaction.
+// - Maintaining the emotional impact and subtext present in the original Japanese text.
+// - Ensuring consistency in the translation of recurring motifs, symbols, or specific narrative devices used by the author.`
+//     } else
+    if (domain === Domains.FICTION && originalLang === 'zh-cn' && this.destLang === 'vi') {
       specialRequirements += `
 - Maintaining the author's unique voice, tone, and style throughout the translation is crucial for fiction.
 - Accurately conveying the emotional depth, nuances, and subtext present in the original Chinese text is essential.
@@ -858,11 +885,11 @@ ${prompt}`)
 - Handling onomatopoeia and descriptive sounds, finding appropriate Vietnamese equivalents that convey the same sensory experience.
 - Addressing potential sensitivities related to cultural, historical, or political content, ensuring the translation is appropriate for the target audience and market.`
     } else {
-      specialRequirements += '\n'
-      specialAttentionConsiderations += '\n'
-      focusAreas += '\n'
-      notedIssues += '\n'
-      additionalIssues += '\n'
+      specialRequirements += `\n[${specialRequirements}]`
+      specialAttentionConsiderations += `\n[${specialAttentionConsiderations}]`
+      focusAreas += `\n[${focusAreas}]`
+      notedIssues += `\n[${notedIssues}]`
+      additionalIssues += `\n[${additionalIssues}]`
     }
     return `${specialRequirements}\n\n${specialAttentionConsiderations}\n\n${focusAreas}\n\n${notedIssues}\n\n${additionalIssues}`
   }
@@ -876,7 +903,33 @@ ${prompt}`)
           vi: 'Vietnamese',
           ja: 'Japanese',
           'zh-cn': 'Chinese (Simplified)',
-          'zh-tw': 'Chinese (Traditional)'
+          'zh-tw': 'Chinese (Traditional)',
+          ko: 'Korean',
+          es: 'Spanish',
+          pt: 'Portuguese',
+          ru: 'Russian',
+          fr: 'French',
+          de: 'German',
+          it: 'Italian',
+          hi: 'Hindi',
+          th: 'Thai',
+          tr: 'Turkish',
+          el: 'Greek',
+          ar: 'Arabic',
+          nl: 'Dutch',
+          pl: 'Polish',
+          uk: 'Ukrainian',
+          sv: 'Swedish',
+          da: 'Danish',
+          no: 'Norwegian',
+          fi: 'Finnish',
+          hu: 'Hungarian',
+          id: 'Indonesian',
+          'ms-MY': 'Malaysian',
+          fil: 'Tagalog (Filipino)',
+          bn: 'Bengali (Bangladesh)',
+          lo: 'Lao',
+          'cs-CZ': 'Czech'
         }
         const toLanguage = LANGUAGE_MAP[this.destLang]
         const fromLanguage = LANGUAGE_MAP[this.originalLang ?? detectedLanguage]
@@ -894,7 +947,33 @@ Your output must only contain the translated text and cannot include explanation
           vi: 'Vietnamese',
           ja: 'Japanese',
           'zh-cn': 'Chinese (simplified)',
-          'zh-tw': 'Chinese (traditional)'
+          'zh-tw': 'Chinese (traditional)',
+          ko: 'Korean',
+          es: 'Spanish',
+          pt: 'Portuguese',
+          ru: 'Russian',
+          fr: 'French',
+          de: 'German',
+          it: 'Italian',
+          hi: 'Hindi',
+          th: 'Thai',
+          tr: 'Turkish',
+          el: 'Greek',
+          ar: 'Arabic',
+          nl: 'Dutch',
+          pl: 'Polish',
+          uk: 'Ukrainian',
+          sv: 'Swedish',
+          da: 'Danish',
+          no: 'Norwegian',
+          fi: 'Finnish',
+          hu: 'Hungarian',
+          id: 'Indonesian',
+          'ms-MY': 'Malaysian',
+          fil: 'Tagalog (Filipino)',
+          bn: 'Bengali (Bangladesh)',
+          lo: 'Lao',
+          'cs-CZ': 'Czech'
         }
         const originalLanguage = this.originalLang ?? detectedLanguage
         const upperCaseDestinationLanguage: string = LANGUAGE_MAP[this.destLang].toUpperCase()
@@ -1009,7 +1088,33 @@ ${isCustomPromptEnabled ? customPrompt as string : ''}
           'zh-tw': 'Chinese',
           en: 'English',
           ja: 'Japanese',
-          vi: 'Vietnamese'
+          vi: 'Vietnamese',
+          ko: 'Korean',
+          es: 'Spanish',
+          pt: 'Portuguese',
+          ru: 'Russian',
+          fr: 'French',
+          de: 'German',
+          it: 'Italian',
+          hi: 'Hindi',
+          th: 'Thai',
+          tr: 'Turkish',
+          el: 'Greek',
+          ar: 'Arabic',
+          nl: 'Dutch',
+          pl: 'Polish',
+          uk: 'Ukrainian',
+          sv: 'Swedish',
+          da: 'Danish',
+          no: 'Norwegian',
+          fi: 'Finnish',
+          hu: 'Hungarian',
+          id: 'Indonesian',
+          'ms-MY': 'Malaysian',
+          fil: 'Tagalog (Filipino)',
+          bn: 'Bengali (Bangladesh)',
+          lo: 'Lao',
+          'cs-CZ': 'Czech'
         }
         systemInstructions.push(`You will be provided with a user input in ${LANGUAGE_MAP[this.originalLang ?? detectedLanguage] ?? LANGUAGE_MAP.en}.\nTranslate the text into ${LANGUAGE_MAP[this.destLang]}.\nOnly output the translated text, without any additional text.`)
       }
