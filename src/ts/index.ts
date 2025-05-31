@@ -26,6 +26,7 @@ const $sourceTextLanguageSelect = $( "#source-text-language-select" )
 const $targetTextarea = $( "#target-textarea" )
 const $targetTextLanguageSelect = $( "#target-text-language-select" )
 const $translateButton = $( "#translate-button" )
+const $textLanguageSelects = $( ".text-language-select" )
 const $translationTranslators = $( "[data-translation-translator-value]" )
 const $translators = $( "[data-translator-value]" )
 let customDictionary: DictionaryEntry[] = []
@@ -254,9 +255,10 @@ $translationTranslators.on( "click", function () {
   const sourceText = $sourceText.val() as string
   if (sourceText.length === 0) return
   const previousTargetText = $targetTextarea.val() as string
+  $textLanguageSelects.prop( "disabled", true )
   $targetTextarea.val( "Đang dịch..." )
   $( "#source-text, #target-textarea" ).prop( "readOnly", true )
-  $( "[data-translation-translator-value], .text-language-select, #add-word-button, #delete-button" ).addClass( "disabled" )
+  $( "[data-translation-translator-value], #add-word-button, #delete-button" ).addClass( "disabled" )
   dictionaryTranslation = new Translation(sourceText, $targetTextLanguageSelect.val() as string, $sourceTextLanguageSelect.val() as string | null, {
     GEMINI_API_KEY: $geminiApiKeyText.val() as string,
     GROQ_API_KEY: $groqApiKeyText.val() as string,
@@ -293,6 +295,7 @@ $translationTranslators.on( "click", function () {
     if (!((textareaTranslation as Translation).abortController.signal.aborted as boolean)) $targetTextarea.val( previousTargetText )
   }).finally(() => {
     $( "#source-text, #target-textarea" ).prop( "readOnly", false )
+    $textLanguageSelects.prop( "disabled", false )
     $( "[data-translation-translator-value], .text-language-select, #add-word-button, #delete-button" ).removeClass( "disabled" )
   })
 })
@@ -300,7 +303,7 @@ $( "[data-define-url]" ).on( "click", function () {
   if (($sourceText.val() as string).length === 0) return
   open($( this ).data( "define-url" ).replace('%l', ($sourceTextLanguageSelect.val() as string).split('-')[0]).replace('%s', $sourceText.val()), '_blank', 'width=1000,height=577')
 })
-$( ".text-language-select" ).on( "change", () => {
+$textLanguageSelects.on( "change", () => {
   $sourceText.trigger( "input" )
 })
 $sourceText.on( "input", function () {
@@ -385,9 +388,9 @@ $retranslateButton.on( "click", () => {
   if (confirm('Bạn có chắc chắn muốn dịch lại?')) $translateButton.click().click()
 })
 $( ".language-select" ).on( "change", function () {
-  const $textLanguageSelect = $( ".text-language-select" ).filter( `#${$( this ).prop( "id" ).replace('original', 'source-text').replace('destination', 'target-text')}` )
+  const $textLanguageSelect = $textLanguageSelects.filter( `#${$( this ).prop( "id" ).replace('original', 'source-text').replace('destination', 'target-text')}` )
   const value = $( this ).val() as string
-  $textLanguageSelect.val( value !== 'null' ? value : $textLanguageSelect.val() as string ).change()
+  $textLanguageSelect.val( $textLanguageSelect.prop( "disabled" ) !== false && value !== 'null' ? value : $textLanguageSelect.val() as string ).change()
 })
 $translateButton.on( "click", function () {
   const $textareaCopyButton = $copyButtons.filter( `[data-target="#${$inputTextarea.prop( "id" ) as string}"]` )
