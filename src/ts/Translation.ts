@@ -1019,9 +1019,9 @@ Your output must only contain the translated text and cannot include explanation
           'cs-CZ': 'Czech'
         }
         const originalLanguage = this.originalLang ?? detectedLanguage
+        const domain = (options.domain as string).replace(Domains.NONE, 'Lifestyle')
         const upperCaseOriginalLanguage = domain === Domains.FICTION ? originalLanguage : LANGUAGE_MAP[originalLanguage].toUpperCase()
         const upperCaseDestinationLanguage = LANGUAGE_MAP[this.destLang].toUpperCase()
-        const domain = (options.domain as string).replace(Domains.NONE, 'Lifestyle')
         const tone = (options.tone as string).replace(Tones.NONE, Tones.SERIOUS)
         const TONE_INSTRUCTION_MAP: Record<string, string> = {
           Serious: `
