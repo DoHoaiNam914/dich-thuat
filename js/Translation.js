@@ -1290,7 +1290,7 @@ Your output must only contain the translated text and cannot include explanation
       } else {
         /* eslint-disable camelcase */
         const { translated_string } = parsedResult
-        const translatedStringParts = translated_string.split(new RegExp(`${translated_string.includes(',\n') && translated_string.match(',\n').length === translated_string.match('\n').length ? ',\\s*' : ((translated_string.includes('\n,') && translated_string.match('\n,').length === translated_string.match('\n').length) || /(?:^|,)[a-z0-9]{7,8}#[a-z0-9]{3}: /.test(translated_string) ? '(?:\\s*,|(?:^|,))' : '\\s*')}([a-z0-9]{7,8}#[a-z0-9]{3}): (?:[a-z0-9]{7,8}#[a-z0-9]{3}: )?`)).slice(1)
+        const translatedStringParts = translated_string.split(new RegExp(`${translated_string.includes(',\n') && [...translated_string.matchAll(',\n')].length === [...translated_string.matchAll('\n')].length ? ',\\s*' : ((translated_string.includes('\n,') && [...translated_string.matchAll('\n,')].length === [...translated_string.matchAll('\n')].length) || [...translated_string.matchAll(/(?:^|,)[a-z0-9]{7,8}#[a-z0-9]{3}: /)].length === [...translated_string.matchAll(/[a-z0-9]{7,8}#[a-z0-9]{3}: /)].length ? '(?:\\s*,|(?:^|,))' : '\\s*')}([a-z0-9]{7,8}#[a-z0-9]{3}): (?:[a-z0-9]{7,8}#[a-z0-9]{3}: )?`)).slice(1)
         /* eslint-enable camelcase */
         for (let i = 0; i < translatedStringParts.length; i += 2) {
           translatedStringMap[translatedStringParts[i]] = translatedStringParts[i + 1].replace(/\n+$/, '')
