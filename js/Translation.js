@@ -1275,7 +1275,7 @@ Your output must only contain the translated text and cannot include explanation
   }
 
   doctranslateIoResponsePostprocess (translatedTextWithUuid, textSentenceWithUuid) {
-    translatedTextWithUuid = translatedTextWithUuid.replace('({)\\n', '$1\n').replace(/(\\")?"?(?:(?:\n|\\n)?\})?(\n?(?:`{3})?)$/, '$1"\n}$2').replace(/\n(?! *"(?:insight|rule|translated_string|[a-z0-9]{7,8}#[a-z0-9]{3})"|\}(?=\n?(?:`{3})?$))/g, '\\n').replace(/("translated_string": ")(.+)(?=")/, (_match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`)
+    translatedTextWithUuid = translatedTextWithUuid.replace(/undefined$/, '').replace('({)\\n', '$1\n').replace(/(\\")?"?(?:(?:\n|\\n)?\})?(\n?(?:`{3})?)$/, '$1"\n}$2').replace(/\n(?! *"(?:insight|rule|translated_string|[a-z0-9]{7,8}#[a-z0-9]{3})"|\}(?=\n?(?:`{3})?$))/g, '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`)
     const jsonMatch = translatedTextWithUuid.match(/(\{[\s\S]+\})/)
     const potentialJsonString = (jsonMatch != null ? jsonMatch[0] : translatedTextWithUuid.replace(/^`{3}json\n/, '').replace(/\n`{3}$/, '')).replace(/insight": \[[\s\S]+(?=translated_string": ")/, '')
     if (Utils.isValidJson(potentialJsonString)) {
@@ -1288,7 +1288,10 @@ Your output must only contain the translated text and cannot include explanation
         // @ts-expect-error JSON5
         translatedStringMap = JSON5.parse(parsedResult.translated_string)
       } else {
-        const translatedStringParts = parsedResult.translated_string.split(/\s*,?([a-z0-9]{7,8}#[a-z0-9]{3}): (?:[a-z0-9]{8}#[a-z0-9]{3}: )?/).slice(1)
+        /* eslint-disable camelcase */
+        const { translated_string } = parsedResult
+        const translatedStringParts = translated_string.split(new RegExp(`${translated_string.includes(',\n') && translated_string.match(',\n').length === translated_string.match('\n').length ? ',\\s*' : ((translated_string.includes('\n,') && translated_string.match('\n,').length === translated_string.match('\n').length) || /(?:^|,)[a-z0-9]{7,8}#[a-z0-9]{3}: /.test(translated_string) ? '(?:\\s*,|(?:^|,))' : '\\s*')}([a-z0-9]{7,8}#[a-z0-9]{3}): (?:[a-z0-9]{7,8}#[a-z0-9]{3}: )?`)).slice(1)
+        /* eslint-enable camelcase */
         for (let i = 0; i < translatedStringParts.length; i += 2) {
           translatedStringMap[translatedStringParts[i]] = translatedStringParts[i + 1].replace(/\n+$/, '')
         }
