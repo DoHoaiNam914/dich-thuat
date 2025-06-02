@@ -1,4 +1,5 @@
 'use strict'
+/* global JSON5 */
 class Utils {
   static clamp (value, min, max) {
     return Math.min(max, Math.max(min, value))
@@ -6,7 +7,8 @@ class Utils {
 
   static isValidJson (jsonString) {
     try {
-      JSON.parse(jsonString)
+      // @ts-expect-error JSON5
+      JSON5.parse(jsonString)
       return true
     } catch {
       return false
