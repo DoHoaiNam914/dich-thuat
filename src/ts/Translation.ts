@@ -330,6 +330,8 @@ class Translation {
     const prompt = this.getPrompt(systemInstruction as SystemInstructions)
     const noEmptyLinesPrompt = prompt.replace(/'[a-z0-9]{8}#[a-z0-9]{3}': '\s*',|,'[a-z0-9]{8}#[a-z0-9]{3}': '\s*'/g, '')
     const date = new Date()
+    // @ts-expect-error JSON5
+    const textSentenceWithUuid = Object.entries(JSON5.parse((prompt.match(/(?<=^### TEXT SENTENCE WITH UUID:\n)[\s\S]+(?=\n### TRANSLATED TEXT WITH UUID:$)/) as RegExpMatchArray)[0]) as Record<string, string>)
     switch (options.translatorId) {
       case Translators.CHUTES_TRANSLATE:
         this.translateText = async (resolve) => {
@@ -442,7 +444,7 @@ ${noEmptyLinesPrompt}`)
                       this.responseText += content
                       if (this.responseText.startsWith('<think>') && !/<\/think>\n{1,2}/.test(this.responseText)) continue
                       else if (this.responseText.startsWith('<think>')) this.responseText = this.responseText.replace(/^<think>\n[\s\S]+\n<\/think>\n{1,2}/, '')
-                      this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(this.responseText, prompt) : this.responseText
+                      this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
                       if (this.translatedText.length === 0) continue
                       if (this.abortController.signal.aborted as boolean) return
                       resolve(this.translatedText, this.text, options)
@@ -523,7 +525,7 @@ ${noEmptyLinesPrompt}`)
 
           for await (const chunk of chatCompletion) {
             this.responseText += chunk.choices[0]?.delta?.content || ''
-            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(this.responseText, prompt) : this.responseText
+            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
             if (this.translatedText.length === 0) continue
             if (this.abortController.signal.aborted as boolean) return
             resolve(this.translatedText, this.text, options)
@@ -592,7 +594,7 @@ ${noEmptyLinesPrompt}`)
             signal: this.abortController.signal
           }).then(value => value.json()).then(value => {
             this.responseText = value.output.filter((element: { type: string }) => element.type === 'message')[0].content[0].text
-            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(this.responseText, prompt) : this.responseText
+            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
             if (this.abortController.signal.aborted as boolean) return
             resolve(this.translatedText, this.text, options)
           })
@@ -626,7 +628,7 @@ ${noEmptyLinesPrompt}`)
           }, { keepalive: true, signal: this.abortController.signal });
         
           this.responseText = completion.choices[0].message?.content
-          this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(this.responseText, prompt) : this.responseText
+          this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
           if (this.abortController.signal.aborted as boolean) return
           resolve(this.translatedText, this.text, options)
         }
@@ -697,7 +699,7 @@ ${noEmptyLinesPrompt}`)
           });
           for await (const chunk of response) {
             this.responseText += chunk.text as string
-            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoResponsePostprocess(this.responseText, prompt) : this.responseText
+            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
             if (this.translatedText.length === 0) continue
             if (this.abortController.signal.aborted as boolean) return
             resolve(this.translatedText, this.text, options)
@@ -1332,8 +1334,7 @@ Your output must only contain the translated text and cannot include explanation
     }
     return systemInstructions
   }
-  private doctranslateIoResponsePostprocess (translatedTextWithUuid: string, textSentenceWithUuid: string): string {
-    translatedTextWithUuid = translatedTextWithUuid.replace(/undefined$/, '').replace('({)\\n', '$1\n').replace(/(\\")?"?(?:(?:\n|\\n)?\})?(\n?(?:`{3})?)$/, '$1"\n}$2').replace(/\n(?! *"(?:insight|rule|translated_string|[a-z0-9]{7,8}#[a-z0-9]{3})"|\}(?=\n?(?:`{3})?$))/g, '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1: string, p2: string) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`)
+  private doctranslateIoPostprocess (translatedTextWithUuid: string, textSentenceWithUuid: string[][]): string {
     const jsonMatch = translatedTextWithUuid.match(/(\{[\s\S]+\})/)
     const potentialJsonString = (jsonMatch != null ? jsonMatch[0] : translatedTextWithUuid.replace(/^`{3}json\n/, '').replace(/\n`{3}$/, '')).replace(/insight": \[[\s\S]+(?=translated_string": ")/, '')
     if (Utils.isValidJson(potentialJsonString)) {
@@ -1348,15 +1349,14 @@ Your output must only contain the translated text and cannot include explanation
       } else {
         /* eslint-disable camelcase */
         const { translated_string } = parsedResult
-        const translatedStringParts = translated_string.split(new RegExp(`${translated_string.includes(',\n') && [...translated_string.matchAll(',\n')].length === [...translated_string.matchAll('\n')].length ? ',\\s*' : ((translated_string.includes('\n,') && [...translated_string.matchAll('\n,')].length === [...translated_string.matchAll('\n')].length) || [...translated_string.matchAll(/(?:^|,)[a-z0-9]{7,8}#[a-z0-9]{3}: /g)].length === [...translated_string.matchAll(/[a-z0-9]{7,8}#[a-z0-9]{3}: /g)].length ? '(?:\\s*(?:^|,))' : '\\s*')}([a-z0-9]{7,8}#[a-z0-9]{3}): (?:[a-z0-9]{7,8}#[a-z0-9]{3}: )?`)).slice(1)
+        const translatedStringParts = translated_string.split(/(?:^|,)([a-z0-9]{7,8}#[a-z0-9]{3}): (?:[a-z0-9]{7,8}#[a-z0-9]{3}: )?/).slice(1)
         /* eslint-enable camelcase */
         for (let i = 0; i < translatedStringParts.length; i += 2) {
           translatedStringMap[translatedStringParts[i]] = translatedStringParts[i + 1].replace(/\n+$/, '')
         }
       }
       if (Object.keys(translatedStringMap ?? {}).length > 0) {
-        // @ts-expect-error JSON5
-        return Object.entries(JSON5.parse((textSentenceWithUuid.match(/(?<=^### TEXT SENTENCE WITH UUID:\n)[\s\S]+(?=\n### TRANSLATED TEXT WITH UUID:$)/) as RegExpMatchArray)[0]) as Record<string, string>).map(([first, second]) => translatedStringMap[first] ?? (second.replace(/\s+/, '').length > 0 ? '' : second)).join('\n')
+        return textSentenceWithUuid.map(([first, second]) => translatedStringMap[first] ?? (second.replace(/\s+/, '').length > 0 ? '' : second)).join('\n')
       }
     }
     return ''
