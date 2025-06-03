@@ -448,7 +448,7 @@ $translateButton.on( "click", function () {
       break
     }
     case 'Huỷ':
-      (textareaTranslation as Translation).abortController.abort()
+      if (textareaTranslation != null) textareaTranslation.abortController.abort()
       // fallthrough
     case 'Sửa':
       $outputTextarea.text( "" )
