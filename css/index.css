@@ -28,32 +28,37 @@
   overscroll-behavior: none;
 }
 
+.modal {
+  --bs-body-bg: rgba(var(--bs-body-bg-rgb), 0.25);
+  --bs-secondary-bg: rgba(var(--bs-secondary-bg-rgb), 0.25);
+}
+
+.modal-content {
+  min-height: 492px;
+}
+
+.modal-content,
+.modal-content .dropdown-menu {
+  backdrop-filter: blur(8px);
+}
+
+.reader-theme-toggle .bi,
+.translator-toggle .bi {
+  width: 1em;
+  height: 1em;
+}
+
+.reader-theme-toggle .dropdown-menu .active .bi,
+.translator-toggle .dropdown-menu .active .bi {
+  display: block !important;
+}
+
+.modal.fade .modal-dialog {
+  transform: unset;
+}
+
 .viewport {
   max-width: var(--viewport-width);
-}
-
-.textarea > .form-control {
-  height: 100vh;
-  font: var(--reader-font-weight) var(--reader-font-size)/var(--reader-line-height) var(--reader-font-family);
-  padding: 10px 10px 5.55rem;
-  width: 100vw;
-}
-
-.textarea > div.form-control {
-  overflow-y: auto;
-}
-
-body:not(.bg-body) .textarea > .form-control,
-body:not(.bg-body) .textarea > .form-control::placeholder {
-  color: var(--reader-color);
-}
-
-.textarea > .form-control > p {
-  margin-bottom: 0;
-}
-
-.textarea.bold-text > .form-control {
-  --reader-font-weight: bold !important;
 }
 
 .combined-navbar {
@@ -84,13 +89,26 @@ body:not(.bg-body) .textarea > .form-control::placeholder {
   max-width: 4.044em;
 }
 
-.reader-theme-toggle .bi,
-.translator-toggle .bi {
-  width: 1em;
-  height: 1em;
+.textarea > .form-control {
+  height: 100vh;
+  font: var(--reader-font-weight) var(--reader-font-size)/var(--reader-line-height) var(--reader-font-family);
+  padding: 10px 10px 5.55rem;
+  width: 100vw;
 }
 
-.reader-theme-toggle .dropdown-menu .active .bi,
-.translator-toggle .dropdown-menu .active .bi {
-  display: block !important;
+.textarea > div.form-control {
+  overflow-y: auto;
+}
+
+body:not(.bg-body) .textarea > .form-control,
+body:not(.bg-body) .textarea > .form-control::placeholder {
+  color: var(--reader-color);
+}
+
+.textarea > .form-control > p {
+  margin-bottom: 0;
+}
+
+.textarea.bold-text > .form-control {
+  --reader-font-weight: bold !important;
 }
