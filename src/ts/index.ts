@@ -6,9 +6,11 @@ import Utils from './Utils.js'
 const $addWordButton = $( "#add-word-button" )
 const $apiKeyTexts = $( ".api-key-text" )
 const $boldTextSwitch = $( "#bold-text-switch" )
+const $checkedOptions = $('.checked-option')
 const $chutesApiTokenText = $( "#chutes-api-token-text" )
 const $copyButtons = $( ".copy-button" )
 const $customDictionarySwitch = $( "#custom-dictionary-switch" )
+const $defineModal = $( "#define-modal" )
 const $deleteButton = $( "#delete-button" )
 const $domainSelect = $( "#domain-select" )
 const $fontFamilyText = $( "#font-family-text" )
@@ -96,8 +98,8 @@ function appendTranslatedTextIntoOutputTextarea (translatedText: string, text: s
       const paragraph = document.createElement('p')
       if (element.replace(/^\s+/, '').length === 0) {
         $( paragraph ).append( document.createElement('br') )
-      } else if (/^\p{P}+$/u.test(translatedLines[index])) {
-        $( paragraph ).text( element )
+      } else if (/^\p{P}+$/u.test(element)) {
+        $( paragraph ).text( translatedLines[index] )
       } else {
         const span = document.createElement('span')
         $( span ).text( element )
@@ -166,7 +168,7 @@ $( document ).ready(() => {
   $('.number-value-option').each((_index, element) => {
     $( element ).val( parseFloat(sessionStorage.getItem(($( element ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')) ?? $( element ).val() as string) )
   })
-  $('.checked-option').each((_index, element) => {
+  $checkedOptions.each((_index, element) => {
     $( element ).prop( "checked", sessionStorage.getItem(($( element ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')) ?? $( element ).prop( "checked" ) )
   })
   $apiKeyTexts.each((index, element) => {
@@ -215,7 +217,7 @@ $translators.on( "click", function () {
 $( ".value-option" ).on( "change", function () {
   sessionStorage.setItem(($( this ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join(''), $( this ).val() as string )
 })
-$( ".checked-option" ).on( "change", function () {
+$checkedOptions.on( "change", function () {
   sessionStorage.setItem(($( this ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join(''), $( this ).prop( "checked" ))
 })
 $apiKeyTexts.on( "change", function () {
@@ -227,7 +229,8 @@ $domainSelect.on( "change", function () {
 $( "#dictionary-modal" ).on( "hide.bs.modal", () => {
   if (dictionaryTranslation != null) dictionaryTranslation.abortController.abort()
   $( "#source-text, #target-textarea" ).val( "" ).prop( "readOnly", false )
-  $( "#add-word-button, #delete-button, [translation-translator-value]" ).removeClass( "disabled" )
+  $textLanguageSelects.prop( "disabled", false )
+  $( "[data-translation-translator-value], .text-language-select, #add-word-button, #delete-button" ).removeClass( "disabled" )
 })
 $( "#custom-dictionary-input" ).on( "change", function () {
   // @ts-expect-error Papaparse
@@ -308,8 +311,21 @@ $translationTranslators.on( "click", function () {
   })
 })
 $( "[data-define-url]" ).on( "click", function () {
-  if (($sourceText.val() as string).length === 0) return
-  open($( this ).data( "define-url" ).replace('%l', ($sourceTextLanguageSelect.val() as string).split('-')[0]).replace('%s', $sourceText.val()), '_blank', 'width=1000,height=577')
+  const sourceText = $sourceText.val() as string
+  if (sourceText.length === 0) return
+  const method = $( this ).data( "define-method" ) ?? 'showInModal'
+  const url = `${method.endsWith('WithCorsProxy') ? Utils.CORS_HEADER_PROXY : ''}${$( this ).data( "define-url" ).replace('%l', ($sourceTextLanguageSelect.val() as string).split('-')[0]).replace('%s', sourceText)}`
+  switch (method) {
+    case 'openInNewWindow':
+      open(url, '_blank', 'width=1000,height=577')
+      break
+    case 'showInModalWithCorsProxy':
+    case 'showInModal':
+    default:
+      $defineModal.find( "iframe" ).attr( "src", url )
+      // @ts-expect-error $().modal()
+      $defineModal.modal( "show" )
+  }
 })
 $textLanguageSelects.on( "change", () => {
   $sourceText.trigger( "input" )
@@ -365,6 +381,9 @@ $( "#copy-csv-button" ).on( "click", () => {
       // continue regardless of error
     }
   }())
+})
+$defineModal.on( "hide.bs.modal", () => {
+  $defineModal.find( "iframe" ).removeAttr( "src" )
 })
 $copyButtons.on( "click", function () {
   const target = $( this ).data( "target" )
@@ -436,14 +455,16 @@ $translateButton.on( "click", function () {
         isCustomDictionaryEnabled: $customDictionarySwitch.prop( "checked" ),
         B2B_AUTH_TOKEN: b2bAuthToken
       })
-      textareaTranslation.translateText(appendTranslatedTextIntoOutputTextarea).then(() => {
+      textareaTranslation.translateText(appendTranslatedTextIntoOutputTextarea).catch(reason => {
+        if ((textareaTranslation as Translation).abortController.signal.aborted as boolean) return
+        console.error(reason)
+        $outputTextarea.text( reason )
+      }).finally(() => {
+        sessionStorage.setItem('responseText', (textareaTranslation as Translation).responseText)
         if ((textareaTranslation as Translation).abortController.signal.aborted as boolean) return
         $( this ).text( "Sửa" )
         $textareaCopyButton.data( "target", "textareaTranslation" )
-        sessionStorage.setItem('responseText', (textareaTranslation as Translation).responseText as string)
         $retranslateButton.removeClass( "disabled" )
-      }).catch(() => {
-        if (!((textareaTranslation as Translation).abortController.signal.aborted as boolean)) $( this ).click()
       })
       break
     }

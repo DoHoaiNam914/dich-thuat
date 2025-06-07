@@ -25,17 +25,21 @@ const MODELS: ModelsType = {
   GOOGLE_GENAI: {
     'Gemini 2.5': [
       {
+        modelId: 'gemini-2.5-pro-preview-06-05',
+        modelName: 'Gemini 2.5 Pro Preview',
+        selected: true
+      },
+      {
+        modelId: 'gemini-2.5-pro-preview-05-06',
+        modelName: 'Gemini 2.5 Pro Preview 05-06'
+      },
+      {
         modelId: 'gemini-2.5-flash-preview-04-17',
         modelName: 'Gemini 2.5 Flash Preview 04-17'
       },
       {
         modelId: 'gemini-2.5-flash-preview-05-20',
         modelName: 'Gemini 2.5 Flash Preview 05-20'
-      },
-      {
-        modelId: 'gemini-2.5-pro-preview-05-06',
-        modelName: 'Gemini 2.5 Pro Preview 05-06',
-        selected: true
       }
     ],
     'Gemini 2.0': [
@@ -328,10 +332,10 @@ class Translation {
     this.B2B_AUTH_TOKEN = B2B_AUTH_TOKEN
     this.TVLY_API_KEY = TVLY_API_KEY
     const prompt = this.getPrompt(systemInstruction as SystemInstructions)
-    const noEmptyLinesPrompt = prompt.replace(/'[a-z0-9]{8}#[a-z0-9]{3}': '\s*',|,'[a-z0-9]{8}#[a-z0-9]{3}': '\s*'/g, '')
+    const noEmptyLinesPrompt = prompt.replace(/^(?<=### TEXT SENTENCE WITH UUID:\n{)'[a-z0-9]{8}#[a-z0-9]{3}': '\s*', |, '[a-z0-9]{8}#[a-z0-9]{3}': '\s*'/g, '')
     const date = new Date()
     // @ts-expect-error JSON5
-    const textSentenceWithUuid = Object.entries(JSON5.parse((prompt.match(/(?<=^### TEXT SENTENCE WITH UUID:\n)[\s\S]+(?=\n### TRANSLATED TEXT WITH UUID:$)/) as RegExpMatchArray)[0]) as Record<string, string>)
+    const textSentenceWithUuid = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? JSON5.parse((prompt.match(/(?<=^### TEXT SENTENCE WITH UUID:\n)[\s\S]+(?=\n### TRANSLATED TEXT WITH UUID:$)/) as RegExpMatchArray)[0]) as Record<string, string> : {}
     switch (options.translatorId) {
       case Translators.CHUTES_TRANSLATE:
         this.translateText = async (resolve) => {
@@ -649,7 +653,7 @@ ${noEmptyLinesPrompt}`)
             ...temperature as number > -1 ? { temperature } : {},
             ...topP as number > -1 ? { topP } : {},
             ...topK as number > -1 ? { topK } : {},
-            ...(googleGenaiModelId as string).startsWith('gemini-2.5-flash') && !isThinkingModeEnabled
+            ...((googleGenaiModelId as string).startsWith('gemini-2.5-flash') || googleGenaiModelId === 'gemini-2.5-pro-preview-06-05') && !isThinkingModeEnabled
               ? {
                   thinkingConfig: {
                     thinkingBudget: 0,
@@ -698,7 +702,7 @@ ${noEmptyLinesPrompt}`)
             contents,
           });
           for await (const chunk of response) {
-            this.responseText += chunk.text as string
+            if (chunk.text != null) this.responseText += chunk.text
             this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
             if (this.translatedText.length === 0) continue
             if (this.abortController.signal.aborted as boolean) return
@@ -729,7 +733,7 @@ ${noEmptyLinesPrompt}`)
 {${this.text.split('\n').map(element => {
           const uuidParts = crypto.randomUUID().split('-')
           return `'${uuidParts[0]}#${uuidParts[2].substring(1)}': ${element.includes("'") && !element.includes('"')  ? `"${element}"` : `'${element.replace(/'/g, "\\'")}'`}`
-        }).join()}}
+        }).join(', ')}}
 ### TRANSLATED TEXT WITH UUID:`
       default:
         return this.text.split('\n').filter(element => element.replace(/^\s+/, '').length > 0).join('\n')
@@ -805,8 +809,8 @@ ${noEmptyLinesPrompt}`)
     - The writing is gentle, focusing on subtle feelings about love and deep character emotions.`
     }
     const styleInstruction = STYLE_INSTRUCTION_MAP[tone]
-    const customDictionaryInstruction = isCustomDictionaryEnabled ? customDictionary.filter(element => element.ori_lang === originalLang && element.des_lang === destLang && this.text.includes(element.ori_word)).map(({ ori_word, des_word }) => `Must translate: ${ori_word} into ${des_word}`).join('\n') : '' // eslint-disable-line camelcase
-    const customInstruction = isCustomPromptEnabled ? customPrompt : ''
+    const customDictionaryInstruction = isCustomDictionaryEnabled ? `${customDictionary.filter(element => element.ori_lang === originalLang && element.des_lang === destLang && this.text.includes(element.ori_word)).map(({ ori_word, des_word }) => `Must translate: ${ori_word} into ${des_word}`).join('\n')}\n` : '' // eslint-disable-line camelcase
+    const customInstruction = isCustomPromptEnabled ? `- Follow the instruction below when translate:\n${customPrompt}` : ''
     switch (`${originalLang}_${destLang}_${domain}`) {
       case `en_vi_${Domains.INFORMATICS}`:
         return `### ROLE:
@@ -896,8 +900,6 @@ In addition to the above issues, are there any other issues to keep in mind when
         
 ### ADVANCED MISSION (HIGHEST PRIORITY):
 ${customDictionaryInstruction}
-
-- Follow the instruction below when translate:
 ${customInstruction}
 ### OUTPUT FORMAT MUST BE IN JSON and must have only 3 fields:
 {
@@ -906,8 +908,7 @@ ${customInstruction}
 "translated_string": "uuid: VIETNAMESE translation of the sentence when using rule ,
 uuid: VIETNAMESe translation of the sentence when using rule ,
   .."
-}
-`
+}`
       case `zh-cn_vi_${Domains.HISTORICAL_STORIES}`:
         return `### ROLE:
 You are a translation professional with many years of experience, able to translate accurately and naturally between languages. You have a good understanding of the grammar, vocabulary and style of both zh-cn and VIETNAMESE. You also know how to maintain the original meaning and emotion of the text when translating.
@@ -1016,8 +1017,6 @@ In addition to the above issues, are there any other issues to keep in mind when
         
 ### ADVANCED MISSION (HIGHEST PRIORITY):
 ${customDictionaryInstruction}
-
-- Follow the instruction below when translate:
 ${customInstruction}
 ### OUTPUT FORMAT MUST BE IN JSON and must have only 3 fields:
 {
@@ -1026,8 +1025,7 @@ ${customInstruction}
 "translated_string": "uuid: VIETNAMESE translation of the sentence when using rule ,
 uuid: VIETNAMESe translation of the sentence when using rule ,
   .."
-}
-`
+}`
       case `zh-cn_vi_${Domains.FICTION}`:
         return `### ROLE:
 You are a translation professional with many years of experience, able to translate accurately and naturally between languages. You have a good understanding of the grammar, vocabulary and style of both zh-cn and VIETNAMESE. You also know how to maintain the original meaning and emotion of the text when translating.
@@ -1098,6 +1096,11 @@ In addition to the above issues, are there any other issues to keep in mind when
 - The way characters address each other MUST accurately reflect their social position, role and relative relationship according to the Character Address Chart.
 - Ensure the way characters address each other is CORRECT and CONSISTENT according to the Character Address Table provided.
 - Strictly adhere to how characters address each other and themselves as defined in the Character Address Table.
+- The Character Address Table provides detailed information about:
++ How each character addresses themselves (first person pronouns) to each other
++ How each character addresses others (second person pronouns)\n+ Relationships between characters (rank, social status, level of intimacy)
++ Special terms of address between characters
+- DO NOT change or create a form of address that differs from the Character Address Table provided.
 - When a character speaks to multiple people or to a group of people, determine the appropriate form of address based on the Character Address Table.
 - When characters reminisce about the past, address each other in a way that is appropriate to the characters' relationship and circumstances at that point in the past
 - When a situation is unclear or not defined in the Address Table, use the closest form of address available in the Table for the same relationship.
@@ -1130,8 +1133,6 @@ In addition to the above issues, are there any other issues to keep in mind when
         
 ### ADVANCED MISSION (HIGHEST PRIORITY):
 ${customDictionaryInstruction}
-
-- Follow the instruction below when translate:
 ${customInstruction}
 ### OUTPUT FORMAT MUST BE IN JSON and must have only 3 fields:
 {
@@ -1140,8 +1141,7 @@ ${customInstruction}
 "translated_string": "uuid: VIETNAMESE translation of the sentence when using rule ,
 uuid: VIETNAMESe translation of the sentence when using rule ,
   .."
-}
-`
+}`
       case `${originalLang}_${destLang}_${Domains.FAST_TRANSLATION}`:
       default:
         return `### ROLE:
@@ -1226,8 +1226,6 @@ In addition to the above issues, are there any other issues to keep in mind when
         
 ### ADVANCED MISSION (HIGHEST PRIORITY):
 ${customDictionaryInstruction}
-
-- Follow the instruction below when translate:
 ${customInstruction}
 ### OUTPUT FORMAT MUST BE IN JSON and must have only 3 fields:
 {
@@ -1236,8 +1234,7 @@ ${customInstruction}
 "translated_string": "uuid: ${upperCaseDestinationLanguage} translation of the sentence when using rule ,
 uuid: ${upperCaseDestinationLanguage.replace(/E$/, 'e')} translation of the sentence when using rule ,
   .."
-}
-`
+}`
     }
   }
   private async getSystemInstructions (options: Options): Promise<string[]> {
@@ -1334,29 +1331,31 @@ Your output must only contain the translated text and cannot include explanation
     }
     return systemInstructions
   }
-  private doctranslateIoPostprocess (translatedTextWithUuid: string, textSentenceWithUuid: string[][]): string {
-    const jsonMatch = translatedTextWithUuid.match(/(\{[\s\S]+\})/)
-    const potentialJsonString = (jsonMatch != null ? jsonMatch[0] : translatedTextWithUuid.replace(/^`{3}json\n/, '').replace(/\n`{3}$/, '')).replace(/insight": \[[\s\S]+(?=translated_string": ")/, '')
+  private doctranslateIoPostprocess (translatedTextWithUuid: string, textSentenceWithUuid: Record<string, string>): string {
+    const doesTranslatedStringExist = translatedTextWithUuid.includes('"translated_string": "')
+    const potentialJsonString = doesTranslatedStringExist ? (translatedTextWithUuid.replace(/(\\")?"?(?:\n\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(/(?<=",)\n(?="[a-z0-9]{7,8}#[a-z0-9]{3}: )|(?:\n(?=,?[a-z0-9]{7,8}#[a-z0-9]{3}: |"$))/gmu, '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{[\s\S]+\})/) as RegExpMatchArray)[0].replace(/insight": \[[\s\S]+(?=translated_string": ")/, '') : JSON.stringify({ translated_string: textSentenceWithUuid })
     if (Utils.isValidJson(potentialJsonString)) {
       // @ts-expect-error JSON5
       const parsedResult = JSON5.parse(potentialJsonString)
       let translatedStringMap: Record<string, string> = {}
       if (typeof parsedResult.translated_string !== 'string') {
-        translatedStringMap = parsedResult.translated_string
+        if (doesTranslatedStringExist) console.log('isJson', true)
+        // translatedStringMap = parsedResult.translated_string
       } else if (Utils.isValidJson(parsedResult.translated_string)) {
         // @ts-expect-error JSON5
         translatedStringMap = JSON5.parse(parsedResult.translated_string)
       } else {
         /* eslint-disable camelcase */
         const { translated_string } = parsedResult
-        const translatedStringParts = translated_string.split(/(?:^|,)([a-z0-9]{7,8}#[a-z0-9]{3}): (?:[a-z0-9]{7,8}#[a-z0-9]{3}: )?/).slice(1)
+        const translatedStringEolAmount = [...translated_string.matchAll('\n')].length
+        const translatedStringParts = translated_string.split(new RegExp(`(?:^|${Math.abs([...translated_string.matchAll(',\n')].length - translatedStringEolAmount) <= 1 ? ',' : ''}\\n${Math.abs([...translated_string.matchAll('\n,')].length - translatedStringEolAmount) <= 1 ? ',' : ''}|,)?([a-z0-9]{7,8}#[a-z0-9]{3}): `, 'u')).slice(1)
         /* eslint-enable camelcase */
         for (let i = 0; i < translatedStringParts.length; i += 2) {
           translatedStringMap[translatedStringParts[i]] = translatedStringParts[i + 1].replace(/\n+$/, '')
         }
       }
       if (Object.keys(translatedStringMap ?? {}).length > 0) {
-        return textSentenceWithUuid.map(([first, second]) => translatedStringMap[first] ?? (second.replace(/\s+/, '').length > 0 ? '' : second)).join('\n')
+        return Object.entries(textSentenceWithUuid).map(([first, second]) => translatedStringMap[first] ?? (second.replace(/\s+/, '').length > 0 ? '' : second)).join('\n')
       }
     }
     return ''
