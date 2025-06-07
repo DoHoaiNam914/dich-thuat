@@ -139,9 +139,9 @@
 
     <div class="container p-0">
       
-      <div class="modal fade" id="options-modal" tabindex="-1" style="--bs-body-bg: rgba(var(--bs-body-bg-rgb), 0.25);">
+      <div class="modal fade" id="options-modal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-          <div class="modal-content" style="backdrop-filter: blur(8px); min-height: 492px;">
+          <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">Tuỳ chọn</h5>
               <button class="btn-close" type="button" data-bs-dismiss="modal"></button>
@@ -162,7 +162,7 @@
   <svg class="bi my-1 me-2 theme-icon-active" aria-hidden="true"><use href="#circle-half"></use></svg>
   <span class="visually-hidden" id="bd-theme-text">Thay đổi chủ đề Bootstrap 5</span>
 </button>
-<ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text" style="backdrop-filter: blur(8px);">
+<ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
   <li>
     <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
       <svg class="bi me-2 opacity-50" aria-hidden="true"><use href="#sun-fill"></use></svg>
@@ -199,7 +199,7 @@
                     </div>
                     <div class="dropdown mb-3 reader-theme-toggle">
                       <button class="align-items-center btn btn-secondary dropdown-toggle d-flex" id="reader-theme" type="button" data-bs-toggle="dropdown">Chuyển đổi chủ đề trình đọc</button>
-                      <ul class="dropdown-menu dropdown-menu-end shadow" style="backdrop-filter: blur(8px);"><li><button class="align-items-center d-flex dropdown-item active" type="button" data-reader-theme-value="bg-body">Bootstrap 5</button></li></ul>
+                      <ul class="dropdown-menu dropdown-menu-end shadow"><li><button class="align-items-center d-flex dropdown-item active" type="button" data-reader-theme-value="bg-body">Bootstrap 5</button></li></ul>
                     </div>
                     <div class="mb-3">
                       <label class="form-label" for="line-height-text">Chiều cao dòng:</label>
@@ -221,7 +221,7 @@
                     <h5 class="mb-3">Dịch thuật</h5>
                     <div class="dropdown mb-3 translator-toggle">
                       <button class="align-items-center btn btn-primary dropdown-toggle d-flex" id="translator" type="button" data-bs-toggle="dropdown">Chuyển đổi trình dịch</button>
-                      <ul class="dropdown-menu dropdown-menu-end shadow" style="backdrop-filter: blur(8px);">
+                      <ul class="dropdown-menu dropdown-menu-end shadow">
                         <li><button class="align-items-center d-flex dropdown-item active" type="button" data-translator-value="googleGenaiTranslate">
                           Google Gen AI Dịch
                           <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
@@ -444,9 +444,9 @@
           </div>
         </div>
       </div>
-      <div class="modal fade" id="dictionary-modal" tabindex="-1" style="--bs-body-bg: rgba(var(--bs-body-bg-rgb), 0.25); --bs-secondary-bg: rgba(var(--bs-secondary-bg-rgb), 0.25);">
+      <div class="modal fade" id="dictionary-modal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-          <div class="modal-content" style="backdrop-filter: blur(8px); min-height: 492px;">
+          <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">Từ điển của tôi (Doctranslate.io)</h5>
               <button class="btn-close" type="button" data-bs-dismiss="modal"></button>
@@ -466,7 +466,7 @@
                     <button class="btn btn btn-outline-danger mb-1" id="delete-all-button" type="button">Xoá tất cả</button>
                     <div class="dropdown d-inline-block mb-3">
                       <button class="align-items-center btn btn-primary dropdown-toggle d-flex" type="button" data-bs-toggle="dropdown">Hành động</button>
-                      <ul class="dropdown-menu dropdown-menu-end shadow" style="backdrop-filter: blur(8px);">
+                      <ul class="dropdown-menu dropdown-menu-end shadow">
                         <li><h6 class="align-items-center d-flex dropdown-header">Dịch với...</h6></li>
                         <li><button class="align-items-center d-flex dropdown-item" type="button" data-translation-translator-value="googleGenaiTranslate">Google Gen AI Dịch</button></li>
                         <li><button class="align-items-center d-flex dropdown-item" type="button" data-translation-translator-value="openaiTranslator">Trình dịch OpenAI</button></li>
@@ -764,17 +764,17 @@
           </div>
         </div>
       </div>
-      <div class="modal fade" id="define-modal" tabindex="-1" style="--bs-body-bg: rgba(var(--bs-body-bg-rgb), 0.25); --bs-secondary-bg: rgba(var(--bs-secondary-bg-rgb), 0.25);">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="transform: unset;">
-          <div class="modal-content" style="backdrop-filter: blur(8px); min-height: 492px;">
+      <div class="modal fade" id="define-modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
             <div class="modal-header"><button class="btn-close" type="button" data-bs-dismiss="modal"></button></div>
-            <div class="modal-body"><iframe height="577" referrerpolicy="no-referrer" sandbox="allow-same-origin allow-scripts" width="1000"></iframe></div>
+            <div class="modal-body"><iframe allowfullscreen="true" height="390" referrerpolicy="no-referrer" sandbox="allow-same-origin allow-scripts" width="100%"></iframe></div>
             <div class="modal-footer"></div>
           </div>
         </div>
       </div>
       <div class="viewport">
-        <div class="bg-body-tertiary combined-navbar position-fixed rounded shadow-sm" style="--bs-bg-opacity: 0.2; --bs-body-bg: rgba(var(--bs-body-bg-rgb), 0.25); backdrop-filter: blur(8px);">
+        <div class="bg-body-tertiary combined-navbar position-fixed rounded shadow-sm" style="--bs-bg-opacity: 0.25; --bs-body-bg: rgba(var(--bs-body-bg-rgb), var(--bs-bg-opacity)); backdrop-filter: blur(8px);">
           <nav class="bg-transparent fix-bottom navbar navbar-scroller py-0 smaller-navbar" style="border-top-left-radius: var(--bs-border-radius); border-top-right-radius: var(--bs-border-radius); box-shadow: rgba(0, 0, 0, 0.075) 0 -0.125rem 0.25rem inset;">
             <div class="container-fluid">
               <div class="row">
