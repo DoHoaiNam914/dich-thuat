@@ -1333,7 +1333,7 @@ Your output must only contain the translated text and cannot include explanation
   }
   private doctranslateIoPostprocess (translatedTextWithUuid: string, textSentenceWithUuid: Record<string, string>): string {
     const doesTranslatedStringExist = translatedTextWithUuid.includes('"translated_string": "')
-    const potentialJsonString = doesTranslatedStringExist ? (translatedTextWithUuid.replace(/(\\")?"?(?:\n\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(/(?<=",)\n(?="[a-z0-9]{7,8}#[a-z0-9]{3}: )|(?:\n(?=,?[a-z0-9]{7,8}#[a-z0-9]{3}: |"$))/gmu, '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s) as RegExpMatchArray)[0].replace(/insight": \[.+(?=translated_string": ")/s, '') : JSON.stringify({ translated_string: textSentenceWithUuid })
+    const potentialJsonString = doesTranslatedStringExist ? (translatedTextWithUuid.replace(/(\\")?"?(?:\n\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(/(?<=",)\n(?="[a-z0-9]{7,8}#[a-z0-9]{3}>?: )|(?:\n(?=,?[a-z0-9]{7,8}#[a-z0-9]{3}>?: |"$))/gmu, '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s) as RegExpMatchArray)[0].replace(/insight": \[.+(?=translated_string": ")/s, '') : JSON.stringify({ translated_string: textSentenceWithUuid })
     if (Utils.isValidJson(potentialJsonString)) {
       // @ts-expect-error JSON5
       const parsedResult = JSON5.parse(potentialJsonString)
@@ -1348,7 +1348,7 @@ Your output must only contain the translated text and cannot include explanation
         /* eslint-disable camelcase */
         const { translated_string } = parsedResult
         const translatedStringEolAmount = [...translated_string.matchAll('\n')].length
-        const translatedStringParts = translated_string.split(new RegExp(`(?:^|${Math.abs([...translated_string.matchAll(',\n')].length - translatedStringEolAmount) <= 1 ? ',' : ''}\\n${Math.abs([...translated_string.matchAll('\n,')].length - translatedStringEolAmount) <= 1 ? ',' : ''}|,)?([a-z0-9]{7,8}#[a-z0-9]{3}): `, 'u')).slice(1)
+        const translatedStringParts = translated_string.split(new RegExp(`(?:^|${Math.abs([...translated_string.matchAll(',\n')].length - translatedStringEolAmount) <= 1 ? ',' : ''}\\n${Math.abs([...translated_string.matchAll('\n,')].length - translatedStringEolAmount) <= 1 ? ',' : ''}|,)?([a-z0-9]{7,8}#[a-z0-9]{3})>?: `, 'u')).slice(1)
         /* eslint-enable camelcase */
         for (let i = 0; i < translatedStringParts.length; i += 2) {
           translatedStringMap[translatedStringParts[i]] = translatedStringParts[i + 1].replace(/\n+$/, '')
