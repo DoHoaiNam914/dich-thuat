@@ -1,5 +1,5 @@
 'use strict'
-/* global $, confirm, fetch, history, localStorage, open, Papa, sessionStorage */
+/* global $, confirm, fetch, localStorage, open, Papa, sessionStorage */
 import Reader from './Reader.js'
 import { MODELS, Translation } from './Translation.js'
 import Utils from './Utils.js'
@@ -123,16 +123,12 @@ function appendTranslatedTextIntoOutputTextarea (translatedText, text, options) 
     })
   }
 }
-$(window).on('popstate', (event) => {
-  history.pushState(null, '', location.href)
-})
 $(window).on('unload', () => {
   Object.keys(localStorage).filter((element) => element.includes('eruda')).forEach((element) => {
     localStorage.removeItem(element)
   })
 })
 $(document).ready(() => {
-  history.pushState(null, '', location.href)
   Reader.loadReaderThemesOptions($('.reader-theme-toggle .dropdown-menu'))
   const $readerThemes = $('[data-reader-theme-value]')
   const preferredReaderTheme = sessionStorage.getItem('readerTheme') ?? $readerThemes.filter('.active').data('reader-theme-value')
@@ -393,7 +389,14 @@ $('#copy-csv-button').on('click', () => {
   }())
 })
 $defineModal.on('hide.bs.modal', () => {
-  $defineModal.find('iframe').prop('contentWindow').location.replace('')
+  const iframe = document.createElement('iframe')
+  $(iframe).addClass(['position-absolute', 'start-50', 'top-50', 'translate-middle'])
+  $(iframe).prop('allowfullscreen', true)
+  $(iframe).prop('height', 390)
+  $(iframe).prop('sandbox', 'allow-same-origin allow-scripts')
+  $(iframe).prop('src', 'about:blank')
+  $(iframe).prop('width', '100%')
+  $defineModal.find('iframe').replaceWith($(iframe).prop('outerHTML'))
 })
 $copyButtons.on('click', function () {
   const target = $(this).data('target')
