@@ -1,5 +1,5 @@
 'use strict'
-/* global $, confirm, fetch, localStorage, open, Papa, sessionStorage */
+/* global $, confirm, fetch, history, localStorage, open, Papa, sessionStorage */
 import Reader from './Reader.js'
 import { MODELS, Translation } from './Translation.js'
 import Utils from './Utils.js'
@@ -123,12 +123,16 @@ function appendTranslatedTextIntoOutputTextarea (translatedText, text, options) 
     })
   }
 }
+$(window).on('popstate', (event) => {
+  history.pushState({ locked: true }, '', location.href)
+})
 $(window).on('unload', () => {
   Object.keys(localStorage).filter((element) => element.includes('eruda')).forEach((element) => {
     localStorage.removeItem(element)
   })
 })
 $(document).ready(() => {
+  history.pushState({ locked: true }, '', location.href)
   Reader.loadReaderThemesOptions($('.reader-theme-toggle .dropdown-menu'))
   const $readerThemes = $('[data-reader-theme-value]')
   const preferredReaderTheme = sessionStorage.getItem('readerTheme') ?? $readerThemes.filter('.active').data('reader-theme-value')
@@ -182,6 +186,12 @@ $(document).ready(() => {
     if ($originalLanguageSelect.val() === 'null') { $originalLanguageSelect.val('en') }
     $originalLanguageSelect.find("option[value='null']").remove()
   })
+})
+$(document).on('keydown', (event) => {
+  if (event.altKey) {
+    if (event.keyCode === 37) { event.preventDefault() }
+    if (event.keyCode === 39) { event.preventDefault() }
+  }
 })
 $fontFamilyText.on('change', function () {
   const fontFamily = Reader.fontMapper($(this).val())
@@ -320,10 +330,11 @@ $('[data-define-url]').on('click', function () {
       break
     case 'showInModalWithCorsProxy':
     case 'showInModal':
-    default:
-      $defineModal.find('iframe').attr('src', url)
+    default: {
       // @ts-expect-error $().modal()
       $defineModal.modal('show')
+      $defineModal.find('iframe').prop('contentWindow').location.replace(url)
+    }
   }
 })
 $textLanguageSelects.on('change', () => {
@@ -382,7 +393,7 @@ $('#copy-csv-button').on('click', () => {
   }())
 })
 $defineModal.on('hide.bs.modal', () => {
-  $defineModal.find('iframe').removeAttr('src')
+  $defineModal.find('iframe').prop('contentWindow').location.replace('')
 })
 $copyButtons.on('click', function () {
   const target = $(this).data('target')
