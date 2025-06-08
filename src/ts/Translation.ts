@@ -331,6 +331,7 @@ class Translation {
     const { B2B_AUTH_TOKEN, systemInstruction, temperature, topP, topK, TVLY_API_KEY } = options
     this.B2B_AUTH_TOKEN = B2B_AUTH_TOKEN
     this.TVLY_API_KEY = TVLY_API_KEY
+    try {
     const prompt = this.getPrompt(systemInstruction as SystemInstructions)
     const noEmptyLinesPrompt = prompt.replace(/^(?<=### TEXT SENTENCE WITH UUID:\n{)'[a-z0-9]{8}#[a-z0-9]{3}': '\s*', |, '[a-z0-9]{8}#[a-z0-9]{3}': '\s*'/g, '')
     const date = new Date()
@@ -710,6 +711,9 @@ ${noEmptyLinesPrompt}`)
           }
         }
     }
+    } catch (error) {
+      console.error(error)
+    }
   }
   private async webSearchWithTavily (): Promise<string[]> {
     // const client = tavily({ apiKey: TVLY_API_KEY });
@@ -732,7 +736,7 @@ ${noEmptyLinesPrompt}`)
         return `### TEXT SENTENCE WITH UUID:
 {${this.text.split('\n').map(element => {
           const uuidParts = crypto.randomUUID().split('-')
-          return `'${uuidParts[0]}#${uuidParts[2].substring(1)}': ${element.includes("'") && !element.includes('"')  ? `"${element}"` : `'${element.replace(/'/g, "\\'")}'`}`
+          return `'${uuidParts[0]}#${uuidParts[2].substring(1)}': ${element.includes("'") && !element.includes('"')  ? `"${element}"` : `'${element.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`}`
         }).join(', ')}}
 ### TRANSLATED TEXT WITH UUID:`
       default:
