@@ -124,7 +124,7 @@ function appendTranslatedTextIntoOutputTextarea (translatedText, text, options) 
   }
 }
 $(window).on('popstate', (event) => {
-  history.pushState({ locked: true }, '', location.href)
+  history.pushState(null, '', location.href)
 })
 $(window).on('unload', () => {
   Object.keys(localStorage).filter((element) => element.includes('eruda')).forEach((element) => {
@@ -132,7 +132,7 @@ $(window).on('unload', () => {
   })
 })
 $(document).ready(() => {
-  history.pushState({ locked: true }, '', location.href)
+  history.pushState(null, '', location.href)
   Reader.loadReaderThemesOptions($('.reader-theme-toggle .dropdown-menu'))
   const $readerThemes = $('[data-reader-theme-value]')
   const preferredReaderTheme = sessionStorage.getItem('readerTheme') ?? $readerThemes.filter('.active').data('reader-theme-value')
