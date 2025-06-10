@@ -83,10 +83,6 @@ const MODELS = {
     ],
     Other: [
       {
-        modelId: 'learnlm-1.5-pro-experimental',
-        modelName: 'LearnLM 1.5 Pro Experimental'
-      },
-      {
         modelId: 'learnlm-2.0-flash-experimental',
         modelName: 'LearnLM 2.0 Flash Experimental'
       }
@@ -283,7 +279,6 @@ class Translation {
     this.TVLY_API_KEY = TVLY_API_KEY
     const prompt = this.getPrompt(systemInstruction)
     const noEmptyLinesPrompt = prompt.replace(/^(?<=### TEXT SENTENCE WITH UUID:\n{)'[a-z0-9]{8}#[a-z0-9]{3}': '\s*', |, '[a-z0-9]{8}#[a-z0-9]{3}': '\s*'/g, '')
-    const date = new Date()
     // @ts-expect-error JSON5
     const textSentenceWithUuid = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? JSON5.parse(prompt.match(/(?<=^### TEXT SENTENCE WITH UUID:\n).+(?=\n### TRANSLATED TEXT WITH UUID:$)/s)[0]) : {}
     switch (options.translatorId) {
@@ -292,12 +287,6 @@ class Translation {
           const { chutesModelId, CHUTES_API_TOKEN, isChutesWebSearchEnabled } = options
           const isNotDeepseekModel = !chutesModelId.startsWith('deepseek-ai/')
           const searchResults = isChutesWebSearchEnabled ? await this.webSearchWithTavily().then(value => value.map((element, index) => `[webpage ${index + 1} begin]${element}[webpage ${index + 1} end]`).join('\n')) : ''
-          const dateTimeFormat = new Intl.DateTimeFormat(isNotDeepseekModel ? 'en' : 'zh-CN', {
-            day: 'numeric',
-            month: 'long',
-            weekday: 'long',
-            year: 'numeric'
-          })
           /* eslint-disable no-mixed-spaces-and-tabs */
           const response = await fetch('https://llm.chutes.ai/v1/chat/completions', {
             method: 'POST',
@@ -315,39 +304,7 @@ class Translation {
                 }))),
                 {
                   role: 'user',
-                  content: searchResults.length > 0
-                    ? (isNotDeepseekModel
-                        ? `# The following contents are the search results related to the user's message:
-${searchResults}
-In the search results I provide to you, each result is formatted as [webpage X begin]...[webpage X end], where X represents the numerical index of each article. Please cite the context at the end of the relevant sentence when appropriate. Use the citation format [citation:X] in the corresponding part of your answer. If a sentence is derived from multiple contexts, list all relevant citation numbers, such as [citation:3][citation:5]. Be sure not to cluster all citations at the end; instead, include them in the corresponding parts of the answer.
-When responding, please keep the following points in mind:
-- Today is ${dateTimeFormat.format(date)}.
-- Not all content in the search results is closely related to the user's question. You need to evaluate and filter the search results based on the question.
-- For listing-type questions (e.g., listing all flight information), try to limit the answer to 10 key points and inform the user that they can refer to the search sources for complete information. Prioritize providing the most complete and relevant items in the list. Avoid mentioning content not provided in the search results unless necessary.
-- For creative tasks (e.g., writing an essay), ensure that references are cited within the body of the text, such as [citation:3][citation:5], rather than only at the end of the text. You need to interpret and summarize the user's requirements, choose an appropriate format, fully utilize the search results, extract key information, and generate an answer that is insightful, creative, and professional. Extend the length of your response as much as possible, addressing each point in detail and from multiple perspectives, ensuring the content is rich and thorough.
-- If the response is lengthy, structure it well and summarize it in paragraphs. If a point-by-point format is needed, try to limit it to 5 points and merge related content.
-- For objective Q&A, if the answer is very brief, you may add one or two related sentences to enrich the content.
-- Choose an appropriate and visually appealing format for your response based on the user's requirements and the content of the answer, ensuring strong readability.
-- Your answer should synthesize information from multiple relevant webpages and avoid repeatedly citing the same webpage.
-- Unless the user requests otherwise, your response should be in the same language as the user's question.
-# The user's message is:
-${noEmptyLinesPrompt}`
-                        : `# 以下内容是基于用户发送的消息的搜索结果:
-${searchResults}
-在我给你的搜索结果中，每个结果都是[webpage X begin]...[webpage X end]格式的，X代表每篇文章的数字索引。请在适当的情况下在句子末尾引用上下文。请按照引用编号[citation:X]的格式在答案中对应部分引用上下文。如果一句话源自多个上下文，请列出所有相关的引用编号，例如[citation:3][citation:5]，切记不要将引用集中在最后返回引用编号，而是在答案对应部分列出。
-在回答时，请注意以下几点：
-- 今天${dateTimeFormat.format(date).replace(' ', '，')}。
-- 并非搜索结果的所有内容都与用户的问题密切相关，你需要结合问题，对搜索结果进行甄别、筛选。
-- 对于列举类的问题（如列举所有航班信息），尽量将答案控制在10个要点以内，并告诉用户可以查看搜索来源、获得完整信息。优先提供信息完整、最相关的列举项；如非必要，不要主动告诉用户搜索结果未提供的内容。
-- 对于创作类的问题（如写论文），请务必在正文的段落中引用对应的参考编号，例如[citation:3][citation:5]，不能只在文章末尾引用。你需要解读并概括用户的题目要求，选择合适的格式，充分利用搜索结果并抽取重要信息，生成符合用户要求、极具思想深度、富有创造力与专业性的答案。你的创作篇幅需要尽可能延长，对于每一个要点的论述要推测用户的意图，给出尽可能多角度的回答要点，且务必信息量大、论述详尽。
-- 如果回答很长，请尽量结构化、分段落总结。如果需要分点作答，尽量控制在5个点以内，并合并相关的内容。
-- 对于客观类的问答，如果问题的答案非常简短，可以适当补充一到两句相关信息，以丰富内容。
-- 你需要根据用户要求和回答内容选择合适、美观的回答格式，确保可读性强。
-- 你的回答应该综合多个相关网页来回答，不能重复引用一个网页。
-- 除非用户要求，否则你回答的语言需要和用户提问的语言保持一致。
-# 用户消息为：
-${noEmptyLinesPrompt}`)
-                    : prompt
+                  content: searchResults.length > 0 ? this.getWebSearchPrompt(searchResults, noEmptyLinesPrompt, isNotDeepseekModel) : prompt
                 }
                 /* eslint-disable no-mixed-spaces-and-tabs */
               ],
@@ -411,12 +368,6 @@ ${noEmptyLinesPrompt}`)
         this.translateText = async (resolve) => {
           const isNotDeepseekModel = groqModelId !== 'deepseek-r1-distill-llama-70b'
           const searchResults = isGroqWebSearchEnabled ? await this.webSearchWithTavily().then(value => value.map((element, index) => `[webpage ${index + 1} begin]${element}[webpage ${index + 1} end]`).join('\n')) : ''
-          const dateTimeFormat = new Intl.DateTimeFormat(isNotDeepseekModel ? 'en' : 'zh-CN', {
-            day: 'numeric',
-            month: 'long',
-            weekday: 'long',
-            year: 'numeric'
-          })
           const chatCompletion = await groq.chat.completions.create({
             messages: [
               ...await this.getSystemInstructions(options).then(value => value.map(element => ({
@@ -425,39 +376,7 @@ ${noEmptyLinesPrompt}`)
               }))),
               {
                 role: 'user',
-                content: searchResults.length > 0
-                  ? (isNotDeepseekModel
-                      ? `# The following contents are the search results related to the user's message:
-${searchResults}
-In the search results I provide to you, each result is formatted as [webpage X begin]...[webpage X end], where X represents the numerical index of each article. Please cite the context at the end of the relevant sentence when appropriate. Use the citation format [citation:X] in the corresponding part of your answer. If a sentence is derived from multiple contexts, list all relevant citation numbers, such as [citation:3][citation:5]. Be sure not to cluster all citations at the end; instead, include them in the corresponding parts of the answer.
-When responding, please keep the following points in mind:
-- Today is ${dateTimeFormat.format(date)}.
-- Not all content in the search results is closely related to the user's question. You need to evaluate and filter the search results based on the question.
-- For listing-type questions (e.g., listing all flight information), try to limit the answer to 10 key points and inform the user that they can refer to the search sources for complete information. Prioritize providing the most complete and relevant items in the list. Avoid mentioning content not provided in the search results unless necessary.
-- For creative tasks (e.g., writing an essay), ensure that references are cited within the body of the text, such as [citation:3][citation:5], rather than only at the end of the text. You need to interpret and summarize the user's requirements, choose an appropriate format, fully utilize the search results, extract key information, and generate an answer that is insightful, creative, and professional. Extend the length of your response as much as possible, addressing each point in detail and from multiple perspectives, ensuring the content is rich and thorough.
-- If the response is lengthy, structure it well and summarize it in paragraphs. If a point-by-point format is needed, try to limit it to 5 points and merge related content.
-- For objective Q&A, if the answer is very brief, you may add one or two related sentences to enrich the content.
-- Choose an appropriate and visually appealing format for your response based on the user's requirements and the content of the answer, ensuring strong readability.
-- Your answer should synthesize information from multiple relevant webpages and avoid repeatedly citing the same webpage.
-- Unless the user requests otherwise, your response should be in the same language as the user's question.
-# The user's message is:
-${noEmptyLinesPrompt}`
-                      : `# 以下内容是基于用户发送的消息的搜索结果:
-${searchResults}
-在我给你的搜索结果中，每个结果都是[webpage X begin]...[webpage X end]格式的，X代表每篇文章的数字索引。请在适当的情况下在句子末尾引用上下文。请按照引用编号[citation:X]的格式在答案中对应部分引用上下文。如果一句话源自多个上下文，请列出所有相关的引用编号，例如[citation:3][citation:5]，切记不要将引用集中在最后返回引用编号，而是在答案对应部分列出。
-在回答时，请注意以下几点：
-- 今天${dateTimeFormat.format(date).replace(' ', '，')}。
-- 并非搜索结果的所有内容都与用户的问题密切相关，你需要结合问题，对搜索结果进行甄别、筛选。
-- 对于列举类的问题（如列举所有航班信息），尽量将答案控制在10个要点以内，并告诉用户可以查看搜索来源、获得完整信息。优先提供信息完整、最相关的列举项；如非必要，不要主动告诉用户搜索结果未提供的内容。
-- 对于创作类的问题（如写论文），请务必在正文的段落中引用对应的参考编号，例如[citation:3][citation:5]，不能只在文章末尾引用。你需要解读并概括用户的题目要求，选择合适的格式，充分利用搜索结果并抽取重要信息，生成符合用户要求、极具思想深度、富有创造力与专业性的答案。你的创作篇幅需要尽可能延长，对于每一个要点的论述要推测用户的意图，给出尽可能多角度的回答要点，且务必信息量大、论述详尽。
-- 如果回答很长，请尽量结构化、分段落总结。如果需要分点作答，尽量控制在5个点以内，并合并相关的内容。
-- 对于客观类的问答，如果问题的答案非常简短，可以适当补充一到两句相关信息，以丰富内容。
-- 你需要根据用户要求和回答内容选择合适、美观的回答格式，确保可读性强。
-- 你的回答应该综合多个相关网页来回答，不能重复引用一个网页。
-- 除非用户要求，否则你回答的语言需要和用户提问的语言保持一致。
-# 用户消息为：
-${noEmptyLinesPrompt}`)
-                  : prompt
+                content: searchResults.length > 0 ? this.getWebSearchPrompt(searchResults, noEmptyLinesPrompt, isNotDeepseekModel) : prompt
               }
             ],
             model: groqModelId,
@@ -679,6 +598,47 @@ ${noEmptyLinesPrompt}`)
     }
   }
 
+  getWebSearchPrompt (searchResults, question, isEnglishQuery = false) {
+    const dateTimeFormat = new Intl.DateTimeFormat(isEnglishQuery ? 'en' : 'zh-CN', {
+      day: 'numeric',
+      month: 'long',
+      weekday: 'long',
+      year: 'numeric'
+    })
+    const date = new Date()
+    return isEnglishQuery
+      ? `# The following contents are the search results related to the user's message:
+${searchResults}
+In the search results I provide to you, each result is formatted as [webpage X begin]...[webpage X end], where X represents the numerical index of each article. Please cite the context at the end of the relevant sentence when appropriate. Use the citation format [citation:X] in the corresponding part of your answer. If a sentence is derived from multiple contexts, list all relevant citation numbers, such as [citation:3][citation:5]. Be sure not to cluster all citations at the end; instead, include them in the corresponding parts of the answer.
+When responding, please keep the following points in mind:
+- Today is ${dateTimeFormat.format(date)}.
+- Not all content in the search results is closely related to the user's question. You need to evaluate and filter the search results based on the question.
+- For listing-type questions (e.g., listing all flight information), try to limit the answer to 10 key points and inform the user that they can refer to the search sources for complete information. Prioritize providing the most complete and relevant items in the list. Avoid mentioning content not provided in the search results unless necessary.
+- For creative tasks (e.g., writing an essay), ensure that references are cited within the body of the text, such as [citation:3][citation:5], rather than only at the end of the text. You need to interpret and summarize the user's requirements, choose an appropriate format, fully utilize the search results, extract key information, and generate an answer that is insightful, creative, and professional. Extend the length of your response as much as possible, addressing each point in detail and from multiple perspectives, ensuring the content is rich and thorough.
+- If the response is lengthy, structure it well and summarize it in paragraphs. If a point-by-point format is needed, try to limit it to 5 points and merge related content.
+- For objective Q&A, if the answer is very brief, you may add one or two related sentences to enrich the content.
+- Choose an appropriate and visually appealing format for your response based on the user's requirements and the content of the answer, ensuring strong readability.
+- Your answer should synthesize information from multiple relevant webpages and avoid repeatedly citing the same webpage.
+- Unless the user requests otherwise, your response should be in the same language as the user's question.
+# The user's message is:
+${question}`
+      : `# 以下内容是基于用户发送的消息的搜索结果:
+${searchResults}
+在我给你的搜索结果中，每个结果都是[webpage X begin]...[webpage X end]格式的，X代表每篇文章的数字索引。请在适当的情况下在句子末尾引用上下文。请按照引用编号[citation:X]的格式在答案中对应部分引用上下文。如果一句话源自多个上下文，请列出所有相关的引用编号，例如[citation:3][citation:5]，切记不要将引用集中在最后返回引用编号，而是在答案对应部分列出。
+在回答时，请注意以下几点：
+- 今天${dateTimeFormat.format(date).replace(' ', '，')}。
+- 并非搜索结果的所有内容都与用户的问题密切相关，你需要结合问题，对搜索结果进行甄别、筛选。
+- 对于列举类的问题（如列举所有航班信息），尽量将答案控制在10个要点以内，并告诉用户可以查看搜索来源、获得完整信息。优先提供信息完整、最相关的列举项；如非必要，不要主动告诉用户搜索结果未提供的内容。
+- 对于创作类的问题（如写论文），请务必在正文的段落中引用对应的参考编号，例如[citation:3][citation:5]，不能只在文章末尾引用。你需要解读并概括用户的题目要求，选择合适的格式，充分利用搜索结果并抽取重要信息，生成符合用户要求、极具思想深度、富有创造力与专业性的答案。你的创作篇幅需要尽可能延长，对于每一个要点的论述要推测用户的意图，给出尽可能多角度的回答要点，且务必信息量大、论述详尽。
+- 如果回答很长，请尽量结构化、分段落总结。如果需要分点作答，尽量控制在5个点以内，并合并相关的内容。
+- 对于客观类的问答，如果问题的答案非常简短，可以适当补充一到两句相关信息，以丰富内容。
+- 你需要根据用户要求和回答内容选择合适、美观的回答格式，确保可读性强。
+- 你的回答应该综合多个相关网页来回答，不能重复引用一个网页。
+- 除非用户要求，否则你回答的语言需要和用户提问的语言保持一致。
+# 用户消息为：
+${question}`
+  }
+
   async detectLanguage () {
     const options = {
       method: 'POST',
@@ -729,366 +689,192 @@ ${noEmptyLinesPrompt}`)
       lo: 'Lao',
       'cs-CZ': 'Czech'
     }
-    const originalLanguage = LANGUAGE_MAP[originalLang] ?? LANGUAGE_MAP.en
-    const upperCaseOriginalLanguage = originalLanguage.toUpperCase()
-    const destinationLanguage = LANGUAGE_MAP[destLang] ?? LANGUAGE_MAP.en
-    const upperCaseDestinationLanguage = destinationLanguage.toUpperCase()
     const STYLE_INSTRUCTION_MAP = {
-      Serious: `- Language should be neutral, precise and technical, avoiding emotional elements.
-    - Make everything clear and logical.`,
-      Friendly: `- Use language that is warm, approachable, and conversational.
-    - Ensure the language feels natural and relaxed.`,
-      Humorous: `- Language must be fun, light and humorous. Use jokes or creative expressions.
-    - Must use entertaining words, wordplay, trendy words, words that young people often use.`,
-      Formal: `- Utilize language that is formal, respectful, and professional. Employ complex sentence structures and maintain a formal register.
+      Serious: `
+    - Language should be neutral, precise and technical, avoiding emotional elements.
+    - Make everything clear and logical.
+    `,
+      Friendly: `
+    - Use language that is warm, approachable, and conversational.
+    - Ensure the language feels natural and relaxed.
+    `,
+      Humorous: `
+    - Language must be fun, light and humorous. Use jokes or creative expressions.
+    - Must use entertaining words, wordplay, trendy words, words that young people often use.
+    `,
+      Formal: `
+    - Utilize language that is formal, respectful, and professional. Employ complex sentence structures and maintain a formal register.
     - Choose polite, precise, and refined vocabulary.
     - Incorporate metaphors, idioms, parallel structures, and couplets where appropriate. Ensure that dialogue between characters is formal and well-ordered.
-    - When relevant, use selectively chosen archaic or classical words, especially if the context pertains to historical or ancient settings.`,
-      Romantic: `- Language must be emotional, poetic and artistic.
+    - When relevant, use selectively chosen archaic or classical words, especially if the context pertains to historical or ancient settings.
+    `,
+      Romantic: `
+    - Language must be emotional, poetic and artistic.
     - Choose flowery, sentimental, and erotic words.
-    - The writing is gentle, focusing on subtle feelings about love and deep character emotions.`
+    - The writing is gentle, focusing on subtle feelings about love and deep character emotions.
+    `
     }
-    const styleInstruction = STYLE_INSTRUCTION_MAP[tone]
+    const originalLanguage = LANGUAGE_MAP[originalLang] ?? LANGUAGE_MAP.en
+    const upperCaseOriginalLanguage = originalLanguage.toUpperCase()
+    const lowerCaseOriginalLanguage = originalLanguage.toLowerCase()
+    const destinationLanguage = LANGUAGE_MAP[destLang] ?? LANGUAGE_MAP.en
+    const upperCaseDestinationLanguage = destinationLanguage.toUpperCase()
+    const lowerCaseDestinationLanguage = destinationLanguage.toLowerCase()
+    let instructionQuestions = ''
+    switch (`${originalLang}:${destLang}`) {
+      case 'en:en':
+        instructionQuestions = `When translating from ${originalLanguage} to ${destinationLanguage} in the domain of ${domain}, what are the special requirements to keep in mind?
+
+What are the linguistic, grammatical and terminology considerations that need special attention when translating from ${originalLanguage} to ${destinationLanguage}?
+
+What needs to be focused on to ensure the document in the target language is correct? Especially technical specifications, units of measurement, technical standards, unit standards that differ between ${originalLanguage} and ${destinationLanguage}. Give examples.
+
+When translating the document from ${originalLanguage} into ${destinationLanguage} in the domain of ${domain}, what issues should be noted about proper names and proper nouns?
+
+In addition to the above issues, are any other issues to keep in mind when translating from ${originalLanguage} to ${destinationLanguage} in the domain of ${domain}?`
+        break
+      case 'en:vi':
+        instructionQuestions = `When translating from ${originalLanguage} to ${destinationLanguage} in the domain of ${domain}, what are the special requirements to keep in mind?
+
+When translating from ${originalLanguage} to ${destinationLanguage} in the domain of ${domain}, what are the linguistic, grammatical, and terminology considerations that need special attention when translating?
+
+When translating the document from ${originalLanguage} into ${destinationLanguage} in the domain of ${domain}, what needs to be focused on to ensure the document in the target language is correct? Especially technical specifications, units of measurement, technical standards, unit standards that differ between ${lowerCaseOriginalLanguage} and ${lowerCaseDestinationLanguage}. Give examples.
+
+When translating the document from ${originalLanguage} into ${destinationLanguage} in the domain of ${domain}, what issues should be noted about proper names and proper nouns?
+
+In addition to the above issues, are any other issues to keep in mind when translating? If so, list them all and answer as many and in as detail as possible.`
+        break
+      case 'vi:en':
+        instructionQuestions = `What are the special requirements to keep in mind when translating is ensuring high accuracy and fidelity to the source text, even under potential time constraints implied by "${domain}," while producing a natural-sounding and culturally appropriate ${destinationLanguage} translation that is immediately usable by the target audience.
+
+What are the linguistic, grammatical, and terminology considerations that need special attention when translating is recognizing the fundamental structural differences between ${originalLanguage} and ${destinationLanguage}.
+
+What needs to be focused on to ensure the document in the target language is correct, especially technical specifications, units of measurement, technical standards, unit standards that differ between ${lowerCaseOriginalLanguage} and ${lowerCaseDestinationLanguage} is meticulous attention to detail for all numerical and technical data.
+
+When translating the document from ${lowerCaseOriginalLanguage} into ${lowerCaseDestinationLanguage} in the domain ${domain}, what issues should be noted about proper names and proper nouns is handling names of people, places, organizations, and specific entities accurately and according to convention.
+
+In addition to the above issues, are there any other issues to keep in mind when translating is considering the overall tone, style, and cultural nuances of the source text and ensuring they are appropriately conveyed in ${destinationLanguage}.`
+        break
+      case 'vi:vi':
+        instructionQuestions = `When translating from ${originalLanguage} to ${destinationLanguage} in the domain of ${domain}, what are the special requirements to keep in mind?
+
+What are the linguistic, grammatical and terminology considerations that need special attention when translating from ${originalLanguage} to ${destinationLanguage}?
+
+What needs to be focused on to ensure the document in the target language is correct? Especially technical specifications, units of measurement, technical standards, unit standards that differ between ${originalLanguage} and ${destinationLanguage}. Give examples.
+
+When translating the document from ${originalLanguage} into ${destinationLanguage} in the domain of ${domain}, what issues should be noted about proper names and proper nouns?
+
+In addition to the above issues, are any other issues to keep in mind when translating from ${originalLanguage} to ${destinationLanguage} in the domain of ${domain}?`
+        break
+      case 'vi:zh-tw':
+        instructionQuestions = `What are the special requirements to keep in mind when translating is ensuring high accuracy and fidelity to the source text, even under potential time constraints implied by "${domain}," while producing a natural-sounding and culturally appropriate ${destinationLanguage.replace('Chinese (Traditional)', 'Traditional Chinese')} translation that is immediately usable by the target audience.
+
+What are the linguistic, grammatical, and terminology considerations that need special attention when translating is recognizing the fundamental structural differences between ${originalLanguage} and ${destinationLanguage.replace('Chinese (Traditional)', 'Traditional Chinese')}.
+
+What needs to be focused on to ensure the document in the target language is correct, especially technical specifications, units of measurement, technical standards, unit standards that differ between ${originalLanguage} and ${destinationLanguage.replace('Chinese (Traditional)', 'Traditional Chinese')} is meticulous attention to detail for all numerical and technical data.
+
+When translating the document from ${originalLanguage} into ${destinationLanguage.replace('Chinese (Traditional)', 'Traditional Chinese')} in the domain ${domain}, what issues should be noted about proper names and proper nouns is handling names of people, places, organizations, and specific entities accurately and according to convention.
+
+In addition to the above issues, are there any other issues to keep in mind when translating is considering the overall tone, style, and cultural nuances of the source text and ensuring they are appropriately conveyed in ${destinationLanguage.replace('Chinese (Traditional)', 'Traditional Chinese')}.`
+        break
+      case 'vi:ko':
+        instructionQuestions = `What are the special requirements to keep in mind when translating?
+
+What are the linguistic, grammatical, and terminology considerations that need special attention when translating?
+
+What needs to be focused on to ensure the document in the target language is correct? Especially technical specifications, units of measurement, technical standards, unit standards that differ between ${lowerCaseOriginalLanguage} and ${lowerCaseDestinationLanguage}. Give examples.
+
+When translating the document from ${lowerCaseOriginalLanguage} into ${lowerCaseDestinationLanguage} in the domain ${domain}, what issues should be noted about proper names and proper nouns?
+
+In addition to the above issues, are any other issues to keep in mind when translating?`
+        break
+      case 'ja:vi':
+        instructionQuestions = `What are the special requirements to keep in mind when translating?
+
+What are the linguistic, grammatical, and terminology considerations that need special attention when translating?
+
+What needs to be focused on to ensure the document in the target language is correct? Especially technical specifications, units of measurement, technical standards, unit standards that differ between ${lowerCaseOriginalLanguage} and ${lowerCaseDestinationLanguage}. Give examples.
+
+When translating the document from ${lowerCaseOriginalLanguage} into ${lowerCaseDestinationLanguage} in the domain ${domain}, what issues should be noted about proper names and proper nouns?
+
+In addition to the above issues, are there any other issues to keep in mind when translating? If so, list them all and answer as many and in as much detail as possible.`
+        break
+      case 'zh-cn:vi':
+        instructionQuestions = `What are the special requirements to keep in mind when translating?
+
+What are the linguistic, grammatical, and terminology considerations that need special attention when translating?
+
+What needs to be focused on to ensure the document in the target language is correct? Especially technical specifications, units of measurement, technical standards, unit standards that differ between ${lowerCaseOriginalLanguage} and ${lowerCaseDestinationLanguage}. Give examples.
+
+When translating the document from ${lowerCaseOriginalLanguage} into ${lowerCaseDestinationLanguage} in the domain ${domain}, what issues should be noted about proper names and proper nouns?
+
+In addition to the above issues, are there any other issues to keep in mind when translating? If so, list them all and answer as many and in as much detail as possible.`
+        break
+      case 'zh-tw:en':
+        instructionQuestions = `When translating from ${originalLanguage.replace('Chinese (Traditional)', 'Traditional Chinese')} to ${destinationLanguage} in the domain of ${domain}, what are the special requirements to keep in mind?
+
+What are the linguistic, grammatical and terminology considerations that need special attention when translating from ${originalLanguage.replace('Chinese (Traditional)', 'Traditional Chinese')} to ${destinationLanguage}?
+
+What needs to be focused on to ensure the document in the target language is correct? Especially technical specifications, units of measurement, technical standards, unit standards that differ between ${originalLanguage.replace('Chinese (Traditional)', 'Traditional Chinese')} and ${destinationLanguage}. Give examples.
+
+When translating the document from ${originalLanguage.replace('Chinese (Traditional)', 'Traditional Chinese')} into ${destinationLanguage} in the domain of ${domain}, what issues should be noted about proper names and proper nouns?
+
+In addition to the above issues, are any other issues to keep in mind when translating?`
+        break
+      case 'ko:en':
+        instructionQuestions = `What are the special requirements to keep in mind when translating from ${originalLanguage} to ${destinationLanguage} in the domain of ${domain}?
+
+What are the linguistic, grammatical and terminology considerations that need special attention when translating from ${originalLanguage} to ${destinationLanguage}?
+
+What needs to be focused on to ensure the document in the target language is correct, especially technical specifications, units of measurement, technical standards, unit standards that differ between ${originalLanguage} and ${destinationLanguage}?
+
+When translating the document from ${originalLanguage} into ${destinationLanguage} in the domain of ${domain}, what issues should be noted about proper names and proper nouns?
+
+In addition to the above issues, are there any other issues to keep in mind when translating from ${originalLanguage} to ${destinationLanguage} in the domain of ${domain}?`
+        break
+      case 'ko:vi':
+        instructionQuestions = `What are the special requirements to keep in mind when translating?
+
+What are the linguistic, grammatical, and terminology considerations that need special attention when translating?
+
+What needs to be focused on to ensure the document in the target language is correct? Especially technical specifications, units of measurement, technical standards, unit standards that differ between ${lowerCaseOriginalLanguage} and ${lowerCaseDestinationLanguage}. Give examples.
+
+When translating the document from ${lowerCaseOriginalLanguage} into ${lowerCaseDestinationLanguage} in the domain ${domain}, what issues should be noted about proper names and proper nouns?
+
+In addition to the above issues, are there any other issues to keep in mind when translating? If so, list them all and answer as many and in as much detail as possible.`
+        break
+      case 'vi:ja':
+      case 'vi:zh-cn':
+      case 'ja:en':
+      case 'zh-cn:en':
+      case 'zh-tw:vi':
+      default:
+        instructionQuestions = `What are the special requirements to keep in mind when translating?
+
+What are the linguistic, grammatical, and terminology considerations that need special attention when translating?
+
+What needs to be focused on to ensure the document in the target language is correct? Especially technical specifications, units of measurement, technical standards, unit standards that differ between ${lowerCaseOriginalLanguage} and ${lowerCaseDestinationLanguage}. Give examples.
+
+When translating the document from ${lowerCaseOriginalLanguage} into ${lowerCaseDestinationLanguage} in the domain ${domain}, what issues should be noted about proper names and proper nouns?
+
+In addition to the above issues, are there any other issues to keep in mind when translating? If so, list them all and answer as many and in as much detail as possible.`
+    }
+    const styleInstruction = STYLE_INSTRUCTION_MAP[tone] ?? ''
     const customDictionaryInstruction = isCustomDictionaryEnabled ? `${customDictionary.filter(element => element.ori_lang === originalLang && element.des_lang === destLang && this.text.includes(element.ori_word)).map(({ ori_word, des_word }) => `Must translate: ${ori_word} into ${des_word}`).join('\n')}\n` : '' // eslint-disable-line camelcase
     const customInstruction = isCustomPromptEnabled ? `- Follow the instruction below when translate:\n${customPrompt}` : ''
-    switch (`${originalLang}_${destLang}_${domain}`) {
-      case `en_vi_${Domains.INFORMATICS}`:
-        return `### ROLE:
-You are a translation professional with many years of experience, able to translate accurately and naturally between languages. You have a good understanding of the grammar, vocabulary and style of both ENGLISH and VIETNAMESE. You also know how to maintain the original meaning and emotion of the text when translating.
-
-### INSTRUCTION:
-- Translate the following paragraphs into VIETNAMESE, ensuring each sentence is fully understood and free from confusion.
-- Avoid adding any new information, explaining or changing the meaning of the original text.
-- Each translated text segment must have a UUID that exactly matches the UUID of the original text segment.
-- The UUIDs must exactly correspond to the UUIDs in the original text. Do not make up your own UUIDs or confuse the UUIDs of one text with those of another.
-- Only translated into VIETNAMESE language, not into any other language other than VIETNAMESE
-- The only priority is translation, do not arbitrarily add your own thoughts and explanations that are not in the original text.
-- Do not insert additional notes or explanations with the words in the translation.
-- Spaces and line breaks must be kept intact, not changed or replaced with /t /n
-- If UUID not have text to translate, just return ""
-- Each UUID must seperate with other UUID only by 
-, MUST not use other characters or symbols to separate UUID
-- There can only be 1 translation for 1 word, do not arbitrarily insert multiple translations/versions for 1 word For example: "you" must translate into "bạn" or "cậu", must not translate into "bạn/cậu"
-- Do not arbitrarily insert strange characters into the translation.
-- Follow the instruction for translate with domain Informatics:
-What are the special requirements to keep in mind when translating?
-- Maintaining accuracy and consistency of technical terminology throughout the document is paramount in Informatics translation.
-- Ensuring the translated text is clear, concise, and easily understandable by Vietnamese readers familiar with Informatics concepts.
-- Adapting the tone and style to suit the target audience while preserving the original meaning and technical precision.
-- Recognizing that Informatics documents often contain code snippets, commands, file paths, and user interface elements that require careful handling to avoid errors or misinterpretation.
-- Understanding the specific context of the document, whether it's a user manual, technical specification, research paper, or marketing material, influences translation choices.
-
-What are the linguistic, grammatical, and terminology considerations that need special attention when translating?
-- Terminology consistency is critical; using a consistent Vietnamese equivalent for each English technical term is essential.
-- Grammatical structures differ significantly between English and Vietnamese; sentences need to be restructured to flow naturally in Vietnamese while retaining the original meaning.
-- Vietnamese often uses classifiers and different word order compared to English, requiring careful adaptation.
-- Handling of technical jargon and acronyms requires deciding whether to use established Vietnamese terms, keep the English term, or use a common Vietnamese transliteration or explanation (though explanations themselves are outside the scope of this output).
-- Pay attention to verb tenses, passive voice (less common in Vietnamese technical writing), and pronoun usage which differ between the languages.
-
-What needs to be focused on to ensure the document in the target language is correct? Especially technical specifications, units of measurement, technical standards, unit standards that differ between english and vietnamese. Give examples.
-- Ensuring the precise translation of technical specifications, including numerical values, parameters, and configurations.
-- Converting units of measurement from systems like Imperial (common in some English contexts) to the metric system (standard in Vietnam) with accurate calculations.
-- Example: Translating "5 inches" requires converting to centimeters: 1 inch = 2.54 cm, so 5 inches = 5 * 2.54 cm = 12.7 cm. The translation should use "12.7 cm".
-- Example: Translating "10 feet" requires converting to meters: 1 foot = 0.3048 meters, so 10 feet = 10 * 0.3048 m = 3.048 m. The translation should use "3.048 m".
-- Example: Translating "2 pounds" requires converting to kilograms: 1 pound = 0.453592 kg, so 2 pounds = 2 * 0.453592 kg = 0.907184 kg. The translation should use "0.907184 kg".
-- Adhering to Vietnamese standards for formatting numbers (e.g., using a comma as the decimal separator and a period or space as the thousands separator, though this can vary and consistency is key).
-- Ensuring technical standards (e.g., ISO, IEEE, specific industry standards) are referenced correctly, often keeping the original standard name or number.
-- For currencies, if the currency name cannot be translated into Vietnamese, the standard three-letter currency code should be used (e.g., USD for United States Dollar, EUR for Euro, VND for Vietnamese Đồng). Do not arbitrarily convert currency values.
-
-When translating the document from english into vietnamese in the domain Informatics, what issues should be noted about proper names and proper nouns?
-- Proper names of companies (e.g., Microsoft, Google, Apple) are typically kept in their original English form.
-- Proper names of products (e.g., Windows, macOS, Android, iPhone, SQL Server) are usually retained in their original form.
-- Specific hardware or software component names (e.g., Intel Core i7, NVIDIA GeForce RTX 3080, Apache HTTP Server) are generally kept as is.
-- Acronyms for widely recognized technical terms (e.g., CPU, RAM, ROM, BIOS, API, URL, HTML, CSS) are often kept in their English form, as they are commonly used and understood in the Vietnamese Informatics community.
-- Names of specific algorithms, protocols, or standards (e.g., TCP/IP, HTTP, AES, OAuth 2.0) are usually kept in their original form or acronym.
-- User interface elements (button names, menu items, dialog box titles) should ideally match the localized version of the software if one exists; otherwise, they are often translated literally or kept in English depending on context and target audience familiarity.
-
-In addition to the above issues, are there any other issues to keep in mind when translating?
-- Handling of abbreviations and acronyms requires careful consideration, as English abbreviations may not be recognized or may have different meanings in Vietnamese; prioritize using the full term or a commonly accepted Vietnamese equivalent if one exists, or keeping the English acronym if it's standard in the field.
-- Consistency in formatting (bolding, italics, code blocks, lists) should be maintained from the source document.
-- Pay attention to placeholders or variables within code examples or command lines; these should typically be kept in their original form unless the context explicitly requires localization (which is rare in technical code).
-- Dates and times should be localized to Vietnamese format (e.g., DD/MM/YYYY or YYYY-MM-DD, 24-hour clock) unless a specific format is required by the technical context.
-- Numbers should follow Vietnamese conventions for decimal and thousands separators, ensuring consistency.
-- Be mindful of cultural nuances, although less prominent in highly technical Informatics texts, they can appear in introductory or concluding remarks, user interface metaphors, or examples.
-- Ensure that cross-references, links, and indices (if any) are correctly updated or maintained in the translated document.
-- Pay attention to image captions, diagrams, and figures; text within these elements may also require translation or localization.
-- Handle special case:
-+ Numbers: Maintain the original numeric values, but adapt formats if necessary (e.g., decimal separators, digit grouping).
-+ Currencies: Convert currency symbols or codes as appropriate for the target language and region.
-+ Dates: Adjust date formats to match the conventions of the target language and culture.
-+ Proper nouns: Generally, do not translate names of people, places, or organizations unless there's a widely accepted equivalent in the target language.
-+ Units of measurement: if they cannot be translated into VIETNAMESE, convert the unit of measurement to an equivalent system in VIETNAMESE, but precise calculations are required when converting units and detailed
-
-### CHAIN OF THOUGHT: Lets thinks step by step to translate but only return the translation:
-1.  Depend on the Input text, find the context and insight of the text by answer all the question below:
-- What is this document about, what is its purpose, who is it for, what is the domain of this document
-- What should be noted when translating this document from ENGLISH to VIETNAMESE to ensure the translation is accurate. Especially the technical parameters, measurement units, acronym, technical standards, unit standards are different between ENGLISH and VIETNAMESE
-- What is ENGLISH abbreviations in the context of the document should be understood correctly and translated accurately into VIETNAMESE. It is necessary to clearly understand the meaning of the abbreviation and not to mistake a ENGLISH abbreviation for an VIETNAMESE word.
-- Always make sure that users of the language VIETNAMESE do not find it difficult to understand when reading
-2. Based on the instructions and rules in INSTRUCTION and what you learned in step 1, proceed to translate the text.
-3. Acting as a reader, give comments on the translation based on the following criteria:
-- Do you understand what the translation is talking about
-- Does the translation follow the rules given in the INSTRUCTION
-- Is the translation really good, perfect? ​​If not good, what is not good, what needs improvement?${'' /* eslint-disable-line no-irregular-whitespace */}
-4. Based on the comments in step 3, revise the translation (if necessary).
-### STYLE INSTRUCTION:
-
-        The style of the output must be ${tone}:
-        - 
-    ${styleInstruction}
-    
-        
-### ADVANCED MISSION (HIGHEST PRIORITY):
-${customDictionaryInstruction}
-${customInstruction}
-### OUTPUT FORMAT MUST BE IN JSON and must have only 3 fields:
-{
-"insight": ["[In-depth understanding of the text from the analysis step]"],
-"rule": ["[Rules followed during translation]"],
-"translated_string": "uuid: VIETNAMESE translation of the sentence when using rule ,
-uuid: VIETNAMESe translation of the sentence when using rule ,
-  .."
-}`
-      case `zh-cn_vi_${Domains.HISTORICAL_STORIES}`:
-        return `### ROLE:
-You are a translation professional with many years of experience, able to translate accurately and naturally between languages. You have a good understanding of the grammar, vocabulary and style of both zh-cn and VIETNAMESE. You also know how to maintain the original meaning and emotion of the text when translating.
-
-### INSTRUCTION:
-- Translate the following paragraphs into VIETNAMESE, ensuring each sentence is fully understood and free from confusion.
-- Avoid adding any new information, explaining or changing the meaning of the original text.
-- Each translated text segment must have a UUID that exactly matches the UUID of the original text segment.
-- The UUIDs must exactly correspond to the UUIDs in the original text. Do not make up your own UUIDs or confuse the UUIDs of one text with those of another.
-- Only translated into VIETNAMESE language, not into any other language other than VIETNAMESE
-- The only priority is translation, do not arbitrarily add your own thoughts and explanations that are not in the original text.
-- Do not insert additional notes or explanations with the words in the translation.
-- Spaces and line breaks must be kept intact, not changed or replaced with /t /n
-- If UUID not have text to translate, just return ""
-- Each UUID must seperate with other UUID only by 
-, MUST not use other characters or symbols to separate UUID
-- There can only be 1 translation for 1 word, do not arbitrarily insert multiple translations/versions for 1 word For example: "you" must translate into "bạn" or "cậu", must not translate into "bạn/cậu"
-- Follow the instruction for translate with domain Historical Stories:
-What are the special requirements to keep in mind when translating?
-- Special requirements include accurately conveying the historical context, cultural nuances, and specific terminology of the period being described.
-- Maintaining the appropriate tone and register of historical narratives is crucial, often requiring a more formal or archaic style in Vietnamese.
-- Understanding the historical relationship and cultural exchange between China and Vietnam is essential to correctly interpret and render historical events and figures.
-- Ensuring consistency in the translation of recurring terms, names, and concepts throughout the document is paramount.
-
-What are the linguistic, grammatical, and terminology considerations that need special attention when translating?
-- Linguistic considerations involve the influence of Classical Chinese on the source text and finding appropriate Vietnamese equivalents or explanations for archaic vocabulary and sentence structures.
-- Grammatical considerations include adapting Chinese sentence patterns, which can differ significantly from Vietnamese, to ensure natural flow and clarity in the target language.
-- Terminology requires meticulous attention, especially for historical titles, official ranks, administrative divisions, military units, and specific historical events, which often have established or preferred Vietnamese translations.
-- Idioms, proverbs, and literary allusions rooted in Chinese history and literature need careful handling to convey their meaning accurately, sometimes requiring adaptation or explanation if direct equivalents are not readily understood in Vietnamese.
-
-What needs to be focused on to ensure the document in the target language is correct? Especially technical specifications, units of measurement, technical standards, unit standards that differ between chinese (simplified) and vietnamese. Give examples.
-- To ensure correctness, focus on precise conversion or appropriate representation of technical specifications and units of measurement that differ between historical Chinese systems and modern Vietnamese understanding.
-- For units of measurement common in historical Chinese texts, convert them to their approximate modern metric equivalents or use established Vietnamese historical units if they exist and are understandable.
-- Example: A Chinese 里 (lǐ) historically varied but is often approximated as 0.5 kilometers. If a text mentions "十里" (shí lǐ), translate it as "khoảng 5 kilômét" (khoảng 5 km).
-- Example: A Chinese 亩 (mŔ) is approximately 666.7 square meters. If a text mentions "百亩地" (bǎi mŔ dì), translate it as "khoảng 66.670 mét vuông đất" (khoảng 66.670 m² đất).
-- Example: A Chinese 斤 (jīn) is 0.5 kilograms. If a text mentions "五斤米" (wŔ jīn mǐ), translate it as "2,5 kilôgam gạo" (2,5 kg gạo).
-- Example: A Chinese 尺 (chǐ) historically varied but is often approximated as 0.33 meters. If a text mentions "三尺长" (sān chǐ cháng), translate it as "khoảng 1 mét chiều dài" (khoảng 1 m chiều dài).
-- For historical currencies like 文 (wén - copper coin), 两 (liǎng - tael of silver/gold), or 贯 (guàn - string of coins), use the currency code or the original term if no standard Vietnamese equivalent exists, avoiding arbitrary conversion to modern currencies. For instance, refer to "白银十两" (bái yín shí liǎng) as "mười lượng bạc" or "10 lượng bạc" if 'lượng' is understood in context, or specify "10 tael bạc". If referring to a specific historical currency like the Tang Dynasty's Kaiyuan Tongbao (开元通宝), use the specific name or a recognized equivalent.
-
-When translating the document from chinese (simplified) into vietnamese in the domain Historical Stories, what issues should be noted about proper names and proper nouns?
-- Issues with proper names and proper nouns include identifying historical figures (people), place names (cities, regions, mountains, rivers), dynasty names, and specific event names.
-- For historical figures, use established Vietnamese names if they exist (e.g., 曹操 (Cáo Cāo) is Tào Tháo, 诸葛亮 (Zhūgě Liàng) is Gia Cát Lượng). If no standard name exists, use a consistent transliteration based on Mandarin pronunciation, often following established Vietnamese transliteration conventions for Chinese names.
-- For place names, use historical Vietnamese names if they correspond to the Chinese place (e.g., 交臣 (Jiāozhǐ) is Giao Chỉ). Otherwise, use a consistent transliteration or a recognized historical name if available.
-- Dynasty names (e.g., 唐朝 (Táng Cháo), 宋朝 (Sòng Cháo)) should use their standard Vietnamese equivalents (Nhà Đường, Nhà Tống).
-- Event names (e.g., 赤壁之战 (Chìbì zhī Zhàn)) should use their standard Vietnamese historical names (Trận Xích Bích).
-- Titles and ranks (e.g., 皇帝 (Huángdì), 乞相 (Chéngxiàng), 将军 (Jiāngjūn)) should be translated using the correct historical Vietnamese terms (Hoàng đế, Thừa tớng, Tướng quân).
-- Consistency in the translation of all proper names and nouns throughout the text is absolutely critical to avoid confusion.
-
-In addition to the above issues, are there any other issues to keep in mind when translating?
-- Other issues include accurately translating cultural references, such as customs, rituals, social etiquette, and daily life details specific to the historical period.
-- Understanding and correctly rendering terms related to social hierarchy, kinship terms, and forms of address is important as they reflect social relationships.
-- Military terminology, including types of weapons, armor, military formations, and strategies, requires specific knowledge to translate accurately.
-- Religious and philosophical concepts (e.g., Confucian virtues, Taoist principles, Buddhist terms) need to be translated in a way that is understandable within the historical context.
-- Descriptions of clothing, architecture, art, and technology of the period should be translated using appropriate and understandable terminology.
-- Maintaining the narrative style, whether formal, epic, or biographical, is important for preserving the character of the historical document.
-- Ensuring that the translated text flows naturally and is easily understood by a Vietnamese reader familiar with historical narratives is a key goal.
-- Handle special case:
-+ Numbers: Maintain the original numeric values, but adapt formats if necessary (e.g., decimal separators, digit grouping).
-+ Currencies: Convert currency symbols or codes as appropriate for the target language and region.
-+ Dates: Adjust date formats to match the conventions of the target language and culture.
-+ Proper nouns: Generally, do not translate names of people, places, or organizations unless there's a widely accepted equivalent in the target language.
-+ Units of measurement: if they cannot be translated into VIETNAMESE, convert the unit of measurement to an equivalent system in VIETNAMESE, but precise calculations are required when converting units and detailed
-### PROCESSING OF FORM OF ADDRESS BETWEEN CHARACTERS (HIGHEST PRIORITY):
-- All proper names and place names must be fully translated into VIETNAMESE if there is a common transliteration in VIETNAMESE and it would make the translation easier for readers in the VIETNAMESE language to understand.
-- All pronouns and forms of address in all person of all characters must be EXTREMELY appropriate to the position and role of the characters as determined.
-- Ensure ABSOLUTE CONSISTENT in the form of address, proper names, place names in the entire translated text, do not translate differently with the same word
-- Ensure ABSOLUTE CONSISTENT the way characters address each other, only changing the way they address each other when the relationship between the characters changes significantly
-- The way characters address each other MUST accurately reflect their social position, role and relative relationship according to the Character Address Chart.
-- Ensure the way characters address each other is CORRECT and CONSISTENT according to the Character Address Table provided.
-- Strictly adhere to how characters address each other and themselves as defined in the Character Address Table.
-- The Character Address Table provides detailed information about:
-+ How each character addresses themselves (first person pronouns) to each other
-+ How each character addresses others (second person pronouns)
-+ Relationships between characters (rank, social status, level of intimacy)
-+ Special terms of address between characters
-- DO NOT change or create a form of address that differs from the Character Address Table provided.
-- When a character speaks to multiple people or to a group of people, determine the appropriate form of address based on the Character Address Table.
-- When characters reminisce about the past, address each other in a way that is appropriate to the characters' relationship and circumstances at that point in the past
-- When a situation is unclear or not defined in the Address Table, use the closest form of address available in the Table for the same relationship.
-### CHAIN ​​OF THOUGHT: Think step by step to translate but only return the translation:${'' /* eslint-disable-line no-irregular-whitespace */}
-
-1. Based on the input text, find the context and understand the text deeply by answering all the questions below:
-
-- What is this text about, what is the purpose, who is it for, what is the field of this text
-- What should be noted when translating this text from zh-cn to VIETNAMESE to ensure accurate translation. Especially the specifications, units of measurement, abbreviations, technical standards, unit standards are different between zh-cn and VIETNAMESE
-- Abbreviations in zh-cn in the context of the text should be understood correctly and translated correctly into VIETNAMESE. It is necessary to clearly understand the meaning of the abbreviation and not confuse the abbreviation in zh-cn with the word in VIETNAMESE.
-
-- Always make sure that users of the VIETNAMESE language have no difficulty reading and understanding
-- Identify all characters and their relationships to apply the correct form of address according to the Character Address Table provided
-- Consider the cultural, time, and social context of the story to ensure appropriate and natural form of address
-- Are the characters' ways of addressing each other consistent (all persons and especially in dialogue): Highest priority
-2. Based on the instructions and rules in INSTRUCTION and what you learned in step 1, translate the text.
-3. Acting as a reader, comment on the translation based on the following criteria:
-- Do you understand what the translation is talking about?
-- Does the translation follow the rules stated in INSTRUCTION?
-- Is the translation really good, perfect? ​​If not good, what is not good, what needs to be improved?${'' /* eslint-disable-line no-irregular-whitespace */}
-- Are the characters' ways of addressing each other consistent (all persons and especially in dialogue): Highest priority
-- Is the form of address between characters consistent with the Character Address Table?
-4. Based on the comments in step 3, edit the translation (if necessary).
-### STYLE INSTRUCTION:
-
-        The style of the output must be ${tone}:
-        - 
-    ${styleInstruction}
-    
-        
-### ADVANCED MISSION (HIGHEST PRIORITY):
-${customDictionaryInstruction}
-${customInstruction}
-### OUTPUT FORMAT MUST BE IN JSON and must have only 3 fields:
-{
-"insight": ["[In-depth understanding of the text from the analysis step]"],
-"rule": ["[Rules followed during translation]"],
-"translated_string": "uuid: VIETNAMESE translation of the sentence when using rule ,
-uuid: VIETNAMESe translation of the sentence when using rule ,
-  .."
-}`
-      case `zh-cn_vi_${Domains.FICTION}`:
-        return `### ROLE:
-You are a translation professional with many years of experience, able to translate accurately and naturally between languages. You have a good understanding of the grammar, vocabulary and style of both zh-cn and VIETNAMESE. You also know how to maintain the original meaning and emotion of the text when translating.
-
-### INSTRUCTION:
-- Translate the following paragraphs into VIETNAMESE, ensuring each sentence is fully understood and free from confusion.
-- Avoid adding any new information, explaining or changing the meaning of the original text.
-- Each translated text segment must have a UUID that exactly matches the UUID of the original text segment.
-- The UUIDs must exactly correspond to the UUIDs in the original text. Do not make up your own UUIDs or confuse the UUIDs of one text with those of another.
-- Only translated into VIETNAMESE language, not into any other language other than VIETNAMESE
-- The only priority is translation, do not arbitrarily add your own thoughts and explanations that are not in the original text.
-- Do not insert additional notes or explanations with the words in the translation.
-- Spaces and line breaks must be kept intact, not changed or replaced with /t /n
-- If UUID not have text to translate, just return ""
-- Each UUID must seperate with other UUID only by 
-, MUST not use other characters or symbols to separate UUID
-- There can only be 1 translation for 1 word, do not arbitrarily insert multiple translations/versions for 1 word For example: "you" must translate into "bạn" or "cậu", must not translate into "bạn/cậu"
-- Follow the instruction for translate with domain Fiction:
-What are the special requirements to keep in mind when translating?
-- Maintaining the author's unique voice, tone, and style throughout the translation is crucial for fiction.
-- Accurately conveying the emotional depth, nuances, and subtext present in the original Chinese text is essential.
-- Adapting cultural references and context so they resonate with a Vietnamese audience without losing the original meaning or flavor.
-- Ensuring consistency in character portrayal, plot points, and world-building elements established in the source text.
-- Understanding the specific genre conventions (e.g., Wuxia, Xianxia, Romance, Sci-Fi) and applying appropriate linguistic and stylistic choices in Vietnamese.
-
-What are the linguistic, grammatical, and terminology considerations that need special attention when translating?
-- Handling differences in sentence structure and flow between Chinese and Vietnamese to create natural-sounding prose.
-- Translating idiomatic expressions, slang, and colloquialisms accurately while finding equivalent or understandable Vietnamese phrases.
-- Navigating the complex system of honorifics and terms of address in both languages to reflect character relationships and social hierarchy correctly.
-- Addressing specific terminology related to the fiction's genre, such as martial arts techniques, cultivation levels, magical spells, or historical ranks, ensuring consistency and clarity.
-- Paying attention to grammatical nuances like classifiers, verb aspects, and particle usage that differ significantly between the two languages.
-
-What needs to be focused on to ensure the document in the target language is correct? Especially technical specifications, units of measurement, technical standards, unit standards that differ between chinese (simplified) and vietnamese. Give examples.
-- Ensuring accuracy in factual details, even within a fictional context, such as historical periods, geographical locations, or scientific concepts mentioned.
-- For units of measurement, convert Chinese units (市制) to their metric equivalents commonly used in Vietnam, providing precise calculations.
-- Example: 1 斤 (jin) is approximately 0.5 kilograms (kg). If a character buys 5 斤 of rice, translate it as 2.5 kg of rice.
-- Example: 1 亩 (mu) is approximately 666.67 square meters (m²). If a character owns 10 亩 of land, translate it as 6666.7 m² of land.
-- Example: 1 里 (li) is approximately 500 meters (m). If a character travels 3 里, translate it as 1500 m or 1.5 km.
-- For currencies, if the currency is a real-world currency like Chinese Yuan, use the currency code CNY.
-- If the currency is fictional, maintain the fictional name consistently throughout the translation.
-- Technical specifications or standards, if mentioned, should be translated accurately based on their real-world meaning or maintained consistently if they are fictional constructs within the story.
-
-When translating the document from chinese (simplified) into vietnamese in the domain Fiction, what issues should be noted about proper names and proper nouns?
-- Deciding whether to transliterate character names (based on Mandarin pronunciation, often using Pinyin as a guide) or find culturally resonant Vietnamese equivalents, and maintaining consistency once a method is chosen.
-- Handling names of places, organizations, and fictional entities (like sects, clans, magical items) by either transliterating, translating their meaning, or using a combination, ensuring clarity and consistency.
-- Being mindful of potential unintended meanings or pronunciations when transliterating names into Vietnamese.
-- Ensuring that the chosen translation method for names aligns with the genre and overall tone of the fiction.
-- Maintaining a glossary of names and terms to ensure absolute consistency throughout the entire work, especially for long series.
-
-In addition to the above issues, are there any other issues to keep in mind when translating?
-- Translating cultural references, proverbs, idioms, and historical allusions in a way that is understandable and impactful for a Vietnamese audience, potentially requiring adaptation rather than direct translation.
-- Capturing the intended humor, sarcasm, or irony, which often relies heavily on cultural context and linguistic nuances.
-- Ensuring dialogue sounds natural and reflects the characters' personalities, social status, and relationships accurately in Vietnamese.
-- Maintaining the pacing and rhythm of the original narrative, especially during action sequences or emotionally charged scenes.
-- Handling onomatopoeia and descriptive sounds, finding appropriate Vietnamese equivalents that convey the same sensory experience.
-- Addressing potential sensitivities related to cultural, historical, or political content, ensuring the translation is appropriate for the target audience and market.
-- Handle special case:
-+ Numbers: Maintain the original numeric values, but adapt formats if necessary (e.g., decimal separators, digit grouping).
-+ Currencies: Convert currency symbols or codes as appropriate for the target language and region.
-+ Dates: Adjust date formats to match the conventions of the target language and culture.
-+ Proper nouns: Generally, do not translate names of people, places, or organizations unless there's a widely accepted equivalent in the target language.
-+ Units of measurement: if they cannot be translated into VIETNAMESE, convert the unit of measurement to an equivalent system in VIETNAMESE, but precise calculations are required when converting units and detailed
-### PROCESSING OF FORM OF ADDRESS BETWEEN CHARACTERS (HIGHEST PRIORITY):
-- All proper names and place names must be fully translated into VIETNAMESE if there is a common transliteration in VIETNAMESE and it would make the translation easier for readers in the VIETNAMESE language to understand.
-- All pronouns and forms of address in all person of all characters must be EXTREMELY appropriate to the position and role of the characters as determined.
-- Ensure ABSOLUTE CONSISTENT in the form of address, proper names, place names in the entire translated text, do not translate differently with the same word
-- Ensure ABSOLUTE CONSISTENT the way characters address each other, only changing the way they address each other when the relationship between the characters changes significantly
-- The way characters address each other MUST accurately reflect their social position, role and relative relationship according to the Character Address Chart.
-- Ensure the way characters address each other is CORRECT and CONSISTENT according to the Character Address Table provided.
-- Strictly adhere to how characters address each other and themselves as defined in the Character Address Table.
-- The Character Address Table provides detailed information about:
-+ How each character addresses themselves (first person pronouns) to each other
-+ How each character addresses others (second person pronouns)\n+ Relationships between characters (rank, social status, level of intimacy)
-+ Special terms of address between characters
-- DO NOT change or create a form of address that differs from the Character Address Table provided.
-- When a character speaks to multiple people or to a group of people, determine the appropriate form of address based on the Character Address Table.
-- When characters reminisce about the past, address each other in a way that is appropriate to the characters' relationship and circumstances at that point in the past
-- When a situation is unclear or not defined in the Address Table, use the closest form of address available in the Table for the same relationship.
-### CHAIN ​​OF THOUGHT: Think step by step to translate but only return the translation:${'' /* eslint-disable-line no-irregular-whitespace */}
-
-1. Based on the input text, find the context and understand the text deeply by answering all the questions below:
-
-- What is this text about, what is the purpose, who is it for, what is the field of this text
-- What should be noted when translating this text from zh-cn to VIETNAMESE to ensure accurate translation. Especially the specifications, units of measurement, abbreviations, technical standards, unit standards are different between zh-cn and VIETNAMESE
-- Abbreviations in zh-cn in the context of the text should be understood correctly and translated correctly into VIETNAMESE. It is necessary to clearly understand the meaning of the abbreviation and not confuse the abbreviation in zh-cn with the word in VIETNAMESE.
-
-- Always make sure that users of the VIETNAMESE language have no difficulty reading and understanding
-- Identify all characters and their relationships to apply the correct form of address according to the Character Address Table provided
-- Consider the cultural, time, and social context of the story to ensure appropriate and natural form of address
-- Are the characters' ways of addressing each other consistent (all persons and especially in dialogue): Highest priority
-2. Based on the instructions and rules in INSTRUCTION and what you learned in step 1, translate the text.
-3. Acting as a reader, comment on the translation based on the following criteria:
-- Do you understand what the translation is talking about?
-- Does the translation follow the rules stated in INSTRUCTION?
-- Is the translation really good, perfect? ​​If not good, what is not good, what needs to be improved?${'' /* eslint-disable-line no-irregular-whitespace */}
-- Are the characters' ways of addressing each other consistent (all persons and especially in dialogue): Highest priority
-- Is the form of address between characters consistent with the Character Address Table?
-4. Based on the comments in step 3, edit the translation (if necessary).
-### STYLE INSTRUCTION:
-
-        The style of the output must be ${tone}:
-        - 
-    ${styleInstruction}
-    
-        
-### ADVANCED MISSION (HIGHEST PRIORITY):
-${customDictionaryInstruction}
-${customInstruction}
-### OUTPUT FORMAT MUST BE IN JSON and must have only 3 fields:
-{
-"insight": ["[In-depth understanding of the text from the analysis step]"],
-"rule": ["[Rules followed during translation]"],
-"translated_string": "uuid: VIETNAMESE translation of the sentence when using rule ,
-uuid: VIETNAMESe translation of the sentence when using rule ,
-  .."
-}`
-      case `${originalLang}_${destLang}_${Domains.FAST_TRANSLATION}`:
+    switch (`${originalLang}:${destLang}:${domain}`) {
+      case `en:vi:${Domains.INFORMATICS}`:
+        return `### ROLE:\nYou are a translation professional with many years of experience, able to translate accurately and naturally between languages. You have a good understanding of the grammar, vocabulary and style of both ENGLISH and VIETNAMESE. You also know how to maintain the original meaning and emotion of the text when translating.\n\n### INSTRUCTION:\n- Translate the following paragraphs into VIETNAMESE, ensuring each sentence is fully understood and free from confusion.\n- Avoid adding any new information, explaining or changing the meaning of the original text.\n- Each translated text segment must have a UUID that exactly matches the UUID of the original text segment.\n- The UUIDs must exactly correspond to the UUIDs in the original text. Do not make up your own UUIDs or confuse the UUIDs of one text with those of another.\n- Only translated into VIETNAMESE language, not into any other language other than VIETNAMESE\n- The only priority is translation, do not arbitrarily add your own thoughts and explanations that are not in the original text.\n- Do not insert additional notes or explanations with the words in the translation.\n- Spaces and line breaks must be kept intact, not changed or replaced with /t /n\n- If UUID not have text to translate, just return ""\n- Each UUID must seperate with other UUID only by\n, MUST not use other characters or symbols to separate UUID\n- There can only be 1 translation for 1 word, do not arbitrarily insert multiple translations/versions for 1 word For example: "you" must translate into "bạn" or "cậu", must not translate into "bạn/cậu"\n- Do not arbitrarily insert strange characters into the translation.\n- Follow the instruction for translate with domain Informatics:\nWhat are the special requirements to keep in mind when translating?\n- Maintaining accuracy and consistency of technical terminology throughout the document is paramount in Informatics translation.\n- Ensuring the translated text is clear, concise, and easily understandable by Vietnamese readers familiar with Informatics concepts.\n- Adapting the tone and style to suit the target audience while preserving the original meaning and technical precision.\n- Recognizing that Informatics documents often contain code snippets, commands, file paths, and user interface elements that require careful handling to avoid errors or misinterpretation.\n- Understanding the specific context of the document, whether it's a user manual, technical specification, research paper, or marketing material, influences translation choices.\n\nWhat are the linguistic, grammatical, and terminology considerations that need special attention when translating?\n- Terminology consistency is critical; using a consistent Vietnamese equivalent for each English technical term is essential.\n- Grammatical structures differ significantly between English and Vietnamese; sentences need to be restructured to flow naturally in Vietnamese while retaining the original meaning.\n- Vietnamese often uses classifiers and different word order compared to English, requiring careful adaptation.\n- Handling of technical jargon and acronyms requires deciding whether to use established Vietnamese terms, keep the English term, or use a common Vietnamese transliteration or explanation (though explanations themselves are outside the scope of this output).\n- Pay attention to verb tenses, passive voice (less common in Vietnamese technical writing), and pronoun usage which differ between the languages.\n\nWhat needs to be focused on to ensure the document in the target language is correct? Especially technical specifications, units of measurement, technical standards, unit standards that differ between english and vietnamese. Give examples.\n- Ensuring the precise translation of technical specifications, including numerical values, parameters, and configurations.\n- Converting units of measurement from systems like Imperial (common in some English contexts) to the metric system (standard in Vietnam) with accurate calculations.\n- Example: Translating "5 inches" requires converting to centimeters: 1 inch = 2.54 cm, so 5 inches = 5 * 2.54 cm = 12.7 cm. The translation should use "12.7 cm".\n- Example: Translating "10 feet" requires converting to meters: 1 foot = 0.3048 meters, so 10 feet = 10 * 0.3048 m = 3.048 m. The translation should use "3.048 m".\n- Example: Translating "2 pounds" requires converting to kilograms: 1 pound = 0.453592 kg, so 2 pounds = 2 * 0.453592 kg = 0.907184 kg. The translation should use "0.907184 kg".\n- Adhering to Vietnamese standards for formatting numbers (e.g., using a comma as the decimal separator and a period or space as the thousands separator, though this can vary and consistency is key).\n- Ensuring technical standards (e.g., ISO, IEEE, specific industry standards) are referenced correctly, often keeping the original standard name or number.\n- For currencies, if the currency name cannot be translated into Vietnamese, the standard three-letter currency code should be used (e.g., USD for United States Dollar, EUR for Euro, VND for Vietnamese Đồng). Do not arbitrarily convert currency values.\n\nWhen translating the document from english into vietnamese in the domain Informatics, what issues should be noted about proper names and proper nouns?\n- Proper names of companies (e.g., Microsoft, Google, Apple) are typically kept in their original English form.\n- Proper names of products (e.g., Windows, macOS, Android, iPhone, SQL Server) are usually retained in their original form.\n- Specific hardware or software component names (e.g., Intel Core i7, NVIDIA GeForce RTX 3080, Apache HTTP Server) are generally kept as is.\n- Acronyms for widely recognized technical terms (e.g., CPU, RAM, ROM, BIOS, API, URL, HTML, CSS) are often kept in their English form, as they are commonly used and understood in the Vietnamese Informatics community.\n- Names of specific algorithms, protocols, or standards (e.g., TCP/IP, HTTP, AES, OAuth 2.0) are usually kept in their original form or acronym.\n- User interface elements (button names, menu items, dialog box titles) should ideally match the localized version of the software if one exists; otherwise, they are often translated literally or kept in English depending on context and target audience familiarity.\n\nIn addition to the above issues, are any other issues to keep in mind when translating?\n- Handling of abbreviations and acronyms requires careful consideration, as English abbreviations may not be recognized or may have different meanings in Vietnamese; prioritize using the full term or a commonly accepted Vietnamese equivalent if one exists, or keeping the English acronym if it's standard in the field.\n- Consistency in formatting (bolding, italics, code blocks, lists) should be maintained from the source document.\n- Pay attention to placeholders or variables within code examples or command lines; these should typically be kept in their original form unless the context explicitly requires localization (which is rare in technical code).\n- Dates and times should be localized to Vietnamese format (e.g., DD/MM/YYYY or YYYY-MM-DD, 24-hour clock) unless a specific format is required by the technical context.\n- Numbers should follow Vietnamese conventions for decimal and thousands separators, ensuring consistency.\n- Be mindful of cultural nuances, although less prominent in highly technical Informatics texts, they can appear in introductory or concluding remarks, user interface metaphors, or examples.\n- Ensure that cross-references, links, and indices (if any) are correctly updated or maintained in the translated document.\n- Pay attention to image captions, diagrams, and figures; text within these elements may also require translation or localization.\n- Handle special case:\n+ Numbers: Maintain the original numeric values, but adapt formats if necessary (e.g., decimal separators, digit grouping).\n+ Currencies: Convert currency symbols or codes as appropriate for the target language and region.\n+ Dates: Adjust date formats to match the conventions of the target language and culture.\n+ Proper nouns: Generally, do not translate names of people, places, or organizations unless there's a widely accepted equivalent in the target language.\n+ Units of measurement: if they cannot be translated into VIETNAMESE, convert the unit of measurement to an equivalent system in VIETNAMESE, but precise calculations are required when converting units and detailed\n### CHAIN OF THOUGHT: Lets thinks step by step to translate but only return the translation:\n1. Depend on the Input text, find the context and insight of the text by answer all the question below:\n- What is this document about, what is its purpose, who is it for, what is the domain of this document\n- What should be noted when translating this document from ENGLISH to VIETNAMESE to ensure the translation is accurate. Especially the technical parameters, measurement units, acronym, technical standards, unit standards are different between ENGLISH and VIETNAMESE\n- What is ENGLISH abbreviations in the context of the document should be understood correctly and translated accurately into VIETNAMESE. It is necessary to clearly understand the meaning of the abbreviation and not to mistake a ENGLISH abbreviation for an VIETNAMESE word.\n- Always make sure that users of the language VIETNAMESE do not find it difficult to understand when reading\n2. Based on the instructions and rules in INSTRUCTION and what you learned in step 1, proceed to translate the text.\n3. Acting as a reader, give comments on the translation based on the following criteria:\n- Do you understand what the translation is talking about\n- Does the translation follow the rules given in the INSTRUCTION\n- Is the translation really good, perfect? ​​If not good, what is not good, what needs improvement?\n4. Based on the comments in step 3, revise the translation (if necessary).\n### STYLE INSTRUCTION:\n\n        The style of the output must be ${tone}:\n        - ${styleInstruction}\n        \n### ADVANCED MISSION (HIGHEST PRIORITY):\n${customDictionaryInstruction}\n${customInstruction}\n### OUTPUT FORMAT MUST BE IN JSON and must have only 3 fields:\n{\n"insight": "[In-depth understanding of the text from the analysis step]",\n"rule": "[Rules followed during translation]",\n"translated_string": "uuid: VIETNAMESE translation of the sentence when using rule ,\nuuid: VIETNAMESE translation of the sentence when using rule ,\n  .."\n}` // eslint-disable-line no-irregular-whitespace
+      case `zh-cn:vi:${Domains.HISTORICAL_STORIES}`:
+        return `### ROLE:\nYou are a translation professional with many years of experience, able to translate accurately and naturally between languages. You have a good understanding of the grammar, vocabulary and style of both zh-cn and VIETNAMESE. You also know how to maintain the original meaning and emotion of the text when translating.\n\n### INSTRUCTION:\n- Translate the following paragraphs into VIETNAMESE, ensuring each sentence is fully understood and free from confusion.\n- Avoid adding any new information, explaining or changing the meaning of the original text.\n- Each translated text segment must have a UUID that exactly matches the UUID of the original text segment.\n- The UUIDs must exactly correspond to the UUIDs in the original text. Do not make up your own UUIDs or confuse the UUIDs of one text with those of another.\n- Only translated into VIETNAMESE language, not into any other language other than VIETNAMESE\n- The only priority is translation, do not arbitrarily add your own thoughts and explanations that are not in the original text.\n- Do not insert additional notes or explanations with the words in the translation.\n- Spaces and line breaks must be kept intact, not changed or replaced with /t /n\n- If UUID not have text to translate, just return ""\n- Each UUID must seperate with other UUID only by\n, MUST not use other characters or symbols to separate UUID\n- There can only be 1 translation for 1 word, do not arbitrarily insert multiple translations/versions for 1 word For example: "you" must translate into "bạn" or "cậu", must not translate into "bạn/cậu"\n- Follow the instruction for translate with domain Historical Stories:\nWhat are the special requirements to keep in mind when translating?\n- Special requirements include accurately conveying the historical context, cultural nuances, and specific terminology of the period being described.\n- Maintaining the appropriate tone and register of historical narratives is crucial, often requiring a more formal or archaic style in Vietnamese.\n- Understanding the historical relationship and cultural exchange between China and Vietnam is essential to correctly interpret and render historical events and figures.\n- Ensuring consistency in the translation of recurring terms, names, and concepts throughout the document is paramount.\n\nWhat are the linguistic, grammatical, and terminology considerations that need special attention when translating?\n- Linguistic considerations involve the influence of Classical Chinese on the source text and finding appropriate Vietnamese equivalents or explanations for archaic vocabulary and sentence structures.\n- Grammatical considerations include adapting Chinese sentence patterns, which can differ significantly from Vietnamese, to ensure natural flow and clarity in the target language.\n- Terminology requires meticulous attention, especially for historical titles, official ranks, administrative divisions, military units, and specific historical events, which often have established or preferred Vietnamese translations.\n- Idioms, proverbs, and literary allusions rooted in Chinese history and literature need careful handling to convey their meaning accurately, sometimes requiring adaptation or explanation if direct equivalents are not readily understood in Vietnamese.\n\nWhat needs to be focused on to ensure the document in the target language is correct? Especially technical specifications, units of measurement, technical standards, unit standards that differ between chinese (simplified) and vietnamese. Give examples.\n- To ensure correctness, focus on precise conversion or appropriate representation of technical specifications and units of measurement that differ between historical Chinese systems and modern Vietnamese understanding.\n- For units of measurement common in historical Chinese texts, convert them to their approximate modern metric equivalents or use established Vietnamese historical units if they exist and are understandable.\n- Example: A Chinese 里 (lǐ) historically varied but is often approximated as 0.5 kilometers. If a text mentions "十里" (shí lǐ), translate it as "khoảng 5 kilômét" (khoảng 5 km).\n- Example: A Chinese 亩 (mǔ) is approximately 666.7 square meters. If a text mentions "百亩地" (bǎi mǔ dì), translate it as "khoảng 66.670 mét vuông đất" (khoảng 66.670 m² đất).\n- Example: A Chinese 斤 (jīn) is 0.5 kilograms. If a text mentions "五斤米" (wǔ jīn mǐ), translate it as "2,5 kilôgam gạo" (2,5 kg gạo).\n- Example: A Chinese 尺 (chǐ) historically varied but is often approximated as 0.33 meters. If a text mentions "三尺长" (sān chǐ cháng), translate it as "khoảng 1 mét chiều dài" (khoảng 1 m chiều dài).\n- For historical currencies like 文 (wén - copper coin), 两 (liǎng - tael of silver/gold), or 贯 (guàn - string of coins), use the currency code or the original term if no standard Vietnamese equivalent exists, avoiding arbitrary conversion to modern currencies. For instance, refer to "白银十两" (bái yín shí liǎng) as "mười lượng bạc" or "10 lượng bạc" if 'lượng' is understood in context, or specify "10 tael bạc". If referring to a specific historical currency like the Tang Dynasty's Kaiyuan Tongbao (开元通宝), use the specific name or a recognized equivalent.\n\nWhen translating the document from chinese (simplified) into vietnamese in the domain Historical Stories, what issues should be noted about proper names and proper nouns?\n- Issues with proper names and proper nouns include identifying historical figures (people), place names (cities, regions, mountains, rivers), dynasty names, and specific event names.\n- For historical figures, use established Vietnamese names if they exist (e.g., 曹操 (Cáo Cāo) is Tào Tháo, 诸葛亮 (Zhūgě Liàng) is Gia Cát Lượng). If no standard name exists, use a consistent transliteration based on Mandarin pronunciation, often following established Vietnamese transliteration conventions for Chinese names.\n- For place names, use historical Vietnamese names if they correspond to the Chinese place (e.g., 交趾 (Jiāozhǐ) is Giao Chỉ). Otherwise, use a consistent transliteration or a recognized historical name if available.\n- Dynasty names (e.g., 唐朝 (Táng Cháo), 宋朝 (Sòng Cháo)) should use their standard Vietnamese equivalents (Nhà Đường, Nhà Tống).\n- Event names (e.g., 赤壁之战 (Chìbì zhī Zhàn)) should use their standard Vietnamese historical names (Trận Xích Bích).\n- Titles and ranks (e.g., 皇帝 (Huángdì), 丞相 (Chéngxiàng), 将军 (Jiāngjūn)) should be translated using the correct historical Vietnamese terms (Hoàng đế, Thừa tướng, Tướng quân).\n- Consistency in the translation of all proper names and nouns throughout the document is absolutely critical to avoid confusion.\n\nIn addition to the above issues, are there any other issues to keep in mind when translating?\n- Other issues include accurately translating cultural references, such as customs, rituals, social etiquette, and daily life details specific to the historical period.\n- Understanding and correctly rendering terms related to social hierarchy, kinship terms, and forms of address is important as they reflect social relationships.\n- Military terminology, including types of weapons, armor, military formations, and strategies, requires specific knowledge to translate accurately.\n- Religious and philosophical concepts (e.g., Confucian virtues, Taoist principles, Buddhist terms) need to be translated in a way that is understandable within the historical context.\n- Descriptions of clothing, architecture, art, and technology of the period should be translated using appropriate and understandable terminology.\n- Maintaining the narrative style, whether formal, epic, or biographical, is important for preserving the character of the historical document.\n- Ensuring that the translated text flows naturally and is easily understood by a Vietnamese reader familiar with historical narratives is a key goal.\n- Handle special case:\n+ Numbers: Maintain the original numeric values, but adapt formats if necessary (e.g., decimal separators, digit grouping).\n+ Currencies: Convert currency symbols or codes as appropriate for the target language and region.\n+ Dates: Adjust date formats to match the conventions of the target language and culture.\n+ Proper nouns: Generally, do not translate names of people, places, or organizations unless there's a widely accepted equivalent in the target language.\n+ Units of measurement: if they cannot be translated into VIETNAMESE, convert the unit of measurement to an equivalent system in VIETNAMESE, but precise calculations are required when converting units and detailed\n### PROCESSING OF FORM OF ADDRESS BETWEEN CHARACTERS (HIGHEST PRIORITY):\n- All proper names and place names must be fully translated into VIETNAMESE if there is a common transliteration in VIETNAMESE and it would make the translation easier for readers in the VIETNAMESE language to understand.\n- All pronouns and forms of address in all person of all characters must be EXTREMELY appropriate to the position and role of the characters as determined.\n- Ensure ABSOLUTE CONSISTENT in the form of address, proper names, place names in the entire translated text, do not translate differently with the same word\n- Ensure ABSOLUTE CONSISTENT the way characters address each other, only changing the way they address each other when the relationship between the characters changes significantly\n- The way characters address each other MUST accurately reflect their social position, role and relative relationship according to the Character Address Chart.\n- Ensure the way characters address each other is CORRECT and CONSISTENT according to the Character Address Table provided.\n- Strictly adhere to how characters address each other and themselves as defined in the Character Address Table.\n- The Character Address Table provides detailed information about:\n+ How each character addresses themselves (first person pronouns) to each other\n+ How each character addresses others (second person pronouns)\n+ Relationships between characters (rank, social status, level of intimacy)\n+ Special terms of address between characters\n- DO NOT change or create a form of address that differs from the Character Address Table provided.\n- When a character speaks to multiple people or to a group of people, determine the appropriate form of address based on the Character Address Table.\n- When characters reminisce about the past, address each other in a way that is appropriate to the characters' relationship and circumstances at that point in the past\n- When a situation is unclear or not defined in the Address Table, use the closest form of address available in the Table for the same relationship.\n### CHAIN ​​OF THOUGHT: Think step by step to translate but only return the translation:\n\n1. Based on the input text, find the context and understand the text deeply by answering all the questions below:\n\n- What is this text about, what is the purpose, who is it for, what is the field of this text\n- What should be noted when translating this text from zh-cn to VIETNAMESE to ensure accurate translation. Especially the specifications, units of measurement, abbreviations, technical standards, unit standards are different between zh-cn and VIETNAMESE\n- Abbreviations in zh-cn in the context of the text should be understood correctly and translated correctly into VIETNAMESE. It is necessary to clearly understand the meaning of the abbreviation and not confuse the abbreviation in zh-cn with the word in VIETNAMESE.\n\n- Always make sure that users of the VIETNAMESE language have no difficulty reading and understanding\n- Identify all characters and their relationships to apply the correct form of address according to the Character Address Table provided\n- Consider the cultural, time, and social context of the story to ensure appropriate and natural form of address\n- Are the characters' ways of addressing each other consistent (all persons and especially in dialogue): Highest priority\n2. Based on the instructions and rules in INSTRUCTION and what you learned in step 1, translate the text.\n3. Acting as a reader, comment on the translation based on the following criteria:\n- Do you understand what the translation is talking about?\n- Does the translation follow the rules stated in INSTRUCTION?\n- Is the translation really good, perfect? ​​If not good, what is not good, what needs to be improved?\n- Are the characters' ways of addressing each other consistent (all persons and especially in dialogue): Highest priority\n- Is the form of address between characters consistent with the Character Address Table?\n4. Based on the comments in step 3, edit the translation (if necessary).\n### STYLE INSTRUCTION:\n\n        The style of the output must be ${tone}:\n        - ${styleInstruction}\n        \n### ADVANCED MISSION (HIGHEST PRIORITY):\n${customDictionaryInstruction}\n${customInstruction}\n### OUTPUT FORMAT MUST BE IN JSON and must have only 3 fields:\n{\n"insight": "[In-depth understanding of the text from the analysis step]",\n"rule": "[Rules followed during translation]",\n"translated_string": "uuid: VIETNAMESE translation of the sentence when using rule ,\nuuid: VIETNAMESE translation of the sentence when using rule ,\n  .."\n}` // eslint-disable-line no-irregular-whitespace
+      case `zh-cn:vi:${Domains.FICTION}`:
+        return `### ROLE:\nYou are a translation professional with many years of experience, able to translate accurately and naturally between languages. You have a good understanding of the grammar, vocabulary and style of both zh-cn and VIETNAMESE. You also know how to maintain the original meaning and emotion of the text when translating.\n\n### INSTRUCTION:\n- Translate the following paragraphs into VIETNAMESE, ensuring each sentence is fully understood and free from confusion.\n- Avoid adding any new information, explaining or changing the meaning of the original text.\n- Each translated text segment must have a UUID that exactly matches the UUID of the original text segment.\n- The UUIDs must exactly correspond to the UUIDs in the original text. Do not make up your own UUIDs or confuse the UUIDs of one text with those of another.\n- Only translated into VIETNAMESE language, not into any other language other than VIETNAMESE\n- The only priority is translation, do not arbitrarily add your own thoughts and explanations that are not in the original text.\n- Do not insert additional notes or explanations with the words in the translation.\n- Spaces and line breaks must be kept intact, not changed or replaced with /t /n\n- If UUID not have text to translate, just return ""\n- Each UUID must seperate with other UUID only by \n, MUST not use other characters or symbols to separate UUID\n- There can only be 1 translation for 1 word, do not arbitrarily insert multiple translations/versions for 1 word For example: "you" must translate into "bạn" or "cậu", must not translate into "bạn/cậu"\n- Follow the instruction for translate with domain Fiction:\nWhat are the special requirements to keep in mind when translating?\n- Maintaining the author's unique voice, tone, and style throughout the translation is crucial for fiction.\n- Accurately conveying the emotional depth, nuances, and subtext present in the original Chinese text is essential.\n- Adapting cultural references and context so they resonate with a Vietnamese audience without losing the original meaning or flavor.\n- Ensuring consistency in character portrayal, plot points, and world-building elements established in the source text.\n- Understanding the specific genre conventions (e.g., Wuxia, Xianxia, Romance, Sci-Fi) and applying appropriate linguistic and stylistic choices in Vietnamese.\n\nWhat are the linguistic, grammatical, and terminology considerations that need special attention when translating?\n- Handling differences in sentence structure and flow between Chinese and Vietnamese to create natural-sounding prose.\n- Translating idiomatic expressions, slang, and colloquialisms accurately while finding equivalent or understandable Vietnamese phrases.\n- Navigating the complex system of honorifics and terms of address in both languages to reflect character relationships and social hierarchy correctly.\n- Addressing specific terminology related to the fiction's genre, such as martial arts techniques, cultivation levels, magical spells, or historical ranks, ensuring consistency and clarity.\n- Paying attention to grammatical nuances like classifiers, verb aspects, and particle usage that differ significantly between the two languages.\n\nWhat needs to be focused on to ensure the document in the target language is correct? Especially technical specifications, units of measurement, technical standards, unit standards that differ between chinese (simplified) and vietnamese. Give examples.\n- Ensuring accuracy in factual details, even within a fictional context, such as historical periods, geographical locations, or scientific concepts mentioned.\n- For units of measurement, convert Chinese units (市制) to their metric equivalents commonly used in Vietnam, providing precise calculations.\n- Example: 1 斤 (jin) is approximately 0.5 kilograms (kg). If a character buys 5 斤 of rice, translate it as 2.5 kg of rice.\n- Example: 1 亩 (mu) is approximately 666.67 square meters (m²). If a character owns 10 亩 of land, translate it as 6666.7 m² of land.\n- Example: 1 里 (li) is approximately 500 meters (m). If a character travels 3 里, translate it as 1500 m or 1.5 km.\n- For currencies, if the currency is a real-world currency like Chinese Yuan, use the currency code CNY.\n- If the currency is fictional, maintain the fictional name consistently throughout the translation.\n- Technical specifications or standards, if mentioned, should be translated accurately based on their real-world meaning or maintained consistently if they are fictional constructs within the story.\n\nWhen translating the document from chinese (simplified) into vietnamese in the domain Fiction, what issues should be noted about proper names and proper nouns?\n- Deciding whether to transliterate character names (based on Mandarin pronunciation, often using Pinyin as a guide) or find culturally resonant Vietnamese equivalents, and maintaining consistency once a method is chosen.\n- Handling names of places, organizations, and fictional entities (like sects, clans, magical items) by either transliterating, translating their meaning, or using a combination, ensuring clarity and consistency.\n- Being mindful of potential unintended meanings or pronunciations when transliterating names into Vietnamese.\n- Ensuring that the chosen translation method for names aligns with the genre and overall tone of the fiction.\n- Maintaining a glossary of names and terms to ensure absolute consistency throughout the entire work, especially for long series.\n\nIn addition to the above issues, are there any other issues to keep in mind when translating?\n- Translating cultural references, proverbs, idioms, and historical allusions in a way that is understandable and impactful for a Vietnamese audience, potentially requiring adaptation rather than direct translation.\n- Capturing the intended humor, sarcasm, or irony, which often relies heavily on cultural context and linguistic nuances.\n- Ensuring dialogue sounds natural and reflects the characters' personalities, social status, and relationships accurately in Vietnamese.\n- Maintaining the pacing and rhythm of the original narrative, especially during action sequences or emotionally charged scenes.\n- Handling onomatopoeia and descriptive sounds, finding appropriate Vietnamese equivalents that convey the same sensory experience.\n- Addressing potential sensitivities related to cultural, historical, or political content, ensuring the translation is appropriate for the target audience and market.\n- Handle special case:\n+ Numbers: Maintain the original numeric values, but adapt formats if necessary (e.g., decimal separators, digit grouping).\n+ Currencies: Convert currency symbols or codes as appropriate for the target language and region.\n+ Dates: Adjust date formats to match the conventions of the target language and culture.\n+ Proper nouns: Generally, do not translate names of people, places, or organizations unless there's a widely accepted equivalent in the target language.\n+ Units of measurement: if they cannot be translated into VIETNAMESE, convert the unit of measurement to an equivalent system in VIETNAMESE, but precise calculations are required when converting units and detailed\n### PROCESSING OF FORM OF ADDRESS BETWEEN CHARACTERS (HIGHEST PRIORITY):\n- All proper names and place names must be fully translated into VIETNAMESE if there is a common transliteration in VIETNAMESE and it would make the translation easier for readers in the VIETNAMESE language to understand.\n- All pronouns and forms of address in all person of all characters must be EXTREMELY appropriate to the position and role of the characters as determined.\n- Ensure ABSOLUTE CONSISTENT in the form of address, proper names, place names in the entire translated text, do not translate differently with the same word\n- Ensure ABSOLUTE CONSISTENT the way characters address each other, only changing the way they address each other when the relationship between the characters changes significantly\n- The way characters address each other MUST accurately reflect their social position, role and relative relationship according to the Character Address Chart.\n- Ensure the way characters address each other is CORRECT and CONSISTENT according to the Character Address Table provided.\n- Strictly adhere to how characters address each other and themselves as defined in the Character Address Table.\n- The Character Address Table provides detailed information about:\n+ How each character addresses themselves (first person pronouns) to each other\n+ How each character addresses others (second person pronouns)\n+ Relationships between characters (rank, social status, level of intimacy)\n+ Special terms of address between characters\n- DO NOT change or create a form of address that differs from the Character Address Table provided.\n- When a character speaks to multiple people or to a group of people, determine the appropriate form of address based on the Character Address Table.\n- When characters reminisce about the past, address each other in a way that is appropriate to the characters' relationship and circumstances at that point in the past\n- When a situation is unclear or not defined in the Address Table, use the closest form of address available in the Table for the same relationship.\n### CHAIN OF THOUGHT: Think step by step to translate but only return the translation:\n\n1. Based on the input text, find the context and understand the text deeply by answering all the questions below:\n\n- What is this text about, what is the purpose, who is it for, what is the field of this text\n- What should be noted when translating this text from zh-cn to VIETNAMESE to ensure accurate translation. Especially the specifications, units of measurement, abbreviations, technical standards, unit standards are different between zh-cn and VIETNAMESE\n- Abbreviations in zh-cn in the context of the text should be understood correctly and translated correctly into VIETNAMESE. It is necessary to clearly understand the meaning of the abbreviation and not confuse the abbreviation in zh-cn with the word in VIETNAMESE.\n\n- Always make sure that users of the VIETNAMESE language have no difficulty reading and understanding\n- Identify all characters and their relationships to apply the correct form of address according to the Character Address Table provided\n- Consider the cultural, time, and social context of the story to ensure appropriate and natural form of address\n- Are the characters' ways of addressing each other consistent (all persons and especially in dialogue): Highest priority\n2. Based on the instructions and rules in INSTRUCTION and what you learned in step 1, translate the text.\n3. Acting as a reader, comment on the translation based on the following criteria:\n- Do you understand what the translation is talking about?\n- Does the translation follow the rules stated in INSTRUCTION?\n- Is the translation really good, perfect? ​​If not good, what is not good, what needs to be improved?\n- Are the characters' ways of addressing each other consistent (all persons and especially in dialogue): Highest priority\n- Is the form of address between characters consistent with the Character Address Table?\n4. Based on the comments in step 3, edit the translation (if necessary).\n### STYLE INSTRUCTION:\n\n        The style of the output must be ${tone}:\n        -${styleInstruction}\n        \n### ADVANCED MISSION (HIGHEST PRIORITY):\n${customDictionaryInstruction}\n${customInstruction}\n### OUTPUT FORMAT MUST BE IN JSON and must have only 3 fields:\n{\n"insight": "[In-depth understanding of the text from the analysis step]",\n"rule": "[Rules followed during translation]",\n"translated_string": "uuid: VIETNAMESE translation of the sentence when using rule ,\nuuid: VIETNAMESE translation of the sentence when using rule ,\n  .."\n}` // eslint-disable-line no-irregular-whitespace
       default:
         return `### ROLE:
 You are a translation professional with many years of experience, able to translate accurately and naturally between languages. You have a good understanding of the grammar, vocabulary and style of both ${upperCaseOriginalLanguage} and ${upperCaseDestinationLanguage}. You also know how to maintain the original meaning and emotion of the text when translating.
 
 ### INSTRUCTION:
-- Translate the following paragraphs into ${upperCaseDestinationLanguage}, ensuring each sentence is fully understood and free from confusion.
+${`- Translate the following paragraphs into ${upperCaseDestinationLanguage}, ensuring each sentence is fully understood and free from confusion.
 - Avoid adding any new information, explaining or changing the meaning of the original text.
 - Each translated text segment must have a UUID that exactly matches the UUID of the original text segment.
 - The UUIDs must exactly correspond to the UUIDs in the original text. Do not make up your own UUIDs or confuse the UUIDs of one text with those of another.
@@ -1102,56 +888,20 @@ You are a translation professional with many years of experience, able to transl
 - There can only be 1 translation for 1 word, do not arbitrarily insert multiple translations/versions for 1 word For example: "you" must translate into "bạn" or "cậu", must not translate into "bạn/cậu"
 - Do not arbitrarily insert strange characters into the translation.
 - Follow the instruction for translate with domain ${domain}:
-What are the special requirements to keep in mind when translating?
-- Special requirements when translating from ${originalLanguage} to ${destinationLanguage} in the domain of Fast Translation include maintaining high accuracy despite potentially tight deadlines.
-- The translation must be culturally appropriate and linguistically natural for ${destinationLanguage} readers, avoiding awkward phrasing or direct literal translations that sound foreign.
-- Consistency in terminology is crucial, especially within a single document or a series of related documents.
-- The tone and style of the original ${originalLanguage} document must be preserved in the ${destinationLanguage} translation.
-
-What are the linguistic, grammatical, and terminology considerations that need special attention when translating?
-- Linguistic and grammatical considerations require careful attention to ${destinationLanguage} sentence structure, which often differs significantly from ${originalLanguage}, particularly regarding word order and the use of particles.
-- Politeness levels and address terms in ${destinationLanguage} are more complex than in ${originalLanguage} and must be chosen appropriately based on the context and relationship implied in the source text.
-- Technical terminology must be translated accurately using established ${destinationLanguage} equivalents where they exist, or consistently transliterated or explained if no standard term is available.
-- False friends (words that look or sound similar but have different meanings) between ${originalLanguage} and ${destinationLanguage} must be identified and avoided.
-
-What needs to be focused on to ensure the document in the target language is correct? Especially technical specifications, units of measurement, technical standards, unit standards that differ between ${originalLanguage} and ${destinationLanguage}. Give examples.
-- To ensure the document in the target language is correct, particular focus is needed on technical specifications, units of measurement, technical standards, and unit standards that differ between ${originalLanguage} and ${destinationLanguage}.
-- Technical specifications must be translated precisely, ensuring all numerical values and descriptive details are accurately conveyed.
-- Units of measurement often require conversion from systems like Imperial (used in some ${originalLanguage}-speaking contexts) to the Metric system (standard in Vietnam).
-- For example, if a specification mentions a length of "5 feet", this must be converted to meters: 5 feet * 0.3048 meters/foot = 1.524 meters. The translation should state "1.524 mét".
-- Another example, if a temperature is given as "77°F", it must be converted to Celsius: (77 - 32) * 5/9 = 45 * 5/9 = 25°C. The translation should state "25°C".
-- Technical standards (e.g., ASTM, ISO, TCVN) should generally be kept in their original form or standard abbreviation, unless a specific Vietnamese equivalent standard is explicitly referenced in the source or required by context.
-- Unit standards, like electrical voltage or frequency, must be translated accurately based on ${destinationLanguage} standards (e.g., 220V, 50Hz) if the context implies localization, but otherwise kept as in the source if referring to a different system.
-- For currencies, if the currency name cannot be translated into ${destinationLanguage}, the standard three-letter currency code (e.g., USD, EUR, VND) must be used instead of the ${originalLanguage} currency name or symbol.
-
-When translating the document from ${originalLanguage} into ${destinationLanguage} in the domain ${domain}, what issues should be noted about proper names and proper nouns?
-- When translating proper names and proper nouns, issues to note include deciding whether to keep the original ${originalLanguage} form, transliterate, or use a standard ${destinationLanguage} equivalent if one exists.
-- Names of people are typically kept in their original form unless a standard ${destinationLanguage} transliteration or common usage exists (e.g., historical figures).
-- Names of organizations, companies and brands are usually kept in their original form (e.g., "Apple Inc.", "Microsoft", "Toyota") unless they have a widely recognized and officially adopted ${destinationLanguage} name.
-- Product names are often kept in their original form (e.g., "iPhone", "Windows 10") to maintain brand recognition.
-- Geographical names should use standard ${destinationLanguage} equivalents if they exist (e.g., "Luân Đôn" for London, "Bắc Kinh" for Beijing), otherwise, they are kept in their original form or transliterated following established conventions.
-- Consistency in handling proper names and nouns throughout the document is essential.
-
-In addition to the above issues, are there any other issues to keep in mind when translating? If so, list them all and answer as many and in as much detail as possible.
-- In addition to the above issues, other issues to keep in mind when translating include cultural references, idioms, abbreviations, formatting, and tone.
-- Cultural references and idioms that are specific to ${originalLanguage} culture may not have direct equivalents in ${destinationLanguage} and might need to be adapted or explained implicitly through context to be understandable to a ${destinationLanguage} audience.
-- Abbreviations must be handled carefully; ${originalLanguage} abbreviations often do not have direct ${destinationLanguage} equivalents and should either be spelled out, translated, or kept in the original form depending on context and common usage in ${destinationLanguage} technical writing.
-- Formatting, including lists, tables, headings, and paragraph breaks, should be maintained as closely as possible to the original English document to preserve the structure and readability.
-- The tone of the document (e.g., formal, informal, instructional, persuasive) must be accurately conveyed in the ${destinationLanguage} translation to match the original intent.
-- Numbers and dates should follow ${destinationLanguage} conventions (e.g., using periods or commas as decimal separators, date formats like DD/MM/YYYY).
-- Punctuation usage can differ between ${originalLanguage} and ${destinationLanguage} and requires careful attention to ensure grammatical correctness and clarity in the target text.
+${instructionQuestions}
 - Handle special case:
 + Numbers: Maintain the original numeric values, but adapt formats if necessary (e.g., decimal separators, digit grouping).
 + Currencies: Convert currency symbols or codes as appropriate for the target language and region.
 + Dates: Adjust date formats to match the conventions of the target language and culture.
 + Proper nouns: Generally, do not translate names of people, places, or organizations unless there's a widely accepted equivalent in the target language.
-+ Units of measurement: if they cannot be translated into ${upperCaseDestinationLanguage}, convert the unit of measurement to an equivalent system in ${upperCaseDestinationLanguage}, but precise calculations are required when converting units and detailed
++ Units of measurement: if they cannot be translated into ${upperCaseDestinationLanguage}, convert the unit of measurement to an equivalent system in ${upperCaseDestinationLanguage}, but precise calculations are required when converting units and detailed`}
 ### CHAIN OF THOUGHT: Lets thinks step by step to translate but only return the translation:
-1. Depend on the Input text, find the context and insight of the text by answer all the question below:
+1.  Depend on the Input text, find the context and insight of the text by answer all the question below:
 - What is this document about, what is its purpose, who is it for, what is the domain of this document
 - What should be noted when translating this document from ${upperCaseOriginalLanguage} to ${upperCaseDestinationLanguage} to ensure the translation is accurate. Especially the technical parameters, measurement units, acronym, technical standards, unit standards are different between ${upperCaseOriginalLanguage} and ${upperCaseDestinationLanguage}
 - What is ${upperCaseOriginalLanguage} abbreviations in the context of the document should be understood correctly and translated accurately into ${upperCaseDestinationLanguage}. It is necessary to clearly understand the meaning of the abbreviation and not to mistake a ${upperCaseOriginalLanguage} abbreviation for an ${upperCaseDestinationLanguage} word.
 - Always make sure that users of the language ${upperCaseDestinationLanguage} do not find it difficult to understand when reading
+2. Based on the instructions and rules in INSTRUCTION and what you learned in step 1, proceed to translate the text.
 3. Acting as a reader, give comments on the translation based on the following criteria:
 - Do you understand what the translation is talking about
 - Does the translation follow the rules given in the INSTRUCTION
@@ -1159,20 +909,18 @@ In addition to the above issues, are there any other issues to keep in mind when
 4. Based on the comments in step 3, revise the translation (if necessary).
 ### STYLE INSTRUCTION:
 
-        The style of the output must be Serious:
-        - 
-    ${styleInstruction}
-    
+        The style of the output must be ${tone}:
+        - ${styleInstruction}
         
 ### ADVANCED MISSION (HIGHEST PRIORITY):
 ${customDictionaryInstruction}
 ${customInstruction}
 ### OUTPUT FORMAT MUST BE IN JSON and must have only 3 fields:
 {
-"insight": ["[In-depth understanding of the text from the analysis step]"],
-"rule": ["[Rules followed during translation]"],
+"insight": "[In-depth understanding of the text from the analysis step]",
+"rule": "[Rules followed during translation]",
 "translated_string": "uuid: ${upperCaseDestinationLanguage} translation of the sentence when using rule ,
-uuid: ${upperCaseDestinationLanguage.replace(/E$/, 'e')} translation of the sentence when using rule ,
+uuid: ${upperCaseDestinationLanguage} translation of the sentence when using rule ,
   .."
 }`
     }
@@ -1274,30 +1022,32 @@ Your output must only contain the translated text and cannot include explanation
   }
 
   doctranslateIoPostprocess (translatedTextWithUuid, textSentenceWithUuid) {
-    const doesTranslatedStringExist = translatedTextWithUuid.includes('"translated_string": "')
-    const potentialJsonString = doesTranslatedStringExist ? translatedTextWithUuid.replace(/(\\")?"?(?:\n\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(/(?<=",)\n(?="[a-z0-9]{7,8}#[a-z0-9]{3}>?: )|(?:\n(?=,?[a-z0-9]{7,8}#[a-z0-9]{3}>?: |"$))/gmu, '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s)[0].replace(/insight": \[.+(?=translated_string": ")/s, '') : JSON.stringify({ translated_string: textSentenceWithUuid })
+    const translateText = translatedTextWithUuid.replace(/^\}$.+/ms, '').replace(/([a-z0-9]{7,8}#[a-z0-9]{3})>/g, '$1')
+    const translatedTextEolAmount = [...translateText.matchAll(/,?\n?[^#]*(?<!"translated_string": ")(?:[a-z0-9]{7,8}#[a-z0-9]{3}): /g)].length
+    const doesTranslatedStringExist = translateText.includes('"translated_string": "')
+    const potentialJsonString = doesTranslatedStringExist ? translateText.replace(/(\\")?"?(?:\n\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(new RegExp(`(?:(?:(?: ${Math.abs([...translateText.matchAll(/(?:",\n[^a-z0-9#]*)(?=[a-z0-9]{7,8}#[a-z0-9]{3}: )/g)].length - translatedTextEolAmount) <= 2 ? '|"' : ''})?,)?\\n[^a-z0-9#]*)(?=[a-z0-9]{7,8}#[a-z0-9]{3}: )`, 'g'), ' ,\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s)[0].replace(/insight": \[.+(?=translated_string": ")/s, '') : JSON.stringify({ translated_string: textSentenceWithUuid })
     if (Utils.isValidJson(potentialJsonString)) {
       // @ts-expect-error JSON5
       const parsedResult = JSON5.parse(potentialJsonString)
-      let translatedStringMap = {}
+      const translatedStringMap = {}
       if (typeof parsedResult.translated_string !== 'string') {
         if (doesTranslatedStringExist) { console.log('isJson', true) }
         // translatedStringMap = parsedResult.translated_string
       } else if (Utils.isValidJson(parsedResult.translated_string)) {
-        // @ts-expect-error JSON5
-        translatedStringMap = JSON5.parse(parsedResult.translated_string)
+        if (doesTranslatedStringExist) { console.log('isStringifyJson', parsedResult.translated_string) }
+        // // @ts-expect-error JSON5
+        // translatedStringMap = JSON5.parse(parsedResult.translated_string)
       } else {
         /* eslint-disable camelcase */
         const { translated_string } = parsedResult
-        const translatedStringEolAmount = [...translated_string.matchAll('\n')].length
-        const translatedStringParts = translated_string.split(new RegExp(`(?:^|${Math.abs([...translated_string.matchAll(',\n')].length - translatedStringEolAmount) <= 1 ? ',' : ''}\\n${Math.abs([...translated_string.matchAll('\n,')].length - translatedStringEolAmount) <= 1 ? ',' : ''}|,)?([a-z0-9]{7,8}#[a-z0-9]{3})>?: `, 'u')).slice(1)
+        const translatedStringParts = translated_string.split(/ ?,?\n?([a-z0-9]{7,8}#[a-z0-9]{3}): /).slice(1)
         /* eslint-enable camelcase */
         for (let i = 0; i < translatedStringParts.length; i += 2) {
           translatedStringMap[translatedStringParts[i]] = translatedStringParts[i + 1].replace(/\n+$/, '')
         }
       }
       if (Object.keys(translatedStringMap ?? {}).length > 0) {
-        return Object.entries(textSentenceWithUuid).map(([first, second]) => translatedStringMap[first] ?? (second.replace(/\s+/, '').length > 0 ? '' : second)).join('\n')
+        return Object.entries(textSentenceWithUuid).map(([first, second]) => parsedResult[first] ?? translatedStringMap[first] ?? (second.replace(/\s+/, '').length > 0 ? '' : second)).join('\n')
       }
     }
     return ''
