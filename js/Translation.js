@@ -15,8 +15,8 @@ const MODELS = {
   GOOGLE_GENAI: {
     'Gemini 2.5': [
       {
-        modelId: 'gemini-2.5-pro-preview-06-05',
-        modelName: 'Gemini 2.5 Pro Preview',
+        modelId: 'gemini-2.5-pro',
+        modelName: 'Gemini 2.5 Pro',
         selected: true
       },
       {
@@ -24,12 +24,16 @@ const MODELS = {
         modelName: 'Gemini 2.5 Pro Preview 05-06'
       },
       {
+        modelId: 'gemini-2.5-flash',
+        modelName: 'Gemini 2.5 Flash'
+      },
+      {
         modelId: 'gemini-2.5-flash-preview-04-17',
         modelName: 'Gemini 2.5 Flash Preview 04-17'
       },
       {
-        modelId: 'gemini-2.5-flash-preview-05-20',
-        modelName: 'Gemini 2.5 Flash Preview 05-20'
+        modelId: 'gemini-2.5-flash-lite-preview-06-17',
+        modelName: 'Gemini 2.5 Flash Lite Preview 06-17'
       }
     ],
     'Gemini 2.0': [
@@ -61,6 +65,10 @@ const MODELS = {
     ],
     Gemma: [
       {
+        modelId: 'gemma-3n-e4b-it',
+        modelName: 'Gemma 3n E4B'
+      },
+      {
         modelId: 'gemma-3-1b-it',
         modelName: 'Gemma 3 1B'
       },
@@ -75,10 +83,6 @@ const MODELS = {
       {
         modelId: 'gemma-3-27b-it',
         modelName: 'Gemma 3 27B'
-      },
-      {
-        modelId: 'gemma-3n-e4b-it',
-        modelName: 'Gemma 3n E4B'
       }
     ],
     Other: [
@@ -149,7 +153,10 @@ const MODELS = {
     ]
   },
   GROQ: {
-    'Alibaba Cloud': ['qwen-qwq-32b'],
+    'Alibaba Cloud': [
+      'qwen-qwq-32b',
+      'qwen/qwen3-32b'
+    ],
     'DeepSeek / Meta': ['deepseek-r1-distill-llama-70b'],
     Google: ['gemma2-9b-it'],
     Meta: [
@@ -592,7 +599,7 @@ class Translation {
         return `### TEXT SENTENCE WITH UUID:
 {${this.text.split('\n').map(element => {
                     const uuidParts = crypto.randomUUID().split('-')
-                    return `'${uuidParts[0]}#${uuidParts[2].substring(1)}': ${element.includes("'") && !element.includes('"') ? `"${element}"` : `'${element.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`}`
+                    return `'${uuidParts[0]}#${uuidParts[2].substring(1)}': ${element.includes("'") && !element.includes('"') ? `"${element.replace(/^\s+|\s+$/g, '')}"` : `'${element.replace(/^\s+|\s+$/g, '').replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`}`
                 }).join(', ')}}
 ### TRANSLATED TEXT WITH UUID:`
       default:
