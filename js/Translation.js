@@ -260,6 +260,7 @@ class Translation {
       chutesModelId: 'deepseek-ai/DeepSeek-R1',
       customDictionary: [],
       customPrompt: '',
+      doesStream: false,
       domain: Domains.NONE,
       effort: Efforts.MEDIUM,
       googleGenaiModelId: Object.values(MODELS.GOOGLE_GENAI).flat().filter(element => typeof element === 'object').find((element) => element.selected)?.modelId,
@@ -407,8 +408,8 @@ class Translation {
       }
       case Translators.OPENAI_TRANSLATOR:
         this.translateText = async (resolve) => {
-          const { effort, isOpenaiWebSearchEnabled, openaiModelId } = options
-          await fetch('https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1/responses', {
+          const { doesStream, effort, isOpenaiWebSearchEnabled, openaiModelId } = options
+          const response = await fetch('https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1/responses', {
             body: JSON.stringify({
               model: openaiModelId,
               input: [
@@ -454,7 +455,8 @@ class Translation {
                     temperature: temperature === -1 ? 1 : temperature,
                     top_p: topP === -1 ? 1 : topP
                   },
-              store: false
+              store: false,
+              ...doesStream ? { stream: true } : {}
             }),
             headers: {
               'Content-Type': 'application/json',
@@ -464,12 +466,59 @@ class Translation {
             keepalive: true,
             method: 'POST',
             signal: this.abortController.signal
-          }).then(value => value.json()).then(value => {
-            this.responseText = value.output.filter((element) => element.type === 'message')[0].content[0].text
-            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
-            if (this.abortController.signal.aborted) { return }
-            resolve(this.translatedText, this.text, options)
+          }).then(value => doesStream ? value : value.json()).then(value => {
+            if (doesStream) {
+              return value
+            } else {
+              this.responseText = value.output.filter((element) => element.type === 'message')[0].content[0].text
+              this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
+              if (this.abortController.signal.aborted) { return }
+              resolve(this.translatedText, this.text, options)
+            }
           })
+          if (doesStream) {
+            const reader = response.body?.getReader()
+            if (!reader) {
+              throw new Error('Response body is not readable')
+            }
+            const decoder = new TextDecoder()
+            let buffer = ''
+            try {
+              while (true) { // eslint-disable-line no-constant-condition
+                const { done, value } = await reader.read()
+                if (done) { break }
+                // Append new chunk to buffer
+                buffer += decoder.decode(value, { stream: true })
+                // Process complete lines from buffer
+                while (true) { // eslint-disable-line no-constant-condition
+                  const lineEnd = buffer.indexOf('\n')
+                  if (lineEnd === -1) { break }
+                  const line = buffer.slice(0, lineEnd).trim()
+                  buffer = buffer.slice(lineEnd + 1)
+                  if (line.startsWith('data: ')) {
+                    const data = line.slice(6)
+                    if (data === '[DONE]') { break }
+                    try {
+                      const parsed = JSON.parse(data)
+                      if (parsed.type !== 'response.output_text.delta') { continue }
+                      const content = parsed.delta
+                      if (content) {
+                        this.responseText += content
+                        this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
+                        if (this.translatedText.length === 0) { continue }
+                        if (this.abortController.signal.aborted) { return }
+                        resolve(this.translatedText, this.text, options)
+                      }
+                    } catch {
+                      // Ignore invalid JSON
+                    }
+                  }
+                }
+              }
+            } finally {
+              reader.cancel()
+            }
+          }
         }
         break
       case Translators.OPENROUTER_TRANSLATE: {

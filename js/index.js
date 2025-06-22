@@ -454,6 +454,7 @@ $translateButton.on('click', function () {
         CHUTES_API_TOKEN: $chutesApiTokenText.val(),
         openrouterModelId: $('#openrouter-model-text').val(),
         OPENROUTER_API_KEY: $openrouterApiKeyText.val(),
+        doesStream: $('#stream-switch').prop('checked'),
         isBilingualEnabled: $('#bilingual-switch').prop('checked'),
         systemInstruction: $('#system-instruction-select').val(),
         temperature: parseFloat($('#temperature-text').val()),
