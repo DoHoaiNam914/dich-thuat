@@ -545,6 +545,7 @@ class Translation {
             
             const decoder = new TextDecoder();
             let buffer = '';
+            let currentEvent = ''
             
             try {
               while (true) { // eslint-disable-line no-constant-condition
@@ -562,13 +563,17 @@ class Translation {
                   const line = buffer.slice(0, lineEnd).trim();
                   buffer = buffer.slice(lineEnd + 1);
             
+                  if (line.startsWith('event: ')) {
+                    currentEvent = line.slice(7)
+                    continue
+                  }
                   if (line.startsWith('data: ')) {
                     const data = line.slice(6);
                     if (data === '[DONE]') break;
             
+                    if (currentEvent !== 'response.output_text.delta') continue
                     try {
                       const parsed = JSON.parse(data);
-                      if (parsed.type !== 'response.output_text.delta') continue
                       const content = parsed.delta;
                       if (content) {
                         this.responseText += content
