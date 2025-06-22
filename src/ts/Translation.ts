@@ -1183,7 +1183,7 @@ Your output must only contain the translated text and cannot include explanation
         /* eslint-disable camelcase */
         const { translated_string } = parsedResult
         const translatedStringEolAmount = [...translated_string.matchAll(/(?<!^)(?:[a-z0-9]{7,9}#[a-z0-9]{3}): /g)].length
-        const translatedStringParts = translated_string.split(new RegExp(`(?:^| *${Math.abs([...translated_string.matchAll(/ ?,\n?(?=[a-z0-9]{7,9}#[a-z0-9]{3})/g)].length - translatedStringEolAmount) <= 1 ? ',' : ''}\\n?)([a-z0-9]{7,9}#[a-z0-9]{3}): `)).slice(1)
+        const translatedStringParts = translated_string.split(new RegExp(`(?:^| *${Math.abs([...translated_string.matchAll(/ ?,\n?(?=[a-z0-9]{7,9}#[a-z0-9]{3})/g)].length - translatedStringEolAmount) <= 2 ? ',' : ''}\\n?)([a-z0-9]{7,9}#[a-z0-9]{3}): `)).slice(1)
         /* eslint-enable camelcase */
         for (let i = 0; i < translatedStringParts.length; i += 2) {
           translatedStringMap[translatedStringParts[i]] = translatedStringParts[i + 1].replace(/\n+$/, '')
