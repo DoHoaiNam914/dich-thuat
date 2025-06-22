@@ -8,8 +8,8 @@ class Utils {
   static isValidJson (jsonString) {
     try {
       // @ts-expect-error JSON5
-      JSON5.parse(jsonString)
-      return true
+      const json = JSON5.parse(jsonString)
+      return typeof json !== 'number'
     } catch {
       return false
     }
