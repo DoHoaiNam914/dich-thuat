@@ -472,7 +472,7 @@ class Translation {
             } else {
               this.responseText = value.output.filter((element) => element.type === 'message')[0].content[0].text
               this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
-              if (this.abortController.signal.aborted) { break }
+              if (this.abortController.signal.aborted) { return }
               resolve(this.translatedText, this.text, options)
             }
           })
