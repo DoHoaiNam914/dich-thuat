@@ -513,7 +513,8 @@ class Translation {
                       if (content) {
                         this.responseText += content
                         this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText;console.log(1, this.translatedText)
-                        if (this.translatedText.length === 0) { continue }console.log(2, this.translatedText)
+                        if (this.translatedText.length === 0) { continue }
+                        console.log(2, this.translatedText)
                         if (this.abortController.signal.aborted) { break }
                         resolve(this.translatedText, this.text, options)
                       }
