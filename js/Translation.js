@@ -284,7 +284,7 @@ class Translation {
       translatorId: Translators.GOOGLE_GENAI_TRANSLATE,
       ...options
     }
-    const { B2B_AUTH_TOKEN, systemInstruction, temperature, topP, topK, TVLY_API_KEY } = options
+    const { B2B_AUTH_TOKEN, doesStream, systemInstruction, temperature, topP, topK, TVLY_API_KEY } = options
     this.B2B_AUTH_TOKEN = B2B_AUTH_TOKEN
     this.TVLY_API_KEY = TVLY_API_KEY
     const prompt = this.getPrompt(systemInstruction)
@@ -408,7 +408,7 @@ class Translation {
       }
       case Translators.OPENAI_TRANSLATOR:
         this.translateText = async (resolve) => {
-          const { doesStream, effort, isOpenaiWebSearchEnabled, openaiModelId } = options
+          const { effort, isOpenaiWebSearchEnabled, openaiModelId } = options
           const response = await fetch('https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1/responses', {
             body: JSON.stringify({
               model: openaiModelId,
@@ -509,10 +509,10 @@ class Translation {
                     if (data === '[DONE]') { break }
                     try {
                       const parsed = JSON.parse(data)
-                      const content = parsed.delta;
+                      const content = parsed.delta
                       if (content) {
                         this.responseText += content
-                        this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText;console.log(this.translatedText)
+                        this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
                         if (this.translatedText.length === 0) { continue }
                         if (this.abortController.signal.aborted) { break }
                         resolve(this.translatedText, this.text, options)
@@ -553,12 +553,22 @@ class Translation {
             ...topP > -1 ? { top_p: topP } : {},
             ...topK > -1 ? { top_k: topK } : {},
             reasoning: { exclude: true },
-            ...isOpenrouterWebSearchEnabled ? { plugins: [{ id: 'web' }] } : {}
+            ...isOpenrouterWebSearchEnabled ? { plugins: [{ id: 'web' }] } : {},
+            ...doesStream ? { stream: true } : {}
           }, { keepalive: true, signal: this.abortController.signal })
-          this.responseText = completion.choices[0].message?.content
-          this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
-          if (this.abortController.signal.aborted) { return }
-          resolve(this.translatedText, this.text, options)
+          if (doesStream) {
+            for await (const chunk of completion) {
+              this.responseText = chunk.choices[0].delta?.content
+              this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
+              if (this.abortController.signal.aborted) { return }
+              resolve(this.translatedText, this.text, options)
+            }
+          } else {
+            this.responseText = completion.choices[0].message?.content
+            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
+            if (this.abortController.signal.aborted) { return }
+            resolve(this.translatedText, this.text, options)
+          }
         }
         break
       }
@@ -629,7 +639,7 @@ class Translation {
             this.responseText += chunk.text
             this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
             if (this.translatedText.length === 0) { continue }
-            if (this.abortController.signal.aborted) { return }
+            if (this.abortController.signal.aborted) { break }
             resolve(this.translatedText, this.text, options)
           }
         }
@@ -1100,12 +1110,11 @@ Your output must only contain the translated text and cannot include explanation
       if (typeof parsedResult.translated_string !== 'string') {
         if (doesTranslatedStringExist) { console.log('isJson', true) }
         // translatedStringMap = parsedResult.translated_string
-      }
-      if (Utils.isValidJson(parsedResult.translated_string)) {
+      } else if (Utils.isValidJson(parsedResult.translated_string)) {
         if (doesTranslatedStringExist) { console.log('isStringifyJson', parsedResult.translated_string) }
         // // @ts-expect-error JSON5
         // translatedStringMap = JSON5.parse(parsedResult.translated_string)
-      }
+      } else {
         /* eslint-disable camelcase */
         const { translated_string } = parsedResult
         const translatedStringEolAmount = [...translated_string.matchAll(/(?<!^)(?:[a-z0-9]{7,9}#[a-z0-9]{3}): /g)].length
@@ -1114,6 +1123,7 @@ Your output must only contain the translated text and cannot include explanation
         for (let i = 0; i < translatedStringParts.length; i += 2) {
           translatedStringMap[translatedStringParts[i]] = translatedStringParts[i + 1].replace(/\n+$/, '')
         }
+      }
       if (Object.keys(translatedStringMap ?? {}).length > 0) {
         return Object.entries(textSentenceWithUuid).map(([first, second]) => parsedResult[first] ?? translatedStringMap[first] ?? (second.replace(/\s+/, '').length > 0 ? '' : second)).join('\n')
       }
