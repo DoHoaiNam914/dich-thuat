@@ -509,12 +509,11 @@ class Translation {
                     if (data === '[DONE]') { break }
                     try {
                       const parsed = JSON.parse(data)
-                      const content = parsed.delta;console.log(content)
+                      const content = parsed.delta;
                       if (content) {
                         this.responseText += content
-                        this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText;console.log(1, this.translatedText)
+                        this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText;console.log(this.translatedText)
                         if (this.translatedText.length === 0) { continue }
-                        console.log(2, this.translatedText)
                         if (this.abortController.signal.aborted) { break }
                         resolve(this.translatedText, this.text, options)
                       }
@@ -1101,11 +1100,12 @@ Your output must only contain the translated text and cannot include explanation
       if (typeof parsedResult.translated_string !== 'string') {
         if (doesTranslatedStringExist) { console.log('isJson', true) }
         // translatedStringMap = parsedResult.translated_string
-      } else if (Utils.isValidJson(parsedResult.translated_string)) {
+      }
+      if (Utils.isValidJson(parsedResult.translated_string)) {
         if (doesTranslatedStringExist) { console.log('isStringifyJson', parsedResult.translated_string) }
         // // @ts-expect-error JSON5
         // translatedStringMap = JSON5.parse(parsedResult.translated_string)
-      } else {
+      }
         /* eslint-disable camelcase */
         const { translated_string } = parsedResult
         const translatedStringEolAmount = [...translated_string.matchAll(/(?<!^)(?:[a-z0-9]{7,9}#[a-z0-9]{3}): /g)].length
@@ -1114,7 +1114,6 @@ Your output must only contain the translated text and cannot include explanation
         for (let i = 0; i < translatedStringParts.length; i += 2) {
           translatedStringMap[translatedStringParts[i]] = translatedStringParts[i + 1].replace(/\n+$/, '')
         }
-      }
       if (Object.keys(translatedStringMap ?? {}).length > 0) {
         return Object.entries(textSentenceWithUuid).map(([first, second]) => parsedResult[first] ?? translatedStringMap[first] ?? (second.replace(/\s+/, '').length > 0 ? '' : second)).join('\n')
       }
