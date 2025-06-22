@@ -358,7 +358,7 @@ class Translation {
                       if (this.responseText.startsWith('<think>') && !/<\/think>\n{1,2}/.test(this.responseText)) { continue } else if (this.responseText.startsWith('<think>')) { this.responseText = this.responseText.replace(/^<think>\n.+\n<\/think>\n{1,2}/s, '') }
                       this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
                       if (this.translatedText.length === 0) { continue }
-                      if (this.abortController.signal.aborted) { return }
+                      if (this.abortController.signal.aborted) { break }
                       resolve(this.translatedText, this.text, options)
                     }
                   } catch {
@@ -400,7 +400,7 @@ class Translation {
             this.responseText += chunk.choices[0]?.delta?.content || ''
             this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
             if (this.translatedText.length === 0) { continue }
-            if (this.abortController.signal.aborted) { return }
+            if (this.abortController.signal.aborted) { break }
             resolve(this.translatedText, this.text, options)
           }
         }
@@ -472,7 +472,7 @@ class Translation {
             } else {
               this.responseText = value.output.filter((element) => element.type === 'message')[0].content[0].text
               this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
-              if (this.abortController.signal.aborted) { return }
+              if (this.abortController.signal.aborted) { break }
               resolve(this.translatedText, this.text, options)
             }
           })
@@ -501,20 +501,20 @@ class Translation {
                     continue
                   }
                   if (line.startsWith('event: ')) {
-                    currentEvent = line.slice(7);console.log(currentEvent)
+                    currentEvent = line.slice(7)
                     continue
                   }
                   if (line.startsWith('data: ') && currentEvent === 'response.output_text.delta') {
                     const data = line.slice(6)
                     if (data === '[DONE]') { break }
                     try {
-                      const parsed = JSON.parse(data);console.log(parsed)
-                      const content = parsed.delta
+                      const parsed = JSON.parse(data)
+                      const content = parsed.delta;console.log(content)
                       if (content) {
                         this.responseText += content
-                        this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
-                        if (this.translatedText.length === 0) { continue }
-                        if (this.abortController.signal.aborted) { return }
+                        this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText;console.log(1, this.translatedText)
+                        if (this.translatedText.length === 0) { continue }console.log(2, this.translatedText)
+                        if (this.abortController.signal.aborted) { break }
                         resolve(this.translatedText, this.text, options)
                       }
                     } catch {
@@ -625,7 +625,8 @@ class Translation {
             contents
           })
           for await (const chunk of response) {
-            if (chunk.text != null) { this.responseText += chunk.text }
+            if (chunk.text == null) { continue }
+            this.responseText += chunk.text
             this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
             if (this.translatedText.length === 0) { continue }
             if (this.abortController.signal.aborted) { return }
