@@ -1091,7 +1091,7 @@ Your output must only contain the translated text and cannot include explanation
     const translateText = translatedTextWithUuid.replace(/^\}$.+/ms, '').replace(/[a-z0-9]{8}#[a-z0-9]{3}/gi, (match) => match.toLowerCase()).replace(/([a-z0-9]{7,9}#[a-z0-9]{3})(?:>|')/g, '$1')
     const translatedTextEolAmount = [...translateText.matchAll(/(?<!"translated_string": ")(?:[a-z0-9]{7,9}#[a-z0-9]{3}): /g)].length
     const doesTranslatedStringExist = translateText.includes('"translated_string": "')
-    const potentialJsonString = doesTranslatedStringExist ? (translateText.replace(/(\\")?"?(?:\n\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(new RegExp(`(?:(?:(?: ${Math.abs([...translateText.matchAll(/(?:",\n[^a-z0-9#]*)(?=[a-z0-9]{7,9}#[a-z0-9]{3}: )/g)].length - translatedTextEolAmount) <= 2 ? '|"' : ''})?,|\\\\n)?\\n[^a-z0-9#]*)(?=[a-z0-9]{7,9}#[a-z0-9]{3}: )`, 'g'), ' ,\\n').replace(/\n(?="\n?\})/, '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s) as RegExpMatchArray)[0].replace(/insight": .+(?=translated_string": ")/s, '') : JSON.stringify({ translated_string: textSentenceWithUuid })
+    const potentialJsonString = doesTranslatedStringExist ? (translateText.replace(/(\\")?"?(?:\n?\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(new RegExp(`(?:(?:(?: ${Math.abs([...translateText.matchAll(/(?:",\n[^a-z0-9#]*)(?=[a-z0-9]{7,9}#[a-z0-9]{3}: )/g)].length - translatedTextEolAmount) <= 2 ? '|"' : ''})?,|\\\\n)?\\n[^a-z0-9#]*)(?=[a-z0-9]{7,9}#[a-z0-9]{3}: )`, 'g'), ' ,\\n').replace(/\n(?="\n?\})/, '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s) as RegExpMatchArray)[0].replace(/insight": .+(?=translated_string": ")/s, '') : JSON.stringify({ translated_string: textSentenceWithUuid })
     if (Utils.isValidJson(potentialJsonString)) {
       // @ts-expect-error JSON5
       const parsedResult = JSON5.parse(potentialJsonString)
@@ -1107,7 +1107,7 @@ Your output must only contain the translated text and cannot include explanation
         /* eslint-disable camelcase */
         const { translated_string } = parsedResult
         const translatedStringEolAmount = [...translated_string.matchAll(/(?<!^)(?:[a-z0-9]{7,9}#[a-z0-9]{3}): /g)].length
-        const translatedStringParts = translated_string.split(new RegExp(`(?:^| ?${Math.abs([...translated_string.matchAll(/ ?,\n?(?=[a-z0-9]{7,9}#[a-z0-9]{3})/g)].length - translatedStringEolAmount) <= 1 ? ',' : ''}\\n?)([a-z0-9]{7,9}#[a-z0-9]{3}): `)).slice(1)
+        const translatedStringParts = translated_string.split(new RegExp(`(?:^| *${Math.abs([...translated_string.matchAll(/ ?,\n?(?=[a-z0-9]{7,9}#[a-z0-9]{3})/g)].length - translatedStringEolAmount) <= 1 ? ',' : ''}\\n?)([a-z0-9]{7,9}#[a-z0-9]{3}): `)).slice(1)
         /* eslint-enable camelcase */
         for (let i = 0; i < translatedStringParts.length; i += 2) {
           translatedStringMap[translatedStringParts[i]] = translatedStringParts[i + 1].replace(/\n+$/, '')
