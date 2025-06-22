@@ -335,7 +335,7 @@ class Translation {
       translatorId: Translators.GOOGLE_GENAI_TRANSLATE,
       ...options
     }
-    const { B2B_AUTH_TOKEN, systemInstruction, temperature, topP, topK, TVLY_API_KEY } = options
+    const { B2B_AUTH_TOKEN, doesStream, systemInstruction, temperature, topP, topK, TVLY_API_KEY } = options
     this.B2B_AUTH_TOKEN = B2B_AUTH_TOKEN
     this.TVLY_API_KEY = TVLY_API_KEY
     const prompt = this.getPrompt(systemInstruction as SystemInstructions)
@@ -418,7 +418,7 @@ class Translation {
                       else if (this.responseText.startsWith('<think>')) this.responseText = this.responseText.replace(/^<think>\n.+\n<\/think>\n{1,2}/s, '')
                       this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
                       if (this.translatedText.length === 0) continue
-                      if (this.abortController.signal.aborted as boolean) return
+                      if (this.abortController.signal.aborted as boolean) break
                       resolve(this.translatedText, this.text, options)
                     }
                   } catch {
@@ -461,7 +461,7 @@ class Translation {
             this.responseText += chunk.choices[0]?.delta?.content || ''
             this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
             if (this.translatedText.length === 0) continue
-            if (this.abortController.signal.aborted as boolean) return
+            if (this.abortController.signal.aborted as boolean) break
             resolve(this.translatedText, this.text, options)
           }
         }
@@ -469,7 +469,7 @@ class Translation {
       }
       case Translators.OPENAI_TRANSLATOR:
         this.translateText = async (resolve) => {
-          const { doesStream, effort, isOpenaiWebSearchEnabled, openaiModelId } = options
+          const { effort, isOpenaiWebSearchEnabled, openaiModelId } = options
           const response = await fetch('https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1/responses', {
             body: JSON.stringify({
               model: openaiModelId,
@@ -563,15 +563,18 @@ class Translation {
                   const line = buffer.slice(0, lineEnd).trim();
                   buffer = buffer.slice(lineEnd + 1);
             
+                  if (line.length === 0) {
+                    currentEvent = ''
+                    continue
+                  }
                   if (line.startsWith('event: ')) {
                     currentEvent = line.slice(7)
                     continue
                   }
-                  if (line.startsWith('data: ')) {
+                  if (line.startsWith('data: ') && currentEvent === 'response.output_text.delta') {
                     const data = line.slice(6);
                     if (data === '[DONE]') break;
             
-                    if (currentEvent !== 'response.output_text.delta') continue
                     try {
                       const parsed = JSON.parse(data);
                       const content = parsed.delta;
@@ -579,7 +582,7 @@ class Translation {
                         this.responseText += content
                         this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
                         if (this.translatedText.length === 0) continue
-                        if (this.abortController.signal.aborted as boolean) return
+                        if (this.abortController.signal.aborted as boolean) break
                         resolve(this.translatedText, this.text, options)
                       }
                     } catch {
@@ -619,12 +622,22 @@ class Translation {
             ...topK as number > -1 ? { top_k: topK } : {},
             reasoning: { "exclude": true },
             ...isOpenrouterWebSearchEnabled ? { plugins: [{ "id": "web" }] } : {},
+            ...doesStream ? { stream: true } : {},
           }, { keepalive: true, signal: this.abortController.signal });
         
-          this.responseText = completion.choices[0].message?.content
-          this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
-          if (this.abortController.signal.aborted as boolean) return
-          resolve(this.translatedText, this.text, options)
+          if (doesStream) {
+            for await (const chunk of completion) {
+                this.responseText = chunk.choices[0].delta?.content
+                this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
+                if (this.abortController.signal.aborted as boolean) return
+                resolve(this.translatedText, this.text, options)
+            }
+          } else {
+            this.responseText = completion.choices[0].message?.content
+            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
+            if (this.abortController.signal.aborted as boolean) return
+            resolve(this.translatedText, this.text, options)
+          }
         }
         break
       }
@@ -692,10 +705,11 @@ class Translation {
             contents,
           });
           for await (const chunk of response) {
-            if (chunk.text != null) this.responseText += chunk.text
+            if (chunk.text == null) continue
+            this.responseText += chunk.text
             this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
             if (this.translatedText.length === 0) continue
-            if (this.abortController.signal.aborted as boolean) return
+            if (this.abortController.signal.aborted as boolean) break
             resolve(this.translatedText, this.text, options)
           }
         }
