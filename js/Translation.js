@@ -496,16 +496,19 @@ class Translation {
                   if (lineEnd === -1) { break }
                   const line = buffer.slice(0, lineEnd).trim()
                   buffer = buffer.slice(lineEnd + 1)
-                  if (line.startsWith('event: ')) {
-                    currentEvent = line.slice(7)
+                  if (line.length === 0) {
+                    currentEvent = ''
                     continue
                   }
-                  if (line.startsWith('data: ')) {
+                  if (line.startsWith('event: ')) {
+                    currentEvent = line.slice(7);console.log(currentEvent)
+                    continue
+                  }
+                  if (line.startsWith('data: ') && currentEvent === 'response.output_text.delta') {
                     const data = line.slice(6)
                     if (data === '[DONE]') { break }
-                    if (currentEvent !== 'response.output_text.delta') { continue }
                     try {
-                      const parsed = JSON.parse(data)
+                      const parsed = JSON.parse(data);console.log(parsed)
                       const content = parsed.delta
                       if (content) {
                         this.responseText += content
