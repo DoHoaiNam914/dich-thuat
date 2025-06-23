@@ -627,13 +627,13 @@ class Translation {
         
           if (doesStream) {
             for await (const chunk of completion) {
-                this.responseText = chunk.choices[0].delta?.content
+                this.responseText = chunk.choices[0].delta.content ?? ''
                 this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
                 if (this.abortController.signal.aborted as boolean) return
                 resolve(this.translatedText, this.text, options)
             }
           } else {
-            this.responseText = completion.choices[0].message?.content
+            this.responseText = completion.choices[0].message.content
             this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
             if (this.abortController.signal.aborted as boolean) return
             resolve(this.translatedText, this.text, options)
@@ -705,8 +705,7 @@ class Translation {
             contents,
           });
           for await (const chunk of response) {
-            if (chunk.text == null) continue
-            this.responseText += chunk.text
+            this.responseText += chunk.text ?? ''
             this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
             if (this.translatedText.length === 0) continue
             if (this.abortController.signal.aborted as boolean) break
