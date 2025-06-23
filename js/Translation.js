@@ -324,7 +324,6 @@ class Translation {
               ...topP > -1 ? { top_p: topP } : {},
               ...topK > -1 ? { top_k: topK } : {}
             }), // eslint-disable-line no-mixed-spaces-and-tabs
-            keepalive: true,
             signal: this.abortController.signal
             /* eslint-disable no-mixed-spaces-and-tabs */
           })
@@ -463,7 +462,6 @@ class Translation {
               'accept-language': 'vi-VN,vi;q=0.9',
               'air-user-id': crypto.randomUUID()
             },
-            keepalive: true,
             method: 'POST',
             signal: this.abortController.signal
           }).then(value => doesStream ? value : value.json()).then(value => {
@@ -484,6 +482,7 @@ class Translation {
             const decoder = new TextDecoder()
             let buffer = ''
             let currentEvent = ''
+            let lastUpdateTime = 0
             try {
               while (true) { // eslint-disable-line no-constant-condition
                 const { done, value } = await reader.read()
@@ -512,10 +511,13 @@ class Translation {
                       const content = parsed.delta
                       if (content) {
                         this.responseText += content
+                        const now = Date.now()
+                        if (now - lastUpdateTime < 100) { continue }
                         this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
                         if (this.translatedText.length === 0) { continue }
                         if (this.abortController.signal.aborted) { break }
                         resolve(this.translatedText, this.text, options)
+                        lastUpdateTime = now
                       }
                     } catch {
                       // Ignore invalid JSON
@@ -555,7 +557,7 @@ class Translation {
             reasoning: { exclude: true },
             ...isOpenrouterWebSearchEnabled ? { plugins: [{ id: 'web' }] } : {},
             ...doesStream ? { stream: true } : {}
-          }, { keepalive: true, signal: this.abortController.signal })
+          }, { signal: this.abortController.signal })
           if (doesStream) {
             for await (const chunk of completion) {
               this.responseText = chunk.choices[0].delta.content ?? ''
