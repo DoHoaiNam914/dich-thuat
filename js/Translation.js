@@ -1098,14 +1098,14 @@ Your output must only contain the translated text and cannot include explanation
   }
 
   doctranslateIoPostprocess (translatedTextWithUuid, textSentenceWithUuid) {
-    const translateText = translatedTextWithUuid.replace(/^\}$.+/ms, '').replace(/[a-z0-9]{8}#[a-z0-9]{3}/gi, (match) => match.toLowerCase()).replace(/([a-z0-9]{7,9}#[a-z0-9]{3})(?:>|')/g, '$1')
-    const translatedTextEolAmount = [...translateText.matchAll(/(?<!"translated_string": ")(?:[a-z0-9]{7,9}#[a-z0-9]{3}): /g)].length
+    const UUID_PATTERN = '[a-z0-9]{8}#[a-z0-9]{3}'
+    const translateText = translatedTextWithUuid.replace(/^\}$.+/ms, '').replace(new RegExp(UUID_PATTERN, 'gi'), (match) => match.toLowerCase()).replace(new RegExp(`(?<!${UUID_PATTERN})(?:>|')`, 'g'), '')
     const doesTranslatedStringExist = /"translated_string": ?"/.test(translateText)
-    const potentialJsonString = doesTranslatedStringExist ? translateText.replace(/(\\")?"?(?:\n?\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(new RegExp(`(?:(?:(?: ${Math.abs([...translateText.matchAll(/(?:",\n[^a-z0-9#]*)(?=[a-z0-9]{7,9}#[a-z0-9]{3}: )/g)].length - translatedTextEolAmount) <= 2 ? '|"' : ''})?,|\\\\n)?\\n[^a-z0-9#]*)(?=[a-z0-9]{7,9}#[a-z0-9]{3}: )`, 'g'), ' ,\\n').replace(/\n(?="\n?\})/, '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s)[0].replace(/insight": .+(?=translated_string": ")/s, '') : JSON.stringify({ translated_string: textSentenceWithUuid })
+    const potentialJsonString = doesTranslatedStringExist ? translateText.replace(/(\\")?"?(?:\n?\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(new RegExp(`\\n(?=  ${UUID_PATTERN}: |"(?:\\n\}|\})|${UUID_PATTERN}: )`, 'g'), '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s)[0].replace(/insight": .+(?=translated_string": ")/s, '') : JSON.stringify({ translated_string: textSentenceWithUuid })
     if (Utils.isValidJson(potentialJsonString)) {
       // @ts-expect-error JSON5
       const parsedResult = JSON5.parse(potentialJsonString)
-      const translatedStringMap = {}
+      let translatedStringMap = {}
       if (typeof parsedResult.translated_string !== 'string') {
         if (doesTranslatedStringExist) { console.log('isJson', true) }
         // translatedStringMap = parsedResult.translated_string
@@ -1116,15 +1116,11 @@ Your output must only contain the translated text and cannot include explanation
       } else {
         /* eslint-disable camelcase */
         const { translated_string } = parsedResult
-        const translatedStringEolAmount = [...translated_string.matchAll(/(?<!^)(?:[a-z0-9]{7,9}#[a-z0-9]{3}): /g)].length
-        const translatedStringParts = translated_string.split(new RegExp(`(?:^| *${Math.abs([...translated_string.matchAll(/ ?,\n?(?=[a-z0-9]{7,9}#[a-z0-9]{3})/g)].length - translatedStringEolAmount) <= 2 ? ',' : ''}\\n?)([a-z0-9]{7,9}#[a-z0-9]{3}): `)).slice(1)
+        translatedStringMap = Object.fromEntries([...translated_string.matchAll(new RegExp(`(?:(${UUID_PATTERN}): ((?:.+(?:\n(?!${UUID_PATTERN}))?)+))(?=\\n${UUID_PATTERN}|$)`, 'g'))].map(element => element.slice(1)))
         /* eslint-enable camelcase */
-        for (let i = 0; i < translatedStringParts.length; i += 2) {
-          translatedStringMap[translatedStringParts[i]] = translatedStringParts[i + 1].replace(/\n+$/, '')
-        }
       }
       if (Object.keys(translatedStringMap ?? {}).length > 0) {
-        return Object.entries(textSentenceWithUuid).map(([first, second]) => parsedResult[first] ?? translatedStringMap[first] ?? (second.replace(/\s+/, '').length > 0 ? '' : second)).join('\n')
+        return Object.entries(textSentenceWithUuid).map(([first, second]) => parsedResult[first] ?? translatedStringMap[first] ?? (second.replace(/^\s+/, '').length > 0 ? '' : second)).join('\n')
       }
     }
     return ''
