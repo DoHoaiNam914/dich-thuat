@@ -1116,7 +1116,8 @@ Your output must only contain the translated text and cannot include explanation
       } else {
         /* eslint-disable camelcase */
         const { translated_string } = parsedResult
-        translatedStringMap = Object.fromEntries([...translated_string.matchAll(new RegExp(`(?:(${UUID_PATTERN}): ((?:.+(?:\n(?!${UUID_PATTERN}))?)+))(?=\\n${UUID_PATTERN}|$)`, 'g'))].map(element => element.slice(1)))
+        const COMMA_PATTERN = Math.abs([...translated_string.matchAll(new RegExp(`(?<!^)(?:${UUID_PATTERN}: )`, 'g'))].length - [...translated_string.matchAll(new RegExp(`,\\n${UUID_PATTERN}: `, 'g'))].length) <= 2 ? ',' : ''
+        translatedStringMap = Object.fromEntries([...translated_string.matchAll(new RegExp(`(?:(${UUID_PATTERN}): ((?:.+(?:\\n(?!${UUID_PATTERN}))?)+))(?=${COMMA_PATTERN}\\n${UUID_PATTERN}|${COMMA_PATTERN}$)`, 'gm'))].map(element => element.slice(1)))
         /* eslint-enable camelcase */
       }
       if (Object.keys(translatedStringMap ?? {}).length > 0) {
