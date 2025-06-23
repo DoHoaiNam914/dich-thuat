@@ -566,7 +566,7 @@ class Translation {
           }, { signal: this.abortController.signal })
           if (doesStream) {
             for await (const chunk of completion) {
-              this.responseText = chunk.choices[0].delta.content ?? ''
+              this.responseText += chunk.choices[0].delta.content ?? ''
               this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
               if (this.abortController.signal.aborted) { return }
               resolve(this.translatedText, this.text, options)
@@ -1135,6 +1135,7 @@ Your output must only contain the translated text and cannot include explanation
         return Object.entries(textSentenceWithUuid).map(([first, second]) => parsedResult[first] ?? translatedStringMap[first] ?? (second.replace(/^\s+/, '').length > 0 ? '' : second)).join('\n')
       }
     }
+    console.log(translatedTextWithUuid, potentialJsonString)
     return ''
   }
 }
