@@ -375,7 +375,6 @@ class Translation {
                     ...topP as number > -1 ? { "top_p": topP } : {},
                     ...topK as number > -1 ? { "top_k": topK } : {}
         			}), // eslint-disable-line no-mixed-spaces-and-tabs
-                keepalive: true,
                 signal: this.abortController.signal
                 /* eslint-disable no-mixed-spaces-and-tabs */
         			});
@@ -524,7 +523,6 @@ class Translation {
               'accept-language': 'vi-VN,vi;q=0.9',
               'air-user-id': crypto.randomUUID()
             },
-            keepalive: true,
             method: 'POST',
             signal: this.abortController.signal
           }).then(value => doesStream ? value : value.json()).then(value => {
@@ -546,6 +544,7 @@ class Translation {
             const decoder = new TextDecoder();
             let buffer = '';
             let currentEvent = ''
+            let lastUpdateTime = 0
             
             try {
               while (true) { // eslint-disable-line no-constant-condition
@@ -573,17 +572,26 @@ class Translation {
                   }
                   if (line.startsWith('data: ') && currentEvent === 'response.output_text.delta') {
                     const data = line.slice(6);
-                    if (data === '[DONE]') break;
+                    if (data === '[DONE]') {
+                      this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
+                      if (this.translatedText.length === 0) continue
+                      if (this.abortController.signal.aborted as boolean) break
+                      resolve(this.translatedText, this.text, options)
+                      break;
+                    }
             
                     try {
                       const parsed = JSON.parse(data);
                       const content = parsed.delta;
                       if (content) {
                         this.responseText += content
+                        const now = Date.now()
+                        if (now - lastUpdateTime < 100) continue
                         this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
                         if (this.translatedText.length === 0) continue
                         if (this.abortController.signal.aborted as boolean) break
                         resolve(this.translatedText, this.text, options)
+                        lastUpdateTime = now
                       }
                     } catch {
                       // Ignore invalid JSON
@@ -623,7 +631,7 @@ class Translation {
             reasoning: { "exclude": true },
             ...isOpenrouterWebSearchEnabled ? { plugins: [{ "id": "web" }] } : {},
             ...doesStream ? { stream: true } : {},
-          }, { keepalive: true, signal: this.abortController.signal });
+          }, { signal: this.abortController.signal });
         
           if (doesStream) {
             for await (const chunk of completion) {
@@ -1163,14 +1171,14 @@ Your output must only contain the translated text and cannot include explanation
     return systemInstructions
   }
   private doctranslateIoPostprocess (translatedTextWithUuid: string, textSentenceWithUuid: Record<string, string>): string {
-    const translateText = translatedTextWithUuid.replace(/^\}$.+/ms, '').replace(/[a-z0-9]{8}#[a-z0-9]{3}/gi, (match) => match.toLowerCase()).replace(/([a-z0-9]{7,9}#[a-z0-9]{3})(?:>|')/g, '$1')
-    const translatedTextEolAmount = [...translateText.matchAll(/(?<!"translated_string": ")(?:[a-z0-9]{7,9}#[a-z0-9]{3}): /g)].length
+    const UUID_PATTERN = '(?:[a-z0-9]{8}#[a-z0-9]{3})'
+    const translateText = translatedTextWithUuid.replace(/^\}$.+/ms, '').replace(new RegExp(UUID_PATTERN, 'gi'), (match) => match.toLowerCase()).replace(new RegExp(`(?<!${UUID_PATTERN})(?:>|')`, 'g'), '')
     const doesTranslatedStringExist = /"translated_string": ?"/.test(translateText)
-    const potentialJsonString = doesTranslatedStringExist ? (translateText.replace(/(\\")?"?(?:\n?\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(new RegExp(`(?:(?:(?: ${Math.abs([...translateText.matchAll(/(?:",\n[^a-z0-9#]*)(?=[a-z0-9]{7,9}#[a-z0-9]{3}: )/g)].length - translatedTextEolAmount) <= 2 ? '|"' : ''})?,|\\\\n)?\\n[^a-z0-9#]*)(?=[a-z0-9]{7,9}#[a-z0-9]{3}: )`, 'g'), ' ,\\n').replace(/\n(?="\n?\})/, '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s) as RegExpMatchArray)[0].replace(/insight": .+(?=translated_string": ")/s, '') : JSON.stringify({ translated_string: textSentenceWithUuid })
+    const potentialJsonString = doesTranslatedStringExist ? (translateText.replace(/(\\")?"?(?:\n?\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(new RegExp(`\\n(?=  ${UUID_PATTERN}: |"(?:\\n\\}|\\})|${UUID_PATTERN}: )`, 'g'), '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s) as RegExpMatchArray)[0].replace(/insight": .+(?=translated_string": ")/s, '') : JSON.stringify({ translated_string: textSentenceWithUuid })
     if (Utils.isValidJson(potentialJsonString)) {
       // @ts-expect-error JSON5
       const parsedResult = JSON5.parse(potentialJsonString)
-      const translatedStringMap: Record<string, string> = {}
+      let translatedStringMap: Record<string, string> = {}
       if (typeof parsedResult.translated_string !== 'string') {
         if (doesTranslatedStringExist) console.log('isJson', true)
         // translatedStringMap = parsedResult.translated_string
@@ -1181,15 +1189,15 @@ Your output must only contain the translated text and cannot include explanation
       } else {
         /* eslint-disable camelcase */
         const { translated_string } = parsedResult
-        const translatedStringEolAmount = [...translated_string.matchAll(/(?<!^)(?:[a-z0-9]{7,9}#[a-z0-9]{3}): /g)].length
-        const translatedStringParts = translated_string.split(new RegExp(`(?:^| *${Math.abs([...translated_string.matchAll(/ ?,\n?(?=[a-z0-9]{7,9}#[a-z0-9]{3})/g)].length - translatedStringEolAmount) <= 2 ? ',' : ''}\\n?)([a-z0-9]{7,9}#[a-z0-9]{3}): `)).slice(1)
+        const uuidAmount = [...translated_string.matchAll(new RegExp(`(?<!^)(?:${UUID_PATTERN}: )`, 'g'))].length
+        const translatedString = uuidAmount === [...translated_string.matchAll(new RegExp(`, ?${UUID_PATTERN}: `, 'g'))].length ? translated_string.replace(new RegExp(`(?:, ?)(?=${UUID_PATTERN}: )`, 'g'), '\n') : translated_string
         /* eslint-enable camelcase */
-        for (let i = 0; i < translatedStringParts.length; i += 2) {
-          translatedStringMap[translatedStringParts[i]] = translatedStringParts[i + 1].replace(/\n+$/, '')
-        }
+        const COMMA_PATTERN = '(?: , |,)'
+        const mayCheckComma = uuidAmount === [...translatedString.matchAll(new RegExp(`${COMMA_PATTERN}\\n${UUID_PATTERN}: `, 'g'))].length
+        translatedStringMap = Object.fromEntries([...translatedString.matchAll(new RegExp(`(${UUID_PATTERN}): (.+(?=${mayCheckComma ? COMMA_PATTERN : ''}\\n${UUID_PATTERN}: |$)(?:\\n(?!${UUID_PATTERN}))?)+`, 'g'))].map(element => element.slice(1)))
       }
       if (Object.keys(translatedStringMap ?? {}).length > 0) {
-        return Object.entries(textSentenceWithUuid).map(([first, second]) => parsedResult[first] ?? translatedStringMap[first] ?? (second.replace(/\s+/, '').length > 0 ? '' : second)).join('\n')
+        return Object.entries(textSentenceWithUuid).map(([first, second]) => parsedResult[first] ?? translatedStringMap[first] ?? (second.replace(/^\s+/, '').length > 0 ? '' : second)).join('\n')
       }
     }
     return ''
