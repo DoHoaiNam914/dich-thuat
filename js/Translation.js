@@ -505,7 +505,13 @@ class Translation {
                   }
                   if (line.startsWith('data: ') && currentEvent === 'response.output_text.delta') {
                     const data = line.slice(6)
-                    if (data === '[DONE]') { break }
+                    if (data === '[DONE]') {
+                      this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
+                      if (this.translatedText.length === 0) { continue }
+                      if (this.abortController.signal.aborted) { break }
+                      resolve(this.translatedText, this.text, options)
+                      break
+                    }
                     try {
                       const parsed = JSON.parse(data)
                       const content = parsed.delta
