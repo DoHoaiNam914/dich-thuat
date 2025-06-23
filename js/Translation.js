@@ -1116,9 +1116,11 @@ Your output must only contain the translated text and cannot include explanation
       } else {
         /* eslint-disable camelcase */
         const { translated_string } = parsedResult
-        const COMMA_PATTERN = Math.abs([...translated_string.matchAll(new RegExp(`(?<!^)(?:${UUID_PATTERN}: )`, 'g'))].length - [...translated_string.matchAll(new RegExp(`,\\n${UUID_PATTERN}: `, 'g'))].length) <= 2 ? ',' : ''
-        translatedStringMap = Object.fromEntries([...translated_string.matchAll(new RegExp(`(?:(${UUID_PATTERN}): ((?:.+(?:\\n(?!${UUID_PATTERN}))?)+))(?=${COMMA_PATTERN}\\n${UUID_PATTERN}|${COMMA_PATTERN}$)`, 'gm'))].map(element => element.slice(1)))
+        const uuidAmount = [...translated_string.matchAll(new RegExp(`(?<!^)(?:${UUID_PATTERN}: )`, 'g'))].length
+        const translatedString = uuidAmount === [...translated_string.matchAll(new RegExp(`,${UUID_PATTERN}: `, 'g'))].length ? translated_string.replace(new RegExp(`,(?=${UUID_PATTERN}: )`, 'g'), '\n') : translated_string
         /* eslint-enable camelcase */
+        const COMMA_PATTERN = uuidAmount - [...translatedString.matchAll(new RegExp(`,\\n${UUID_PATTERN}: `, 'g'))].length <= 0 ? ',' : ''
+        translatedStringMap = Object.fromEntries([...translatedString.matchAll(new RegExp(`(?:(${UUID_PATTERN}): ((?:.+(?:\\n(?!${UUID_PATTERN}))?)+))(?=${COMMA_PATTERN}\\n${UUID_PATTERN}|${COMMA_PATTERN === ',' ? `${COMMA_PATTERN}?` : ''}$)`, 'gm'))].map(element => element.slice(1)))
       }
       if (Object.keys(translatedStringMap ?? {}).length > 0) {
         return Object.entries(textSentenceWithUuid).map(([first, second]) => parsedResult[first] ?? translatedStringMap[first] ?? (second.replace(/^\s+/, '').length > 0 ? '' : second)).join('\n')
