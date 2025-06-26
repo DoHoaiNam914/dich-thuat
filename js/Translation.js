@@ -1050,7 +1050,7 @@ Your output must only contain the translated text and cannot include explanation
     const UUID_PATTERN = '(?:[a-z0-9]{8}#[a-z0-9]{3})'
     const translateText = translatedTextWithUuid.replace(/^\}$.+/ms, '').replace(new RegExp(UUID_PATTERN, 'gi'), (match) => match.toLowerCase()).replace(new RegExp(`(?<!${UUID_PATTERN})(?:>|')`, 'g'), '')
     const doesTranslatedStringExist = /"translated_string": ?"/.test(translateText)
-    const potentialJsonString = doesTranslatedStringExist ? translateText.replace(/(\\")?"?(?:\n?\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(new RegExp(`\\\\?\\n(?=  ${UUID_PATTERN}: |"(?:\\n\\}|\\})|${UUID_PATTERN}: )`, 'g'), '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s)[0].replace(/insight": .+(?=translated_string": ")/s, '') : JSON.stringify({ translated_string: textSentenceWithUuid })
+    const potentialJsonString = doesTranslatedStringExist ? translateText.replace(/\\$/, '').replace(/(\\")?(?:",?)?(?:\n?\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(new RegExp(`\\n(?=  ${UUID_PATTERN}: |"(?:\\n\\}|${UUID_PATTERN}: |\\})|${UUID_PATTERN}: )|\\\\\\n(?=${UUID_PATTERN}: )`, 'g'), '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s)[0].replace(/insight": .+(?=translated_string": ")/s, '') : JSON.stringify({ translated_string: textSentenceWithUuid })
     if (Utils.isValidJson(potentialJsonString)) {
       // @ts-expect-error JSON5
       const parsedResult = JSON5.parse(potentialJsonString)
@@ -1069,8 +1069,8 @@ Your output must only contain the translated text and cannot include explanation
         const translatedString = uuidAmount === [...translated_string.matchAll(new RegExp(`, ?${UUID_PATTERN}: `, 'g'))].length ? translated_string.replace(new RegExp(`(?:, ?)(?=${UUID_PATTERN}: )`, 'g'), '\n') : translated_string
         /* eslint-enable camelcase */
         const COMMA_PATTERN = '(?: , |,)'
-        const mayIncludesComma = uuidAmount - [...translatedString.matchAll(new RegExp(`${COMMA_PATTERN}\\n${UUID_PATTERN}: `, 'g'))].length <= 5
-        translatedStringMap = Object.fromEntries([...translatedString.matchAll(new RegExp(`(${UUID_PATTERN}): (.+(?=${mayIncludesComma ? COMMA_PATTERN : ''}\\n(?: |\\n)?${UUID_PATTERN}: |$)(?:\\n(?!(?: |\\n)?${UUID_PATTERN}: ))?)+`, 'g'))].map(element => element.slice(1)))
+        const mayIncludesComma = uuidAmount - [...translatedString.matchAll(new RegExp(`${COMMA_PATTERN}\\n${UUID_PATTERN}: `, 'g'))].length <= 17
+        translatedStringMap = Object.fromEntries([...translatedString.matchAll(new RegExp(`(${UUID_PATTERN}): (.+(?=${mayIncludesComma ? COMMA_PATTERN : ''}\\n(?: |\\n|" +\\n")?${UUID_PATTERN}: |$)(?:\\n(?!(?: |\\n|" +\\n")?${UUID_PATTERN}: ))?)+`, 'g'))].map(element => element.slice(1)))
       }
       if (Object.keys(translatedStringMap ?? {}).length > 0) {
         return Object.entries(textSentenceWithUuid).map(([first, second]) => parsedResult[first] ?? translatedStringMap[first] ?? (second.replace(/^\s+/, '').length > 0 ? '' : second)).join('\n')
