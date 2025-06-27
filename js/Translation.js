@@ -20,10 +20,6 @@ const MODELS = {
         selected: true
       },
       {
-        modelId: 'gemini-2.5-pro-preview-05-06',
-        modelName: 'Gemini 2.5 Pro Preview 05-06'
-      },
-      {
         modelId: 'gemini-2.5-flash',
         modelName: 'Gemini 2.5 Flash'
       },
@@ -64,6 +60,10 @@ const MODELS = {
       'gemini-1.5-pro-001'
     ],
     Gemma: [
+      {
+        modelId: 'gemma-3n-e2b-it',
+        modelName: 'Gemma 3n E2B'
+      },
       {
         modelId: 'gemma-3n-e4b-it',
         modelName: 'Gemma 3n E4B'
@@ -1069,8 +1069,8 @@ Your output must only contain the translated text and cannot include explanation
         const translatedString = uuidAmount - [...translated_string.matchAll(new RegExp(`, ?${UUID_PATTERN}: `, 'g'))].length <= 1 ? translated_string.replace(new RegExp(`(?:, ?)(?=${UUID_PATTERN}: )`, 'g'), '\n') : translated_string
         /* eslint-enable camelcase */
         const COMMA_PATTERN = '(?: , |,)'
-        const mayIncludesComma = uuidAmount - [...translatedString.matchAll(new RegExp(`${COMMA_PATTERN}\\n${UUID_PATTERN}: `, 'g'))].length <= 17
-        translatedStringMap = Object.fromEntries([...translatedString.matchAll(new RegExp(`(${UUID_PATTERN}): (.+(?=${mayIncludesComma ? COMMA_PATTERN : ''}\\n(?: |\\n|" +\\n")?${UUID_PATTERN}: |$)(?:\\n(?!(?: |\\n|" +\\n")?${UUID_PATTERN}: ))?)+`, 'g'))].map(element => element.slice(1)))
+        const mayIncludesComma = uuidAmount - [...translatedString.matchAll(new RegExp(`${COMMA_PATTERN}\\n${UUID_PATTERN}: `, 'g'))].length <= 1
+        translatedStringMap = Object.fromEntries([...translatedString.matchAll(new RegExp(`(${UUID_PATTERN}): (.+(?=${mayIncludesComma ? COMMA_PATTERN : ''}\\n(?: |\\n|" +\\n")?${UUID_PATTERN}: |\\n?$)(?:\\n(?!(?: |\\n|" +\\n")?${UUID_PATTERN}: ))?)+`, 'g'))].map(element => element.slice(1)))
       }
       if (Object.keys(translatedStringMap ?? {}).length > 0) {
         return Object.entries(textSentenceWithUuid).map(([first, second]) => parsedResult[first] ?? translatedStringMap[first] ?? (second.replace(/^\s+/, '').length > 0 ? '' : second)).join('\n')
