@@ -431,6 +431,11 @@ $('.language-select').on('change', function () {
   const value = $(this).val()
   $textLanguageSelect.val(value !== 'null' ? value : $textLanguageSelect.val()).change()
 })
+$('#dictionary-modal-button').on('mousedown', () => {
+  if (!$outputTextarea.is(':visible')) { return }
+  $sourceText.val((getSelection().toString() ?? '').replaceAll(/\n/g, ' '))
+  getSelection().removeAllRanges()
+})
 $translateButton.on('click', function () {
   const $textareaCopyButton = $copyButtons.filter(`[data-target="#${$inputTextarea.prop('id')}"]`)
   switch ($(this).text()) {
