@@ -30,10 +30,6 @@ const MODELS: ModelsType = {
         selected: true
       },
       {
-        modelId: 'gemini-2.5-pro-preview-05-06',
-        modelName: 'Gemini 2.5 Pro Preview 05-06'
-      },
-      {
         modelId: 'gemini-2.5-flash',
         modelName: 'Gemini 2.5 Flash'
       },
@@ -74,6 +70,10 @@ const MODELS: ModelsType = {
       'gemini-1.5-pro-001'
     ],
     Gemma: [
+      {
+        modelId: 'gemma-3n-e2b-it',
+        modelName: 'Gemma 3n E2B'
+      },
       {
         modelId: 'gemma-3n-e4b-it',
         modelName: 'Gemma 3n E4B'
@@ -1109,9 +1109,9 @@ Your output must only contain the translated text and cannot include explanation
   }
   private doctranslateIoPostprocess (translatedTextWithUuid: string, textSentenceWithUuid: Record<string, string>): string {
     const UUID_PATTERN = '(?:[a-z0-9]{8}#[a-z0-9]{3})'
-    const translateText = translatedTextWithUuid.replace(/^\}$.+/ms, '').replace(new RegExp(UUID_PATTERN, 'gi'), (match) => match.toLowerCase()).replace(new RegExp(`(?<!${UUID_PATTERN})(?:>|')`, 'g'), '')
+    const translateText = translatedTextWithUuid.replace(/^\}$.+/ms, '').replace(new RegExp(UUID_PATTERN, 'gi'), (match) => match.toLowerCase()).replace(new RegExp(`(?<=${UUID_PATTERN})(?:>|')`, 'g'), '')
     const doesTranslatedStringExist = /"translated_string": ?"/.test(translateText)
-    const potentialJsonString = doesTranslatedStringExist ? (translateText.replace(/(\\")?"?(?:\n?\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(new RegExp(`\\n(?=  ${UUID_PATTERN}: |"(?:\\n\\}|\\})|${UUID_PATTERN}: )`, 'g'), '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s) as RegExpMatchArray)[0].replace(/insight": .+(?=translated_string": ")/s, '') : JSON.stringify({ translated_string: textSentenceWithUuid })
+    const potentialJsonString = doesTranslatedStringExist ? (translateText.replace(/\\$/, '').replace(/(\\")?(?:",?)?(?:\n?\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(new RegExp(`\\n(?=  ${UUID_PATTERN}: |"(?:\\n\\}|${UUID_PATTERN}: |\\})|${UUID_PATTERN}: )|\\\\\\n(?=${UUID_PATTERN}: )`, 'g'), '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s) as RegExpMatchArray)[0].replace(/insight": .+(?=translated_string": ")/s, '') : JSON.stringify({ translated_string: textSentenceWithUuid })
     if (Utils.isValidJson(potentialJsonString)) {
       // @ts-expect-error JSON5
       const parsedResult = JSON5.parse(potentialJsonString)
@@ -1127,11 +1127,11 @@ Your output must only contain the translated text and cannot include explanation
         /* eslint-disable camelcase */
         const { translated_string } = parsedResult
         const uuidAmount = [...translated_string.matchAll(new RegExp(`(?<!^)(?:${UUID_PATTERN}: )`, 'g'))].length
-        const translatedString = uuidAmount === [...translated_string.matchAll(new RegExp(`, ?${UUID_PATTERN}: `, 'g'))].length ? translated_string.replace(new RegExp(`(?:, ?)(?=${UUID_PATTERN}: )`, 'g'), '\n') : translated_string
+        const translatedString = uuidAmount - [...translated_string.matchAll(new RegExp(`, ?${UUID_PATTERN}: `, 'g'))].length <= 1 ? translated_string.replace(new RegExp(`(?:, ?)(?=${UUID_PATTERN}: )`, 'g'), '\n') : translated_string
         /* eslint-enable camelcase */
         const COMMA_PATTERN = '(?: , |,)'
-        const mayCheckComma = uuidAmount === [...translatedString.matchAll(new RegExp(`${COMMA_PATTERN}\\n${UUID_PATTERN}: `, 'g'))].length
-        translatedStringMap = Object.fromEntries([...translatedString.matchAll(new RegExp(`(${UUID_PATTERN}): (.+(?=${mayCheckComma ? COMMA_PATTERN : ''}\\n${UUID_PATTERN}: |$)(?:\\n(?!${UUID_PATTERN}: ))?)+`, 'g'))].map(element => element.slice(1)))
+        const mayIncludesComma = uuidAmount - [...translatedString.matchAll(new RegExp(`${COMMA_PATTERN}\\n${UUID_PATTERN}: `, 'g'))].length <= 1
+        translatedStringMap = Object.fromEntries([...translatedString.matchAll(new RegExp(`(${UUID_PATTERN}): (.+(?=${mayIncludesComma ? COMMA_PATTERN : ''}\\n(?: |\\n|" +\\n")?${UUID_PATTERN}: |\\n?$)(?:\\n(?!(?: |\\n|" +\\n")?${UUID_PATTERN}: ))?)+`, 'g'))].map(element => element.slice(1)))
       }
       if (Object.keys(translatedStringMap ?? {}).length > 0) {
         return Object.entries(textSentenceWithUuid).map(([first, second]) => parsedResult[first] ?? translatedStringMap[first] ?? (second.replace(/^\s+/, '').length > 0 ? '' : second)).join('\n')
