@@ -1054,6 +1054,7 @@ Your output must only contain the translated text and cannot include explanation
     if (Utils.isValidJson(potentialJsonString)) {
       // @ts-expect-error JSON5
       const parsedResult = JSON5.parse(potentialJsonString)
+      const textSentenceWithUuids = Object.entries(textSentenceWithUuid)
       let translatedStringMap = {}
       if (typeof parsedResult.translated_string !== 'string') {
         if (doesTranslatedStringExist) { console.log('isJson', true) }
@@ -1066,14 +1067,14 @@ Your output must only contain the translated text and cannot include explanation
         /* eslint-disable camelcase */
         const { translated_string } = parsedResult
         const uuidAmount = [...translated_string.matchAll(new RegExp(`(?<!^)(?:${UUID_PATTERN}: )`, 'g'))].length
-        const translatedString = uuidAmount - [...translated_string.matchAll(new RegExp(`, ?${UUID_PATTERN}: `, 'g'))].length <= 1 ? translated_string.replace(new RegExp(`(?:, ?)(?=${UUID_PATTERN}: )`, 'g'), '\n') : translated_string
+        const translatedString = uuidAmount - [...translated_string.matchAll(new RegExp(`, ?${UUID_PATTERN}: `, 'g'))].length <= (textSentenceWithUuids.length <= 2 ? 0 : 1) ? translated_string.replace(new RegExp(`(?:, ?)(?=${UUID_PATTERN}: )`, 'g'), '\n') : translated_string
         /* eslint-enable camelcase */
         const COMMA_PATTERN = '(?: , |,)'
-        const mayIncludesComma = uuidAmount - [...translatedString.matchAll(new RegExp(`${COMMA_PATTERN}\\n${UUID_PATTERN}: `, 'g'))].length <= 1
+        const mayIncludesComma = uuidAmount - [...translatedString.matchAll(new RegExp(`${COMMA_PATTERN}\\n${UUID_PATTERN}: `, 'g'))].length <= (textSentenceWithUuids.length <= 2 ? 0 : 1)
         translatedStringMap = Object.fromEntries([...translatedString.matchAll(new RegExp(`(${UUID_PATTERN}): (.+(?=${mayIncludesComma ? COMMA_PATTERN : ''}\\n(?: |\\n|" +\\n")?${UUID_PATTERN}: |\\n?$)(?:\\n(?!(?: |\\n|" +\\n")?${UUID_PATTERN}: ))?)+`, 'g'))].map(element => element.slice(1)))
       }
       if (Object.keys(translatedStringMap ?? {}).length > 0) {
-        return Object.entries(textSentenceWithUuid).map(([first, second]) => parsedResult[first] ?? translatedStringMap[first] ?? (second.replace(/^\s+/, '').length > 0 ? '' : second)).join('\n')
+        return textSentenceWithUuids.map(([first, second]) => parsedResult[first] ?? translatedStringMap[first] ?? (second.replace(/^\s+/, '').length > 0 ? '' : second)).join('\n')
       }
     }
     return ''
