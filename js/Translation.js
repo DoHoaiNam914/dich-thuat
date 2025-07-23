@@ -24,12 +24,8 @@ const MODELS = {
         modelName: 'Gemini 2.5 Flash'
       },
       {
-        modelId: 'gemini-2.5-flash-preview-04-17',
-        modelName: 'Gemini 2.5 Flash Preview 04-17'
-      },
-      {
-        modelId: 'gemini-2.5-flash-lite-preview-06-17',
-        modelName: 'Gemini 2.5 Flash Lite Preview 06-17'
+        modelId: 'gemini-2.5-flash-lite',
+        modelName: 'Gemini 2.5 Flash Lite'
       }
     ],
     'Gemini 2.0': [
