@@ -146,7 +146,6 @@ const MODELS = {
   },
   GROQ: {
     'Alibaba Cloud': [
-      'qwen-qwq-32b',
       'qwen/qwen3-32b'
     ],
     'DeepSeek / Meta': ['deepseek-r1-distill-llama-70b'],
@@ -162,7 +161,8 @@ const MODELS = {
         selected: true
       }
     ],
-    Mistral: ['mistral-saba-24b']
+    Mistral: ['mistral-saba-24b'],
+    'Moonshot AI': ['moonshotai/kimi-k2-instruct']
   }
 }
 let Domains;
