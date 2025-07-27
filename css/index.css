@@ -93,6 +93,7 @@
   height: 100vh;
   font: var(--reader-font-weight) var(--reader-font-size)/var(--reader-line-height) var(--reader-font-family);
   padding: 10px 10px 5.55rem;
+  text-align: var(--reader-text-align);
   width: 100vw;
 }
 
