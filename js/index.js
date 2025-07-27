@@ -433,7 +433,7 @@ $('.language-select').on('change', function () {
 })
 $('#dictionary-modal-button').on('mousedown', () => {
   if (!$outputTextarea.is(':visible')) { return }
-  $sourceText.val((getSelection().toString() ?? '').replaceAll(/\n/g, ' '))
+  $sourceText.val((getSelection().toString() ?? '').replaceAll(/\n/g, ' ')).trigger('input')
   getSelection().removeAllRanges()
 })
 $translateButton.on('click', function () {
