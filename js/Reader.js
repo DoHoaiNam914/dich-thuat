@@ -92,7 +92,7 @@ class Reader {
   }
 
   static fontMapper (fontFamily) {
-    return fontFamily.replace(/['"]/g, '').split(/, */).filter(element => element.length > 0).map(element => Reader.FONT_MAP.find(([first, second]) => first === element || second === element)?.[1] ?? element).join(', ')
+    return fontFamily.replace(/['"]/g, '').split(/, */).map(element => element.trim()).filter(element => element.length > 0).map(element => Reader.FONT_MAP.find(([first, second]) => first === element || second === element)?.[1] ?? element).join(', ')
   }
 }
 Reader.THEMES = [
@@ -294,6 +294,12 @@ Reader.FONT_MAP = Object.entries({
   'PingFang SC': 'pingfang sc-ttc',
   'PingFang TC': 'pingfang tc-ttc',
   'new-york': 'new-york',
+  'Noto Sans JP': 'Noto Sans JP',
+  'Noto Sans SC': 'Noto Sans SC',
+  'Noto Sans TC': 'Noto Sans TC',
+  'Noto Serif JP': 'Noto Serif JP',
+  'Noto Serif SC': 'Noto Serif SC',
+  'Noto Serif TC': 'Noto Serif TC',
   // Sitka: 'sitka-ttf',
   'Songti SC': 'songti sc-ttc',
   'Songti TC': 'songti tc-ttc',
