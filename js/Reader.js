@@ -294,6 +294,7 @@ Reader.FONT_MAP = Object.entries({
   'PingFang SC': 'PingFang SC-ttc',
   'PingFang TC': 'PingFang TC-ttc',
   'new-york': 'new-york',
+  'Noto Sans': 'Noto Sans',
   'Noto Sans JP': 'Noto Sans JP',
   'Noto Sans SC': 'Noto Sans SC',
   'Noto Sans TC': 'Noto Sans TC',
