@@ -243,7 +243,7 @@ Reader.FONT_MAP = Object.entries({
   Bookerly: 'Bookerly',
   'Minion Pro': 'Minion Pro',
   'Noto Serif': 'Noto Serif',
-  Roboto: 'Roboto-woff2',
+  Roboto: 'Roboto-ttf',
   'SVN-Times New Roman': 'SVN-Times New Roman',
   Quicksand: 'Quicksand',
   'iCiel Domaine Text': 'iCiel Domaine Text',
