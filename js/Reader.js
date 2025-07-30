@@ -279,6 +279,7 @@ Reader.FONT_MAP = Object.entries({
   'Amazon Ember': 'Amazon Ember',
   'Apple SD Gothic Neo': 'Apple SD Gothic Neo-otf',
   'Atkinson Hyperlegible': 'Atkinson Hyperlegible',
+  'Atkinson Hyperlegible Next': 'Atkinson Hyperlegible Next',
   'A-OTF Ryumin Pr5': 'A-OTF Ryumin Pr5',
   // Calibri: 'Calibri-ttf',
   // 'Comic Sans': 'Comic Sans-ttf',
