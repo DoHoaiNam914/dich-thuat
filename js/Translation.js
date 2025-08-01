@@ -434,7 +434,14 @@ class Translation {
                 type: 'text'
               }
             },
-            reasoning: { ...MODELS.OPENAI.Reasoning.includes(openaiModelId) && effort !== 'medium' ? { effort } : {} },
+            reasoning: MODELS.OPENAI.Reasoning.includes(openaiModelId) && effort !== 'medium'
+              ? {
+                  effort,
+                  summary: 'auto'
+                }
+              : {
+                  summary: 'auto'
+                },
             tools: [
               ...isOpenaiWebSearchEnabled
                 ? [{
@@ -528,13 +535,18 @@ class Translation {
             ...temperature > -1 ? { temperature } : {},
             ...topP > -1 ? { topP } : {},
             ...topK > -1 ? { topK } : {},
-            ...(googleGenaiModelId.startsWith('gemini-2.5-flash') || googleGenaiModelId === 'gemini-2.5-pro-preview-06-05') && !isThinkingModeEnabled
+            ...googleGenaiModelId.startsWith('gemini-2.5-flash') && !isThinkingModeEnabled
               ? {
                   thinkingConfig: {
+                    includeThoughts: true,
                     thinkingBudget: 0
                   }
                 }
-              : {},
+              : {
+                  thinkingConfig: {
+                    includeThoughts: true
+                  }
+                },
             safetySettings: [
               {
                 category: HarmCategory.HARM_CATEGORY_HARASSMENT,
@@ -607,7 +619,7 @@ class Translation {
         return `### TEXT SENTENCE WITH UUID:
 {${this.text.split('\n').map(element => {
                     const uuidParts = crypto.randomUUID().split('-')
-                    return `'${uuidParts[0]}#${uuidParts[2].substring(1)}': ${element.includes("'") && !element.includes('"') ? `"${element.replace(/^\s+|\s+$/g, '')}"` : `'${element.replace(/^\s+|\s+$/g, '').replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`}`
+                    return `'${uuidParts[0]}#${uuidParts[2].substring(1)}': ${element.includes("'") && !element.includes('"') ? `"${element.replace(/^\s+|\s+$/g, '').replace(/\\/g, '\\\\')}"` : `'${element.replace(/^\s+|\s+$/g, '').replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`}`
                 }).join(', ')}}
 ### TRANSLATED TEXT WITH UUID:`
       default:
