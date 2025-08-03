@@ -337,7 +337,7 @@ $sourceText.on('input', function () {
   $targetTextarea.val(customDictionary.find(({ ori_lang, des_lang, ori_word }) => ori_lang === $sourceTextLanguageSelect.val() && des_lang === $targetTextLanguageSelect.val() && ori_word === $(this).val())?.des_word ?? $targetTextarea.val()) // eslint-disable-line camelcase
 })
 $targetTextarea.on('input', function () {
-  $(this).val($(this).val().replace(/\n/g, ' '))
+  $(this).val($(this).val().replace(/\n+/g, ' '))
 })
 $addWordButton.on('click', () => {
   const originalLanguage = $sourceTextLanguageSelect.val()
@@ -430,7 +430,7 @@ $('.language-select').on('change', function () {
 })
 $('#dictionary-modal-button').on('mousedown', () => {
   if (!$outputTextarea.is(':visible')) { return }
-  $sourceText.val((getSelection()?.toString() ?? '').replace(/\n/g, ' '))
+  $sourceText.val((getSelection()?.toString() ?? '').replace(/\n+/g, ' ')).trigger('input')
   getSelection()?.removeAllRanges()
 })
 $translateButton.on('click', function () {
