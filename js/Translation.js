@@ -15,17 +15,21 @@ const MODELS = {
   GOOGLE_GENAI: {
     'Gemini 2.5': [
       {
-        modelId: 'gemini-2.5-pro',
-        modelName: 'Gemini 2.5 Pro',
+        modelId: 'gemini-2.5-pro-preview-06-05',
+        modelName: 'Gemini 2.5 Pro Preview',
         selected: true
       },
       {
-        modelId: 'gemini-2.5-flash',
-        modelName: 'Gemini 2.5 Flash'
+        modelId: 'gemini-2.5-pro-preview-05-06',
+        modelName: 'Gemini 2.5 Pro Preview 05-06'
       },
       {
-        modelId: 'gemini-2.5-flash-lite',
-        modelName: 'Gemini 2.5 Flash Lite'
+        modelId: 'gemini-2.5-flash-preview-04-17',
+        modelName: 'Gemini 2.5 Flash Preview 04-17'
+      },
+      {
+        modelId: 'gemini-2.5-flash-preview-05-20',
+        modelName: 'Gemini 2.5 Flash Preview 05-20'
       }
     ],
     'Gemini 2.0': [
@@ -57,14 +61,6 @@ const MODELS = {
     ],
     Gemma: [
       {
-        modelId: 'gemma-3n-e2b-it',
-        modelName: 'Gemma 3n E2B'
-      },
-      {
-        modelId: 'gemma-3n-e4b-it',
-        modelName: 'Gemma 3n E4B'
-      },
-      {
         modelId: 'gemma-3-1b-it',
         modelName: 'Gemma 3 1B'
       },
@@ -79,6 +75,10 @@ const MODELS = {
       {
         modelId: 'gemma-3-27b-it',
         modelName: 'Gemma 3 27B'
+      },
+      {
+        modelId: 'gemma-3n-e4b-it',
+        modelName: 'Gemma 3n E4B'
       }
     ],
     Other: [
@@ -125,6 +125,10 @@ const MODELS = {
       'gpt-4o-2024-08-06',
       'gpt-4o-2024-05-13'
     ],
+    'GPT-4.5': [
+      'gpt-4.5-preview-2025-02-27',
+      'gpt-4.5-preview'
+    ],
     'GPT-4': [
       'gpt-4-turbo-preview',
       'gpt-4-turbo-2024-04-09',
@@ -145,9 +149,7 @@ const MODELS = {
     ]
   },
   GROQ: {
-    'Alibaba Cloud': [
-      'qwen/qwen3-32b'
-    ],
+    'Alibaba Cloud': ['qwen-qwq-32b'],
     'DeepSeek / Meta': ['deepseek-r1-distill-llama-70b'],
     Google: ['gemma2-9b-it'],
     Meta: [
@@ -161,8 +163,7 @@ const MODELS = {
         selected: true
       }
     ],
-    Mistral: ['mistral-saba-24b'],
-    'Moonshot AI': ['moonshotai/kimi-k2-instruct']
+    Mistral: ['mistral-saba-24b']
   }
 }
 let Domains;
@@ -252,7 +253,6 @@ class Translation {
       chutesModelId: 'deepseek-ai/DeepSeek-R1',
       customDictionary: [],
       customPrompt: '',
-      doesStream: false,
       domain: Domains.NONE,
       effort: Efforts.MEDIUM,
       googleGenaiModelId: Object.values(MODELS.GOOGLE_GENAI).flat().filter(element => typeof element === 'object').find((element) => element.selected)?.modelId,
@@ -276,7 +276,7 @@ class Translation {
       translatorId: Translators.GOOGLE_GENAI_TRANSLATE,
       ...options
     }
-    const { B2B_AUTH_TOKEN, doesStream, systemInstruction, temperature, topP, topK, TVLY_API_KEY } = options
+    const { B2B_AUTH_TOKEN, systemInstruction, temperature, topP, topK, TVLY_API_KEY } = options
     this.B2B_AUTH_TOKEN = B2B_AUTH_TOKEN
     this.TVLY_API_KEY = TVLY_API_KEY
     const prompt = this.getPrompt(systemInstruction)
@@ -316,6 +316,7 @@ class Translation {
               ...topP > -1 ? { top_p: topP } : {},
               ...topK > -1 ? { top_k: topK } : {}
             }), // eslint-disable-line no-mixed-spaces-and-tabs
+            keepalive: true,
             signal: this.abortController.signal
             /* eslint-disable no-mixed-spaces-and-tabs */
           })
@@ -349,7 +350,7 @@ class Translation {
                       if (this.responseText.startsWith('<think>') && !/<\/think>\n{1,2}/.test(this.responseText)) { continue } else if (this.responseText.startsWith('<think>')) { this.responseText = this.responseText.replace(/^<think>\n.+\n<\/think>\n{1,2}/s, '') }
                       this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
                       if (this.translatedText.length === 0) { continue }
-                      if (this.abortController.signal.aborted) { break }
+                      if (this.abortController.signal.aborted) { return }
                       resolve(this.translatedText, this.text, options)
                     }
                   } catch {
@@ -391,7 +392,7 @@ class Translation {
             this.responseText += chunk.choices[0]?.delta?.content || ''
             this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
             if (this.translatedText.length === 0) { continue }
-            if (this.abortController.signal.aborted) { break }
+            if (this.abortController.signal.aborted) { return }
             resolve(this.translatedText, this.text, options)
           }
         }
@@ -400,80 +401,68 @@ class Translation {
       case Translators.OPENAI_TRANSLATOR:
         this.translateText = async (resolve) => {
           const { effort, isOpenaiWebSearchEnabled, openaiModelId } = options
-          const openai = new OpenAI({
-            apiKey: '5N3NR9SDGLS7VLUWSEN9J30P',
-            baseURL: 'https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1',
-            fetchOptions: { signal: this.abortController.signal },
-            defaultHeaders: { 'air-user-id': crypto.randomUUID() },
-            dangerouslyAllowBrowser: true
-          })
-          const response = await openai.responses.create({
-            model: openaiModelId,
-            input: [
-              ...await this.getSystemInstructions(options).then(value => value.map(element => ({
-                role: MODELS.OPENAI.Reasoning.includes(openaiModelId) ? (openaiModelId.startsWith('o1-mini') ? 'user' : 'developer') : 'system',
-                content: [
-                  {
-                    type: 'input_text',
-                    text: element
-                  }
-                ]
-              }))),
-              {
-                role: 'user',
-                content: [
-                  {
-                    type: 'input_text',
-                    text: noEmptyLinesPrompt
-                  }
-                ]
-              }
-            ],
-            text: {
-              format: {
-                type: 'text'
-              }
-            },
-            reasoning: MODELS.OPENAI.Reasoning.includes(openaiModelId) && effort !== 'medium'
-              ? {
-                  effort,
-                  summary: 'auto'
+          await fetch('https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1/responses', {
+            body: JSON.stringify({
+              model: openaiModelId,
+              input: [
+                ...await this.getSystemInstructions(options).then(value => value.map(element => ({
+                  role: MODELS.OPENAI.Reasoning.includes(openaiModelId) ? (openaiModelId.startsWith('o1-mini') ? 'user' : 'developer') : 'system',
+                  content: [
+                    {
+                      type: 'input_text',
+                      text: element
+                    }
+                  ]
+                }))),
+                {
+                  role: 'user',
+                  content: [
+                    {
+                      type: 'input_text',
+                      text: noEmptyLinesPrompt
+                    }
+                  ]
                 }
-              : {
-                  summary: 'auto'
-                },
-            tools: [
-              ...isOpenaiWebSearchEnabled
-                ? [{
-                    type: 'web_search_preview',
-                    user_location: {
-                      type: 'approximate'
-                    },
-                    search_context_size: 'medium'
-                  }]
-                : []
-            ],
-            ...MODELS.OPENAI.Reasoning.includes(openaiModelId) ? {} : { temperature: temperature === -1 ? 1 : temperature },
-            max_output_tokens: null,
-            ...MODELS.OPENAI.Reasoning.includes(openaiModelId) ? {} : { top_p: topP === -1 ? 1 : topP },
-            store: false,
-            ...doesStream ? { stream: true } : {}
-          })
-          if (doesStream) {
-            for await (const event of response) {
-              if (event.type !== 'response.output_text.delta') { continue }
-              this.responseText += event.delta
-              this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
-              if (this.translatedText.length === 0) { continue }
-              if (this.abortController.signal.aborted) { break }
-              resolve(this.translatedText, this.text, options)
-            }
-          } else {
-            this.responseText = response.output.filter((element) => element.type === 'message')[0].content[0].text
+              ],
+              text: {
+                format: {
+                  type: 'text'
+                }
+              },
+              reasoning: { ...MODELS.OPENAI.Reasoning.includes(openaiModelId) && effort !== 'medium' ? { effort } : {} },
+              tools: [
+                ...isOpenaiWebSearchEnabled
+                  ? [{
+                      type: 'web_search_preview',
+                      user_location: {
+                        type: 'approximate'
+                      },
+                      search_context_size: 'medium'
+                    }]
+                  : []
+              ],
+              ...MODELS.OPENAI.Reasoning.includes(openaiModelId)
+                ? {}
+                : {
+                    temperature: temperature === -1 ? 1 : temperature,
+                    top_p: topP === -1 ? 1 : topP
+                  },
+              store: false
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+              'accept-language': 'vi-VN,vi;q=0.9',
+              'air-user-id': crypto.randomUUID()
+            },
+            keepalive: true,
+            method: 'POST',
+            signal: this.abortController.signal
+          }).then(value => value.json()).then(value => {
+            this.responseText = value.output.filter((element) => element.type === 'message')[0].content[0].text
             this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
             if (this.abortController.signal.aborted) { return }
             resolve(this.translatedText, this.text, options)
-          }
+          })
         }
         break
       case Translators.OPENROUTER_TRANSLATE: {
@@ -500,23 +489,12 @@ class Translation {
             ...topP > -1 ? { top_p: topP } : {},
             ...topK > -1 ? { top_k: topK } : {},
             reasoning: { exclude: true },
-            ...isOpenrouterWebSearchEnabled ? { plugins: [{ id: 'web' }] } : {},
-            ...doesStream ? { stream: true } : {}
-          }, { signal: this.abortController.signal })
-          if (doesStream) {
-            for await (const chunk of completion) {
-              this.responseText += chunk.choices[0].delta.content ?? ''
-              this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
-              if (this.translatedText.length === 0) { continue }
-              if (this.abortController.signal.aborted) { return }
-              resolve(this.translatedText, this.text, options)
-            }
-          } else {
-            this.responseText = completion.choices[0].message.content
-            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
-            if (this.abortController.signal.aborted) { return }
-            resolve(this.translatedText, this.text, options)
-          }
+            ...isOpenrouterWebSearchEnabled ? { plugins: [{ id: 'web' }] } : {}
+          }, { keepalive: true, signal: this.abortController.signal })
+          this.responseText = completion.choices[0].message?.content
+          this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
+          if (this.abortController.signal.aborted) { return }
+          resolve(this.translatedText, this.text, options)
         }
         break
       }
@@ -535,18 +513,13 @@ class Translation {
             ...temperature > -1 ? { temperature } : {},
             ...topP > -1 ? { topP } : {},
             ...topK > -1 ? { topK } : {},
-            ...googleGenaiModelId.startsWith('gemini-2.5-flash') && !isThinkingModeEnabled
+            ...(googleGenaiModelId.startsWith('gemini-2.5-flash') || googleGenaiModelId === 'gemini-2.5-pro-preview-06-05') && !isThinkingModeEnabled
               ? {
                   thinkingConfig: {
-                    includeThoughts: true,
                     thinkingBudget: 0
                   }
                 }
-              : {
-                  thinkingConfig: {
-                    includeThoughts: true
-                  }
-                },
+              : {},
             safetySettings: [
               {
                 category: HarmCategory.HARM_CATEGORY_HARASSMENT,
@@ -588,10 +561,10 @@ class Translation {
             contents
           })
           for await (const chunk of response) {
-            this.responseText += chunk.text ?? ''
+            if (chunk.text != null) { this.responseText += chunk.text }
             this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
             if (this.translatedText.length === 0) { continue }
-            if (this.abortController.signal.aborted) { break }
+            if (this.abortController.signal.aborted) { return }
             resolve(this.translatedText, this.text, options)
           }
         }
@@ -619,7 +592,7 @@ class Translation {
         return `### TEXT SENTENCE WITH UUID:
 {${this.text.split('\n').map(element => {
                     const uuidParts = crypto.randomUUID().split('-')
-                    return `'${uuidParts[0]}#${uuidParts[2].substring(1)}': ${element.includes("'") && !element.includes('"') ? `"${element.replace(/^\s+|\s+$/g, '').replace(/\\/g, '\\\\')}"` : `'${element.replace(/^\s+|\s+$/g, '').replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`}`
+                    return `'${uuidParts[0]}#${uuidParts[2].substring(1)}': ${element.includes("'") && !element.includes('"') ? `"${element}"` : `'${element.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`}`
                 }).join(', ')}}
 ### TRANSLATED TEXT WITH UUID:`
       default:
@@ -1051,15 +1024,14 @@ Your output must only contain the translated text and cannot include explanation
   }
 
   doctranslateIoPostprocess (translatedTextWithUuid, textSentenceWithUuid) {
-    const UUID_PATTERN = '(?:[a-z0-9]{8}#[a-z0-9]{3})'
-    const translateText = translatedTextWithUuid.replace(/^\}$.+/ms, '').replace(new RegExp(UUID_PATTERN, 'gi'), (match) => match.toLowerCase()).replace(new RegExp(`(?<=${UUID_PATTERN})(?:>|')`, 'g'), '')
-    const doesTranslatedStringExist = /"translated_string": ?"/.test(translateText)
-    const potentialJsonString = doesTranslatedStringExist ? translateText.replace(/\\$/, '').replace(/(\\")?(?:",?)?(?:\n?\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(new RegExp(`\\n(?=  ${UUID_PATTERN}: |"(?:\\n\\}|${UUID_PATTERN}: |\\})|${UUID_PATTERN}: )|\\\\\\n(?=${UUID_PATTERN}: )`, 'g'), '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s)[0].replace(/insight": .+(?=translated_string": ")/s, '') : JSON.stringify({ translated_string: textSentenceWithUuid })
+    const translateText = translatedTextWithUuid.replace(/^\}$.+/ms, '').replace(/[a-z0-9]{8}#[a-z0-9]{3}/gi, (match) => match.toLowerCase()).replace(/([a-z0-9]{7,9}#[a-z0-9]{3})(?:>|')/g, '$1')
+    const translatedTextEolAmount = [...translateText.matchAll(/(?<!"translated_string": ")(?:[a-z0-9]{7,9}#[a-z0-9]{3}): /g)].length
+    const doesTranslatedStringExist = translateText.includes('"translated_string": "')
+    const potentialJsonString = doesTranslatedStringExist ? translateText.replace(/(\\")?"?(?:\n\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(new RegExp(`(?:(?:(?: ${Math.abs([...translateText.matchAll(/(?:",\n[^a-z0-9#]*)(?=[a-z0-9]{7,9}#[a-z0-9]{3}: )/g)].length - translatedTextEolAmount) <= 2 ? '|"' : ''})?,|\\\\n)?\\n[^a-z0-9#]*)(?=[a-z0-9]{7,9}#[a-z0-9]{3}: )`, 'g'), ' ,\\n').replace(/\n(?="\n?\})/, '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s)[0].replace(/insight": .+(?=translated_string": ")/s, '') : JSON.stringify({ translated_string: textSentenceWithUuid })
     if (Utils.isValidJson(potentialJsonString)) {
       // @ts-expect-error JSON5
       const parsedResult = JSON5.parse(potentialJsonString)
-      const textSentenceWithUuids = Object.entries(textSentenceWithUuid)
-      let translatedStringMap = {}
+      const translatedStringMap = {}
       if (typeof parsedResult.translated_string !== 'string') {
         if (doesTranslatedStringExist) { console.log('isJson', true) }
         // translatedStringMap = parsedResult.translated_string
@@ -1070,15 +1042,15 @@ Your output must only contain the translated text and cannot include explanation
       } else {
         /* eslint-disable camelcase */
         const { translated_string } = parsedResult
-        const uuidAmount = [...translated_string.matchAll(new RegExp(`(?<!^)(?:${UUID_PATTERN}: )`, 'g'))].length
-        const translatedString = uuidAmount - [...translated_string.matchAll(new RegExp(`, ?${UUID_PATTERN}: `, 'g'))].length <= (textSentenceWithUuids.length <= 2 ? 0 : 1) ? translated_string.replace(new RegExp(`(?:, ?)(?=${UUID_PATTERN}: )`, 'g'), '\n') : translated_string
+        const translatedStringEolAmount = [...translated_string.matchAll(/(?<!^)(?:[a-z0-9]{7,9}#[a-z0-9]{3}): /g)].length
+        const translatedStringParts = translated_string.split(new RegExp(`(?:^| ?${Math.abs([...translated_string.matchAll(/ ?,\n?(?=[a-z0-9]{7,9}#[a-z0-9]{3})/g)].length - translatedStringEolAmount) <= 1 ? ',' : ''}\\n?)([a-z0-9]{7,9}#[a-z0-9]{3}): `)).slice(1)
         /* eslint-enable camelcase */
-        const COMMA_PATTERN = '(?: , |,)'
-        const mayIncludesComma = uuidAmount - [...translatedString.matchAll(new RegExp(`${COMMA_PATTERN}\\n${UUID_PATTERN}: `, 'g'))].length <= (textSentenceWithUuids.length <= 2 ? 0 : 1)
-        translatedStringMap = Object.fromEntries([...translatedString.matchAll(new RegExp(`(${UUID_PATTERN}): (.+(?=${mayIncludesComma ? COMMA_PATTERN : ''}\\n(?: |\\n|" +\\n")?${UUID_PATTERN}: |\\n?$)(?:\\n(?!(?: |\\n|" +\\n")?${UUID_PATTERN}: ))?)+`, 'g'))].map(element => element.slice(1)))
+        for (let i = 0; i < translatedStringParts.length; i += 2) {
+          translatedStringMap[translatedStringParts[i]] = translatedStringParts[i + 1].replace(/\n+$/, '')
+        }
       }
       if (Object.keys(translatedStringMap ?? {}).length > 0) {
-        return textSentenceWithUuids.map(([first, second]) => parsedResult[first] ?? translatedStringMap[first] ?? (second.replace(/^\s+/, '').length > 0 ? '' : second)).join('\n')
+        return Object.entries(textSentenceWithUuid).map(([first, second]) => parsedResult[first] ?? translatedStringMap[first] ?? (second.replace(/\s+/, '').length > 0 ? '' : second)).join('\n')
       }
     }
     return ''

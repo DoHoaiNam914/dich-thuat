@@ -1,5 +1,5 @@
 'use strict'
-/* global $, confirm, fetch, localStorage, open, Papa, sessionStorage */
+/* global $, confirm, fetch, getSelection, localStorage, open, Papa, sessionStorage */
 import Reader from './Reader.js'
 import { MODELS, Translation } from './Translation.js'
 import Utils from './Utils.js'
@@ -7,7 +7,6 @@ const $addWordButton = $('#add-word-button')
 const $apiKeyTexts = $('.api-key-text')
 const $boldTextSwitch = $('#bold-text-switch')
 const $checkedOptions = $('.checked-option')
-const $chutesApiTokenText = $('#chutes-api-token-text')
 const $copyButtons = $('.copy-button')
 const $customDictionarySwitch = $('#custom-dictionary-switch')
 const $defineModal = $('#define-modal')
@@ -278,7 +277,6 @@ $translationTranslators.on('click', function () {
   dictionaryTranslation = new Translation(sourceText, $targetTextLanguageSelect.val(), $sourceTextLanguageSelect.val() || null, {
     GEMINI_API_KEY: $geminiApiKeyText.val(),
     GROQ_API_KEY: $groqApiKeyText.val(),
-    CHUTES_API_TOKEN: $chutesApiTokenText.val(),
     OPENROUTER_API_KEY: $openrouterApiKeyText.val(),
     TVLY_API_KEY: $('#tvly-api-key-text').val(),
     isCustomDictionaryEnabled: $customDictionarySwitch.prop('checked'),
@@ -291,10 +289,9 @@ $translationTranslators.on('click', function () {
     isOpenaiWebSearchEnabled: $('#openai-web-search-switch').prop('checked'),
     groqModelId: $('#dictionary-groq-model-select').val(),
     isGroqWebSearchEnabled: $('#groq-web-search-switch').prop('checked'),
-    chutesModelId: $('#dictionary-chutes-model-text').val(),
-    isChutesWebSearchEnabled: $('#chutes-web-search-switch').prop('checked'),
     openrouterModelId: $('#dictionary-openrouter-model-text').val(),
-    isOpenrouterWebSearchEnabled: $('#openrouter-web-search-switch').prop('checked'),
+    doesReasoning: $('#dictionary-reasoning-switch').prop('checked'),
+    openrouterWebSearch: $('#openrouter-web-search').val(),
     systemInstruction: $('#dictionary-system-instruction-select').val(),
     temperature: parseFloat($('#dictionary-temperature-text').val()),
     topP: parseFloat($('#dictionary-top-p-text').val()),
@@ -433,8 +430,8 @@ $('.language-select').on('change', function () {
 })
 $('#dictionary-modal-button').on('mousedown', () => {
   if (!$outputTextarea.is(':visible')) { return }
-  $sourceText.val((getSelection().toString() ?? '').replaceAll(/\n/g, ' ')).trigger('input')
-  getSelection().removeAllRanges()
+  $sourceText.val((getSelection()?.toString() ?? '').replace(/\n/g, ' '))
+  getSelection()?.removeAllRanges()
 })
 $translateButton.on('click', function () {
   const $textareaCopyButton = $copyButtons.filter(`[data-target="#${$inputTextarea.prop('id')}"]`)
@@ -455,9 +452,8 @@ $translateButton.on('click', function () {
         effort: $('#effort-select').val(),
         groqModelId: $('#groq-model-select').val(),
         GROQ_API_KEY: $groqApiKeyText.val(),
-        chutesModelId: $('#chutes-model-text').val(),
-        CHUTES_API_TOKEN: $chutesApiTokenText.val(),
         openrouterModelId: $('#openrouter-model-text').val(),
+        doesReasoning: $('#reasoning-switch').prop('checked'),
         OPENROUTER_API_KEY: $openrouterApiKeyText.val(),
         doesStream: $('#stream-switch').prop('checked'),
         isBilingualEnabled: $('#bilingual-switch').prop('checked'),
