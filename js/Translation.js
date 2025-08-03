@@ -15,21 +15,17 @@ const MODELS = {
   GOOGLE_GENAI: {
     'Gemini 2.5': [
       {
-        modelId: 'gemini-2.5-pro-preview-06-05',
-        modelName: 'Gemini 2.5 Pro Preview',
+        modelId: 'gemini-2.5-pro',
+        modelName: 'Gemini 2.5 Pro',
         selected: true
       },
       {
-        modelId: 'gemini-2.5-pro-preview-05-06',
-        modelName: 'Gemini 2.5 Pro Preview 05-06'
+        modelId: 'gemini-2.5-flash',
+        modelName: 'Gemini 2.5 Flash'
       },
       {
-        modelId: 'gemini-2.5-flash-preview-04-17',
-        modelName: 'Gemini 2.5 Flash Preview 04-17'
-      },
-      {
-        modelId: 'gemini-2.5-flash-preview-05-20',
-        modelName: 'Gemini 2.5 Flash Preview 05-20'
+        modelId: 'gemini-2.5-flash-lite',
+        modelName: 'Gemini 2.5 Flash Lite'
       }
     ],
     'Gemini 2.0': [
@@ -61,6 +57,14 @@ const MODELS = {
     ],
     Gemma: [
       {
+        modelId: 'gemma-3n-e2b-it',
+        modelName: 'Gemma 3n E2B'
+      },
+      {
+        modelId: 'gemma-3n-e4b-it',
+        modelName: 'Gemma 3n E4B'
+      },
+      {
         modelId: 'gemma-3-1b-it',
         modelName: 'Gemma 3 1B'
       },
@@ -75,10 +79,6 @@ const MODELS = {
       {
         modelId: 'gemma-3-27b-it',
         modelName: 'Gemma 3 27B'
-      },
-      {
-        modelId: 'gemma-3n-e4b-it',
-        modelName: 'Gemma 3n E4B'
       }
     ],
     Other: [
@@ -125,10 +125,6 @@ const MODELS = {
       'gpt-4o-2024-08-06',
       'gpt-4o-2024-05-13'
     ],
-    'GPT-4.5': [
-      'gpt-4.5-preview-2025-02-27',
-      'gpt-4.5-preview'
-    ],
     'GPT-4': [
       'gpt-4-turbo-preview',
       'gpt-4-turbo-2024-04-09',
@@ -149,7 +145,9 @@ const MODELS = {
     ]
   },
   GROQ: {
-    'Alibaba Cloud': ['qwen-qwq-32b'],
+    'Alibaba Cloud': [
+      'qwen/qwen3-32b'
+    ],
     'DeepSeek / Meta': ['deepseek-r1-distill-llama-70b'],
     Google: ['gemma2-9b-it'],
     Meta: [
@@ -163,7 +161,8 @@ const MODELS = {
         selected: true
       }
     ],
-    Mistral: ['mistral-saba-24b']
+    Mistral: ['mistral-saba-24b'],
+    'Moonshot AI': ['moonshotai/kimi-k2-instruct']
   }
 }
 let Domains;
@@ -212,6 +211,12 @@ let Efforts;
   Efforts.MEDIUM = 'medium'
   Efforts.HIGH = 'high'
 })(Efforts || (Efforts = {}))
+let OpenrouterWebSearchs;
+(function (OpenrouterWebSearchs) {
+  OpenrouterWebSearchs.DISABLED = ''
+  OpenrouterWebSearchs.EXA = 'exa'
+  OpenrouterWebSearchs.TAVILY = 'tavily'
+})(OpenrouterWebSearchs || (OpenrouterWebSearchs = {}))
 let SystemInstructions;
 (function (SystemInstructions) {
   SystemInstructions.GPT4OMINI = 'gpt-4o-mini'
@@ -230,7 +235,6 @@ let Tones;
 let Translators;
 (function (Translators) {
   Translators.BAIDU_TRANSLATE = 'baiduTranslate'
-  Translators.CHUTES_TRANSLATE = 'chutesTranslate'
   Translators.DEEPL_TRANSLATE = 'deeplTranslate'
   Translators.GOOGLE_GENAI_TRANSLATE = 'googleGenaiTranslate'
   Translators.GOOGLE_TRANSLATE = 'googleTranslate'
@@ -250,21 +254,21 @@ class Translation {
     this.originalLang = originalLang
     this.abortController = new AbortController()
     options = {
-      chutesModelId: 'deepseek-ai/DeepSeek-R1',
       customDictionary: [],
       customPrompt: '',
+      doesReasoning: false,
+      doesStream: false,
       domain: Domains.NONE,
       effort: Efforts.MEDIUM,
       googleGenaiModelId: Object.values(MODELS.GOOGLE_GENAI).flat().filter(element => typeof element === 'object').find((element) => element.selected)?.modelId,
       groqModelId: Object.values(MODELS.GROQ).flat().filter(element => typeof element === 'object').find((element) => element.selected)?.modelId,
       isBilingualEnabled: false,
-      isChutesWebSearchEnabled: false,
       isCustomDictionaryEnabled: false,
       isCustomPromptEnabled: false,
       isGroqWebSearchEnabled: false,
       isGroundingWithGoogleSearchEnabled: false,
       isOpenaiWebSearchEnabled: false,
-      isOpenrouterWebSearchEnabled: false,
+      openrouterWebSearch: OpenrouterWebSearchs.DISABLED,
       isThinkingModeEnabled: true,
       openaiModelId: Object.values(MODELS.OPENAI).flat().filter(element => typeof element === 'object').find((element) => element.selected)?.modelId,
       openrouterModelId: 'openai/gpt-4o',
@@ -276,7 +280,7 @@ class Translation {
       translatorId: Translators.GOOGLE_GENAI_TRANSLATE,
       ...options
     }
-    const { B2B_AUTH_TOKEN, systemInstruction, temperature, topP, topK, TVLY_API_KEY } = options
+    const { B2B_AUTH_TOKEN, doesStream, systemInstruction, temperature, topP, topK, TVLY_API_KEY } = options
     this.B2B_AUTH_TOKEN = B2B_AUTH_TOKEN
     this.TVLY_API_KEY = TVLY_API_KEY
     const prompt = this.getPrompt(systemInstruction)
@@ -284,86 +288,6 @@ class Translation {
     // @ts-expect-error JSON5
     const textSentenceWithUuid = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? JSON5.parse(prompt.match(/(?<=^### TEXT SENTENCE WITH UUID:\n).+(?=\n### TRANSLATED TEXT WITH UUID:$)/s)[0]) : {}
     switch (options.translatorId) {
-      case Translators.CHUTES_TRANSLATE:
-        this.translateText = async (resolve) => {
-          const { chutesModelId, CHUTES_API_TOKEN, isChutesWebSearchEnabled } = options
-          const isNotDeepseekModel = !chutesModelId.startsWith('deepseek-ai/')
-          const searchResults = isChutesWebSearchEnabled ? await this.webSearchWithTavily().then(value => value.map((element, index) => `[webpage ${index + 1} begin]${element}[webpage ${index + 1} end]`).join('\n')) : ''
-          /* eslint-disable no-mixed-spaces-and-tabs */
-          const response = await fetch('https://llm.chutes.ai/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${CHUTES_API_TOKEN}`,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              model: chutesModelId,
-              messages: [
-                /* eslint-enable no-mixed-spaces-and-tabs */
-                ...await this.getSystemInstructions(options).then(value => value.map(element => ({
-                  role: 'system',
-                  content: element
-                }))),
-                {
-                  role: 'user',
-                  content: searchResults.length > 0 ? this.getWebSearchPrompt(searchResults, noEmptyLinesPrompt, isNotDeepseekModel) : prompt
-                }
-                /* eslint-disable no-mixed-spaces-and-tabs */
-              ],
-              stream: true,
-              temperature: temperature > -1 ? temperature : 0.7,
-              /* eslint-enable no-mixed-spaces-and-tabs */
-              ...topP > -1 ? { top_p: topP } : {},
-              ...topK > -1 ? { top_k: topK } : {}
-            }), // eslint-disable-line no-mixed-spaces-and-tabs
-            keepalive: true,
-            signal: this.abortController.signal
-            /* eslint-disable no-mixed-spaces-and-tabs */
-          })
-          /* eslint-enable no-mixed-spaces-and-tabs */
-          const reader = response.body?.getReader()
-          if (!reader) {
-            throw new Error('Response body is not readable')
-          }
-          const decoder = new TextDecoder()
-          let buffer = ''
-          try {
-            while (true) { // eslint-disable-line no-constant-condition
-              const { done, value } = await reader.read()
-              if (done) { break }
-              // Append new chunk to buffer
-              buffer += decoder.decode(value, { stream: true })
-              // Process complete lines from buffer
-              while (true) { // eslint-disable-line no-constant-condition
-                const lineEnd = buffer.indexOf('\n')
-                if (lineEnd === -1) { break }
-                const line = buffer.slice(0, lineEnd).trim()
-                buffer = buffer.slice(lineEnd + 1)
-                if (line.startsWith('data: ')) {
-                  const data = line.slice(6)
-                  if (data === '[DONE]') { break }
-                  try {
-                    const parsed = JSON.parse(data)
-                    const content = parsed.choices[0].delta.content
-                    if (content) {
-                      this.responseText += content
-                      if (this.responseText.startsWith('<think>') && !/<\/think>\n{1,2}/.test(this.responseText)) { continue } else if (this.responseText.startsWith('<think>')) { this.responseText = this.responseText.replace(/^<think>\n.+\n<\/think>\n{1,2}/s, '') }
-                      this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
-                      if (this.translatedText.length === 0) { continue }
-                      if (this.abortController.signal.aborted) { return }
-                      resolve(this.translatedText, this.text, options)
-                    }
-                  } catch {
-                    // Ignore invalid JSON
-                  }
-                }
-              }
-            }
-          } finally {
-            reader.cancel()
-          }
-        } // eslint-disable-line no-mixed-spaces-and-tabs
-        break
       case Translators.GROQ_TRANSLATE: {
         const { groqModelId, GROQ_API_KEY, isGroqWebSearchEnabled } = options
         const groq = new Groq({ apiKey: GROQ_API_KEY, dangerouslyAllowBrowser: true })
@@ -378,7 +302,7 @@ class Translation {
               }))),
               {
                 role: 'user',
-                content: searchResults.length > 0 ? this.getWebSearchPrompt(searchResults, noEmptyLinesPrompt, isNotDeepseekModel) : prompt
+                content: searchResults.length > 0 ? this.getWebSearchPrompt(searchResults, noEmptyLinesPrompt, isNotDeepseekModel) : noEmptyLinesPrompt
               }
             ],
             model: groqModelId,
@@ -392,7 +316,7 @@ class Translation {
             this.responseText += chunk.choices[0]?.delta?.content || ''
             this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
             if (this.translatedText.length === 0) { continue }
-            if (this.abortController.signal.aborted) { return }
+            if (this.abortController.signal.aborted) { break }
             resolve(this.translatedText, this.text, options)
           }
         }
@@ -401,78 +325,92 @@ class Translation {
       case Translators.OPENAI_TRANSLATOR:
         this.translateText = async (resolve) => {
           const { effort, isOpenaiWebSearchEnabled, openaiModelId } = options
-          await fetch('https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1/responses', {
-            body: JSON.stringify({
-              model: openaiModelId,
-              input: [
-                ...await this.getSystemInstructions(options).then(value => value.map(element => ({
-                  role: MODELS.OPENAI.Reasoning.includes(openaiModelId) ? (openaiModelId.startsWith('o1-mini') ? 'user' : 'developer') : 'system',
-                  content: [
-                    {
-                      type: 'input_text',
-                      text: element
-                    }
-                  ]
-                }))),
-                {
-                  role: 'user',
-                  content: [
-                    {
-                      type: 'input_text',
-                      text: noEmptyLinesPrompt
-                    }
-                  ]
-                }
-              ],
-              text: {
-                format: {
-                  type: 'text'
-                }
-              },
-              reasoning: { ...MODELS.OPENAI.Reasoning.includes(openaiModelId) && effort !== 'medium' ? { effort } : {} },
-              tools: [
-                ...isOpenaiWebSearchEnabled
-                  ? [{
-                      type: 'web_search_preview',
-                      user_location: {
-                        type: 'approximate'
-                      },
-                      search_context_size: 'medium'
-                    }]
-                  : []
-              ],
-              ...MODELS.OPENAI.Reasoning.includes(openaiModelId)
-                ? {}
-                : {
-                    temperature: temperature === -1 ? 1 : temperature,
-                    top_p: topP === -1 ? 1 : topP
-                  },
-              store: false
-            }),
-            headers: {
-              'Content-Type': 'application/json',
-              'accept-language': 'vi-VN,vi;q=0.9',
-              'air-user-id': crypto.randomUUID()
+          const openai = new OpenAI({
+            apiKey: '5N3NR9SDGLS7VLUWSEN9J30P',
+            baseURL: 'https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1',
+            fetchOptions: { signal: this.abortController.signal },
+            defaultHeaders: { 'air-user-id': crypto.randomUUID() },
+            dangerouslyAllowBrowser: true
+          })
+          const response = await openai.responses.create({
+            model: openaiModelId,
+            input: [
+              ...await this.getSystemInstructions(options).then(value => value.map(element => ({
+                role: MODELS.OPENAI.Reasoning.includes(openaiModelId) ? (openaiModelId.startsWith('o1-mini') ? 'user' : 'developer') : 'system',
+                content: [
+                  {
+                    type: 'input_text',
+                    text: element
+                  }
+                ]
+              }))),
+              {
+                role: 'user',
+                content: [
+                  {
+                    type: 'input_text',
+                    text: noEmptyLinesPrompt
+                  }
+                ]
+              }
+            ],
+            text: {
+              format: {
+                type: 'text'
+              }
             },
-            keepalive: true,
-            method: 'POST',
-            signal: this.abortController.signal
-          }).then(value => value.json()).then(value => {
-            this.responseText = value.output.filter((element) => element.type === 'message')[0].content[0].text
+            reasoning: MODELS.OPENAI.Reasoning.includes(openaiModelId) && effort !== 'medium'
+              ? {
+                  effort,
+                  summary: 'auto'
+                }
+              : {
+                  summary: 'auto'
+                },
+            tools: [
+              ...isOpenaiWebSearchEnabled
+                ? [{
+                    type: 'web_search_preview',
+                    user_location: {
+                      type: 'approximate'
+                    },
+                    search_context_size: 'medium'
+                  }]
+                : []
+            ],
+            ...MODELS.OPENAI.Reasoning.includes(openaiModelId) ? {} : { temperature: temperature === -1 ? 1 : temperature },
+            max_output_tokens: null,
+            ...MODELS.OPENAI.Reasoning.includes(openaiModelId) ? {} : { top_p: topP === -1 ? 1 : topP },
+            store: false,
+            ...doesStream ? { stream: true } : {}
+          })
+          if (doesStream) {
+            for await (const event of response) {
+              if (event.type !== 'response.output_text.delta') { continue }
+              this.responseText += event.delta
+              this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
+              if (this.translatedText.length === 0) { continue }
+              if (this.abortController.signal.aborted) { break }
+              resolve(this.translatedText, this.text, options)
+            }
+          } else {
+            this.responseText = response.output.filter((element) => element.type === 'message')[0].content[0].text
             this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
             if (this.abortController.signal.aborted) { return }
             resolve(this.translatedText, this.text, options)
-          })
+          }
         }
         break
       case Translators.OPENROUTER_TRANSLATE: {
-        const { isOpenrouterWebSearchEnabled, openrouterModelId, OPENROUTER_API_KEY } = options
+        const { doesReasoning, openrouterWebSearch, openrouterModelId, OPENROUTER_API_KEY } = options
         const openai = new OpenAI({
           baseURL: 'https://openrouter.ai/api/v1',
           apiKey: OPENROUTER_API_KEY,
           dangerouslyAllowBrowser: true
         })
         this.translateText = async (resolve) => {
+          const isNotDeepseekModel = !openrouterModelId.startsWith('deepseek/')
+          const searchResults = openrouterWebSearch === OpenrouterWebSearchs.TAVILY ? await this.webSearchWithTavily().then(value => value.map((element, index) => `[webpage ${index + 1} begin]${element}[webpage ${index + 1} end]`).join('\n')) : ''
           const completion = await openai.chat.completions.create({
             model: openrouterModelId,
             messages: [
@@ -482,19 +420,33 @@ class Translation {
               }))),
               {
                 role: 'user',
-                content: noEmptyLinesPrompt
+                content: searchResults.length > 0 ? this.getWebSearchPrompt(searchResults, noEmptyLinesPrompt, isNotDeepseekModel) : noEmptyLinesPrompt
               }
             ],
             ...temperature > -1 ? { temperature } : {},
             ...topP > -1 ? { top_p: topP } : {},
             ...topK > -1 ? { top_k: topK } : {},
-            reasoning: { exclude: true },
-            ...isOpenrouterWebSearchEnabled ? { plugins: [{ id: 'web' }] } : {}
-          }, { keepalive: true, signal: this.abortController.signal })
-          this.responseText = completion.choices[0].message?.content
-          this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
-          if (this.abortController.signal.aborted) { return }
-          resolve(this.translatedText, this.text, options)
+            reasoning: {
+              exclude: true,
+              ...doesReasoning ? { enabled: true } : {}
+            },
+            ...openrouterWebSearch === OpenrouterWebSearchs.EXA ? { plugins: [{ id: 'web' }] } : {},
+            ...doesStream ? { stream: true } : {}
+          }, { signal: this.abortController.signal })
+          if (doesStream) {
+            for await (const chunk of completion) {
+              this.responseText += chunk.choices[0].delta.content ?? ''
+              this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
+              if (this.translatedText.length === 0) { continue }
+              if (this.abortController.signal.aborted) { return }
+              resolve(this.translatedText, this.text, options)
+            }
+          } else {
+            this.responseText = completion.choices[0].message.content
+            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
+            if (this.abortController.signal.aborted) { return }
+            resolve(this.translatedText, this.text, options)
+          }
         }
         break
       }
@@ -513,13 +465,18 @@ class Translation {
             ...temperature > -1 ? { temperature } : {},
             ...topP > -1 ? { topP } : {},
             ...topK > -1 ? { topK } : {},
-            ...(googleGenaiModelId.startsWith('gemini-2.5-flash') || googleGenaiModelId === 'gemini-2.5-pro-preview-06-05') && !isThinkingModeEnabled
+            ...googleGenaiModelId.startsWith('gemini-2.5-flash') && !isThinkingModeEnabled
               ? {
                   thinkingConfig: {
+                    includeThoughts: true,
                     thinkingBudget: 0
                   }
                 }
-              : {},
+              : {
+                  thinkingConfig: {
+                    includeThoughts: true
+                  }
+                },
             safetySettings: [
               {
                 category: HarmCategory.HARM_CATEGORY_HARASSMENT,
@@ -561,10 +518,10 @@ class Translation {
             contents
           })
           for await (const chunk of response) {
-            if (chunk.text != null) { this.responseText += chunk.text }
+            this.responseText += chunk.text ?? ''
             this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
             if (this.translatedText.length === 0) { continue }
-            if (this.abortController.signal.aborted) { return }
+            if (this.abortController.signal.aborted) { break }
             resolve(this.translatedText, this.text, options)
           }
         }
@@ -592,7 +549,7 @@ class Translation {
         return `### TEXT SENTENCE WITH UUID:
 {${this.text.split('\n').map(element => {
                     const uuidParts = crypto.randomUUID().split('-')
-                    return `'${uuidParts[0]}#${uuidParts[2].substring(1)}': ${element.includes("'") && !element.includes('"') ? `"${element}"` : `'${element.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`}`
+                    return `'${uuidParts[0]}#${uuidParts[2].substring(1)}': ${element.includes("'") && !element.includes('"') ? `"${element.replace(/^\s+|\s+$/g, '').replace(/\\/g, '\\\\')}"` : `'${element.replace(/^\s+|\s+$/g, '').replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`}`
                 }).join(', ')}}
 ### TRANSLATED TEXT WITH UUID:`
       default:
@@ -1024,14 +981,15 @@ Your output must only contain the translated text and cannot include explanation
   }
 
   doctranslateIoPostprocess (translatedTextWithUuid, textSentenceWithUuid) {
-    const translateText = translatedTextWithUuid.replace(/^\}$.+/ms, '').replace(/[a-z0-9]{8}#[a-z0-9]{3}/gi, (match) => match.toLowerCase()).replace(/([a-z0-9]{7,9}#[a-z0-9]{3})(?:>|')/g, '$1')
-    const translatedTextEolAmount = [...translateText.matchAll(/(?<!"translated_string": ")(?:[a-z0-9]{7,9}#[a-z0-9]{3}): /g)].length
-    const doesTranslatedStringExist = translateText.includes('"translated_string": "')
-    const potentialJsonString = doesTranslatedStringExist ? translateText.replace(/(\\")?"?(?:\n\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(new RegExp(`(?:(?:(?: ${Math.abs([...translateText.matchAll(/(?:",\n[^a-z0-9#]*)(?=[a-z0-9]{7,9}#[a-z0-9]{3}: )/g)].length - translatedTextEolAmount) <= 2 ? '|"' : ''})?,|\\\\n)?\\n[^a-z0-9#]*)(?=[a-z0-9]{7,9}#[a-z0-9]{3}: )`, 'g'), ' ,\\n').replace(/\n(?="\n?\})/, '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s)[0].replace(/insight": .+(?=translated_string": ")/s, '') : JSON.stringify({ translated_string: textSentenceWithUuid })
+    const UUID_PATTERN = '(?:[a-z0-9]{8}#[a-z0-9]{3})'
+    const translateText = translatedTextWithUuid.replace(/^\}$.+/ms, '').replace(new RegExp(UUID_PATTERN, 'gi'), (match) => match.toLowerCase()).replace(new RegExp(`(?<=${UUID_PATTERN})(?:>|')`, 'g'), '')
+    const doesTranslatedStringExist = /"translated_string": ?"/.test(translateText)
+    const potentialJsonString = doesTranslatedStringExist ? translateText.replace(/\\$/, '').replace(/(\\")?(?:",?)?(?:\n?\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(new RegExp(`\\n(?=  ${UUID_PATTERN}: |"(?:\\n\\}|${UUID_PATTERN}: |\\})|${UUID_PATTERN}: )|\\\\\\n(?=${UUID_PATTERN}: )`, 'g'), '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s)[0].replace(/insight": .+(?=translated_string": ")/s, '') : JSON.stringify({ translated_string: textSentenceWithUuid })
     if (Utils.isValidJson(potentialJsonString)) {
       // @ts-expect-error JSON5
       const parsedResult = JSON5.parse(potentialJsonString)
-      const translatedStringMap = {}
+      const textSentenceWithUuids = Object.entries(textSentenceWithUuid)
+      let translatedStringMap = {}
       if (typeof parsedResult.translated_string !== 'string') {
         if (doesTranslatedStringExist) { console.log('isJson', true) }
         // translatedStringMap = parsedResult.translated_string
@@ -1042,18 +1000,18 @@ Your output must only contain the translated text and cannot include explanation
       } else {
         /* eslint-disable camelcase */
         const { translated_string } = parsedResult
-        const translatedStringEolAmount = [...translated_string.matchAll(/(?<!^)(?:[a-z0-9]{7,9}#[a-z0-9]{3}): /g)].length
-        const translatedStringParts = translated_string.split(new RegExp(`(?:^| ?${Math.abs([...translated_string.matchAll(/ ?,\n?(?=[a-z0-9]{7,9}#[a-z0-9]{3})/g)].length - translatedStringEolAmount) <= 1 ? ',' : ''}\\n?)([a-z0-9]{7,9}#[a-z0-9]{3}): `)).slice(1)
+        const uuidAmount = [...translated_string.matchAll(new RegExp(`(?<!^)(?:${UUID_PATTERN}: )`, 'g'))].length
+        const translatedString = uuidAmount - [...translated_string.matchAll(new RegExp(`, ?${UUID_PATTERN}: `, 'g'))].length <= (textSentenceWithUuids.length <= 2 ? 0 : 1) ? translated_string.replace(new RegExp(`(?:, ?)(?=${UUID_PATTERN}: )`, 'g'), '\n') : translated_string
         /* eslint-enable camelcase */
-        for (let i = 0; i < translatedStringParts.length; i += 2) {
-          translatedStringMap[translatedStringParts[i]] = translatedStringParts[i + 1].replace(/\n+$/, '')
-        }
+        const COMMA_PATTERN = '(?: , |,)'
+        const mayIncludesComma = uuidAmount - [...translatedString.matchAll(new RegExp(`${COMMA_PATTERN}\\n${UUID_PATTERN}: `, 'g'))].length <= (textSentenceWithUuids.length <= 2 ? 0 : 1)
+        translatedStringMap = Object.fromEntries([...translatedString.matchAll(new RegExp(`(${UUID_PATTERN}): (.+(?=${mayIncludesComma ? COMMA_PATTERN : ''}\\n(?: |\\n|" +\\n")?${UUID_PATTERN}: |\\n?$)(?:\\n(?!(?: |\\n|" +\\n")?${UUID_PATTERN}: ))?)+`, 'g'))].map(element => element.slice(1)))
       }
       if (Object.keys(translatedStringMap ?? {}).length > 0) {
-        return Object.entries(textSentenceWithUuid).map(([first, second]) => parsedResult[first] ?? translatedStringMap[first] ?? (second.replace(/\s+/, '').length > 0 ? '' : second)).join('\n')
+        return textSentenceWithUuids.map(([first, second]) => parsedResult[first] ?? translatedStringMap[first] ?? (second.replace(/^\s+/, '').length > 0 ? '' : second)).join('\n')
       }
     }
     return ''
   }
 }
-export { Domains, Efforts, MODELS, SystemInstructions, Tones, Translation }
+export { Domains, Efforts, MODELS, OpenrouterWebSearchs, SystemInstructions, Tones, Translation }
