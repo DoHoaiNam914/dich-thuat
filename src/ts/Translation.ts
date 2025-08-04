@@ -248,10 +248,10 @@ interface Options {
   isGroqWebSearchEnabled?: boolean
   isGroundingWithGoogleSearchEnabled?: boolean
   isOpenaiWebSearchEnabled?: boolean
-  openrouterWebSearch?: OpenrouterWebSearchs
   isThinkingModeEnabled?: boolean
   openaiModelId?: string
   openrouterModelId?: string,
+  openrouterWebSearch?: OpenrouterWebSearchs
   OPENROUTER_API_KEY?: string,
   systemInstruction?: SystemInstructions
   temperature?: number

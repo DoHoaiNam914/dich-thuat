@@ -292,7 +292,7 @@ $translationTranslators.on( "click", function () {
     isGroqWebSearchEnabled: $( "#groq-web-search-switch" ).prop( "checked" ),
     openrouterModelId: $( "#dictionary-openrouter-model-text" ).val() as string,
     doesReasoning: $( "#dictionary-reasoning-switch" ).prop( "checked" ),
-    openrouterWebSearch: $( "#openrouter-web-search" ).val() as OpenrouterWebSearchs,
+    openrouterWebSearch: $( "#openrouter-web-search-select" ).val() as OpenrouterWebSearchs,
     systemInstruction: $( "#dictionary-system-instruction-select" ).val() as SystemInstructions,
     temperature: parseFloat($( "#dictionary-temperature-text" ).val() as string),
     topP: parseFloat($( "#dictionary-top-p-text" ).val() as string),
