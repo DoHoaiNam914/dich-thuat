@@ -1,13 +1,12 @@
 'use strict'
-/* global $, confirm, fetch, localStorage, open, Papa, sessionStorage */
+/* global $, confirm, fetch, getSelection, localStorage, open, Papa, sessionStorage */
 import Reader from './Reader.js'
-import { DictionaryEntry, Domains, Efforts, MODELS, Options, SystemInstructions, Tones, Translation } from './Translation.js'
+import { DictionaryEntry, Domains, Efforts, MODELS, OpenrouterWebSearchs, Options, SystemInstructions, Tones, Translation } from './Translation.js'
 import Utils from './Utils.js'
 const $addWordButton = $( "#add-word-button" )
 const $apiKeyTexts = $( ".api-key-text" )
 const $boldTextSwitch = $( "#bold-text-switch" )
 const $checkedOptions = $('.checked-option')
-const $chutesApiTokenText = $( "#chutes-api-token-text" )
 const $copyButtons = $( ".copy-button" )
 const $customDictionarySwitch = $( "#custom-dictionary-switch" )
 const $defineModal = $( "#define-modal" )
@@ -279,7 +278,6 @@ $translationTranslators.on( "click", function () {
   dictionaryTranslation = new Translation(sourceText, $targetTextLanguageSelect.val() as string, $sourceTextLanguageSelect.val() as string || null, {
     GEMINI_API_KEY: $geminiApiKeyText.val() as string,
     GROQ_API_KEY: $groqApiKeyText.val() as string,
-    CHUTES_API_TOKEN: $chutesApiTokenText.val() as string,
     OPENROUTER_API_KEY: $openrouterApiKeyText.val() as string,
     TVLY_API_KEY: $( "#tvly-api-key-text" ).val() as string,
     isCustomDictionaryEnabled: $customDictionarySwitch.prop( "checked" ),
@@ -292,10 +290,9 @@ $translationTranslators.on( "click", function () {
     isOpenaiWebSearchEnabled: $( "#openai-web-search-switch" ).prop( "checked" ),
     groqModelId: $( "#dictionary-groq-model-select" ).val() as string,
     isGroqWebSearchEnabled: $( "#groq-web-search-switch" ).prop( "checked" ),
-    chutesModelId: $( "#dictionary-chutes-model-text" ).val() as string,
-    isChutesWebSearchEnabled: $( "#chutes-web-search-switch" ).prop( "checked" ),
     openrouterModelId: $( "#dictionary-openrouter-model-text" ).val() as string,
-    isOpenrouterWebSearchEnabled: $( "#openrouter-web-search-switch" ).prop( "checked" ),
+    doesReasoning: $( "#dictionary-reasoning-switch" ).prop( "checked" ),
+    openrouterWebSearch: $( "#openrouter-web-search" ).val() as OpenrouterWebSearchs,
     systemInstruction: $( "#dictionary-system-instruction-select" ).val() as SystemInstructions,
     temperature: parseFloat($( "#dictionary-temperature-text" ).val() as string),
     topP: parseFloat($( "#dictionary-top-p-text" ).val() as string),
@@ -341,7 +338,7 @@ $sourceText.on( "input", function () {
   $targetTextarea.val( customDictionary.find(({ ori_lang, des_lang, ori_word }) => ori_lang === $sourceTextLanguageSelect.val() && des_lang === $targetTextLanguageSelect.val() && ori_word === $( this ).val())?.des_word ?? $targetTextarea.val() as string ) // eslint-disable-line camelcase
 })
 $targetTextarea.on( "input", function () {
-  $( this ).val( ($( this ).val() as string).replace(/\n/g, ' ') )
+  $( this ).val( ($( this ).val() as string).replace(/\n+/g, ' ') )
 })
 $addWordButton.on( "click", () => {
   const originalLanguage = $sourceTextLanguageSelect.val() as string
@@ -435,8 +432,8 @@ $( ".language-select" ).on( "change", function () {
 })
 $( "#dictionary-modal-button" ).on( "mousedown", () => {
   if (!$outputTextarea.is(':visible')) return
-  $sourceText.val((getSelection().toString() ?? '').replaceAll(/\n/g, ' '))
-  getSelection().removeAllRanges()
+  $sourceText.val((getSelection()?.toString() ?? '').replace(/\n+/g, ' ')).trigger( "input" )
+  getSelection()?.removeAllRanges()
 })
 $translateButton.on( "click", function () {
   const $textareaCopyButton = $copyButtons.filter( `[data-target="#${$inputTextarea.prop( "id" ) as string}"]` )
@@ -457,9 +454,8 @@ $translateButton.on( "click", function () {
         effort: $( "#effort-select" ).val() as Efforts,
         groqModelId: $( "#groq-model-select" ).val() as string,
         GROQ_API_KEY: $groqApiKeyText.val() as string,
-        chutesModelId: $( "#chutes-model-text" ).val() as string,
-        CHUTES_API_TOKEN: $chutesApiTokenText.val() as string,
         openrouterModelId: $( "#openrouter-model-text" ).val() as string,
+        doesReasoning: $( "#reasoning-switch" ).prop( "checked" ),
         OPENROUTER_API_KEY: $openrouterApiKeyText.val() as string,
         doesStream: $( "#stream-switch" ).prop( "checked" ),
         isBilingualEnabled: $( "#bilingual-switch" ).prop( "checked" ),

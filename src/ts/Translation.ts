@@ -34,12 +34,8 @@ const MODELS: ModelsType = {
         modelName: 'Gemini 2.5 Flash'
       },
       {
-        modelId: 'gemini-2.5-flash-preview-04-17',
-        modelName: 'Gemini 2.5 Flash Preview 04-17'
-      },
-      {
-        modelId: 'gemini-2.5-flash-lite-preview-06-17',
-        modelName: 'Gemini 2.5 Flash Lite Preview 06-17'
+        modelId: 'gemini-2.5-flash-lite',
+        modelName: 'Gemini 2.5 Flash Lite'
       }
     ],
     'Gemini 2.0': [
@@ -139,10 +135,6 @@ const MODELS: ModelsType = {
       'gpt-4o-2024-08-06',
       'gpt-4o-2024-05-13'
     ],
-    'GPT-4.5': [
-      'gpt-4.5-preview-2025-02-27',
-      'gpt-4.5-preview'
-    ],
     'GPT-4': [
       'gpt-4-turbo-preview',
       'gpt-4-turbo-2024-04-09',
@@ -164,7 +156,6 @@ const MODELS: ModelsType = {
   },
   GROQ: {
     'Alibaba Cloud': [
-      'qwen-qwq-32b',
       'qwen/qwen3-32b'
     ],
     'DeepSeek / Meta': ['deepseek-r1-distill-llama-70b'],
@@ -180,7 +171,8 @@ const MODELS: ModelsType = {
         selected: true
       }
     ],
-    Mistral: ['mistral-saba-24b']
+    Mistral: ['mistral-saba-24b'],
+    'Moonshot AI': ['moonshotai/kimi-k2-instruct']
   }
 }
 interface DictionaryEntry {
@@ -233,6 +225,42 @@ enum Efforts {
   MEDIUM = 'medium',
   HIGH = 'high'
 }
+enum OpenrouterWebSearchs {
+  DISABLED = '',
+  EXA = 'exa',
+  TAVILY = 'tavily'
+}
+interface Options {
+  B2B_AUTH_TOKEN?: string
+  customDictionary?: DictionaryEntry[]
+  customPrompt?: string
+  doesReasoning?: boolean
+  doesStream?: boolean
+  domain?: Domains
+  effort?: Efforts
+  GEMINI_API_KEY?: string
+  googleGenaiModelId?: string
+  groqModelId?: string
+  GROQ_API_KEY?: string
+  isBilingualEnabled?: boolean
+  isCustomDictionaryEnabled?: boolean
+  isCustomPromptEnabled?: boolean
+  isGroqWebSearchEnabled?: boolean
+  isGroundingWithGoogleSearchEnabled?: boolean
+  isOpenaiWebSearchEnabled?: boolean
+  openrouterWebSearch?: OpenrouterWebSearchs
+  isThinkingModeEnabled?: boolean
+  openaiModelId?: string
+  openrouterModelId?: string,
+  OPENROUTER_API_KEY?: string,
+  systemInstruction?: SystemInstructions
+  temperature?: number
+  tone?: Tones
+  topP?: number
+  topK?: number
+  translatorId?: Translators
+  TVLY_API_KEY?: string
+}
 enum SystemInstructions {
   GPT4OMINI = 'gpt-4o-mini',
   COCCOC_EDU = 'coccocEdu',
@@ -246,42 +274,8 @@ enum Tones {
   FORMAL = 'Formal',
   ROMANTIC = 'Romantic'
 }
-interface Options {
-  B2B_AUTH_TOKEN?: string
-  chutesModelId?: string
-  CHUTES_API_TOKEN?: string
-  customDictionary?: DictionaryEntry[]
-  customPrompt?: string
-  doesStream?: boolean
-  domain?: Domains
-  effort?: Efforts
-  GEMINI_API_KEY?: string
-  googleGenaiModelId?: string
-  groqModelId?: string
-  GROQ_API_KEY?: string
-  isBilingualEnabled?: boolean
-  isChutesWebSearchEnabled?: boolean
-  isCustomDictionaryEnabled?: boolean
-  isCustomPromptEnabled?: boolean
-  isGroqWebSearchEnabled?: boolean
-  isGroundingWithGoogleSearchEnabled?: boolean
-  isOpenaiWebSearchEnabled?: boolean
-  isOpenrouterWebSearchEnabled?: boolean
-  isThinkingModeEnabled?: boolean
-  openaiModelId?: string
-  openrouterModelId?: string,
-  OPENROUTER_API_KEY?: string,
-  systemInstruction?: SystemInstructions
-  temperature?: number
-  tone?: Tones
-  topP?: number
-  topK?: number
-  translatorId?: Translators
-  TVLY_API_KEY?: string
-}
 enum Translators {
   BAIDU_TRANSLATE = 'baiduTranslate',
-  CHUTES_TRANSLATE = 'chutesTranslate',
   DEEPL_TRANSLATE = 'deeplTranslate',
   GOOGLE_GENAI_TRANSLATE = 'googleGenaiTranslate',
   GOOGLE_TRANSLATE = 'googleTranslate',
@@ -308,22 +302,21 @@ class Translation {
     this.originalLang = originalLang
     this.abortController = new AbortController()
     options = {
-      chutesModelId: 'deepseek-ai/DeepSeek-R1',
       customDictionary: [],
       customPrompt: '',
+      doesReasoning: false,
       doesStream: false,
       domain: Domains.NONE,
       effort: Efforts.MEDIUM,
       googleGenaiModelId: (Object.values(MODELS.GOOGLE_GENAI) as ModelEntry[][]).flat().filter(element => typeof element === 'object').find((element: Model) => element.selected)?.modelId,
       groqModelId: (Object.values(MODELS.GROQ) as ModelEntry[][]).flat().filter(element => typeof element === 'object').find((element: Model) => element.selected)?.modelId,
       isBilingualEnabled: false,
-      isChutesWebSearchEnabled: false,
       isCustomDictionaryEnabled: false,
       isCustomPromptEnabled: false,
       isGroqWebSearchEnabled: false,
       isGroundingWithGoogleSearchEnabled: false,
       isOpenaiWebSearchEnabled: false,
-      isOpenrouterWebSearchEnabled: false,
+      openrouterWebSearch: OpenrouterWebSearchs.DISABLED,
       isThinkingModeEnabled: true,
       openaiModelId: (Object.values(MODELS.OPENAI) as ModelEntry[][]).flat().filter(element => typeof element === 'object').find((element: Model) => element.selected)?.modelId,
       openrouterModelId: 'openai/gpt-4o',
@@ -343,94 +336,6 @@ class Translation {
     // @ts-expect-error JSON5
     const textSentenceWithUuid = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? JSON5.parse((prompt.match(/(?<=^### TEXT SENTENCE WITH UUID:\n).+(?=\n### TRANSLATED TEXT WITH UUID:$)/s) as RegExpMatchArray)[0]) as Record<string, string> : {}
     switch (options.translatorId) {
-      case Translators.CHUTES_TRANSLATE:
-        this.translateText = async (resolve) => {
-          const { chutesModelId, CHUTES_API_TOKEN, isChutesWebSearchEnabled } = options
-          const isNotDeepseekModel = !(chutesModelId as string).startsWith('deepseek-ai/')
-          const searchResults = isChutesWebSearchEnabled ? await this.webSearchWithTavily().then(value => value.map((element, index) => `[webpage ${index + 1} begin]${element}[webpage ${index + 1} end]`).join('\n')) : ''
-          /* eslint-disable no-mixed-spaces-and-tabs */
-        			const response = await fetch("https://llm.chutes.ai/v1/chat/completions", {
-        					method: "POST",
-        					headers: {
-        						"Authorization": `Bearer ${CHUTES_API_TOKEN}`,
-        			"Content-Type": "application/json"
-        					},
-        					body: JSON.stringify(			{
-        			  "model": chutesModelId,
-        			  "messages": [
-                  /* eslint-enable no-mixed-spaces-and-tabs */
-                  ...await this.getSystemInstructions(options).then(value => value.map(element => ({
-                    "role": "system",
-                    "content": element
-                  }))),
-                  {
-                    "role": "user",
-                    "content": searchResults.length > 0 ? this.getWebSearchPrompt(searchResults, noEmptyLinesPrompt, isNotDeepseekModel) : prompt
-                  }
-                  /* eslint-disable no-mixed-spaces-and-tabs */
-        			  ],
-        			  "stream": true,
-        			  "temperature": temperature as number > -1 ? temperature : 0.7,
-                    /* eslint-enable no-mixed-spaces-and-tabs */
-                    ...topP as number > -1 ? { "top_p": topP } : {},
-                    ...topK as number > -1 ? { "top_k": topK } : {}
-        			}), // eslint-disable-line no-mixed-spaces-and-tabs
-                signal: this.abortController.signal
-                /* eslint-disable no-mixed-spaces-and-tabs */
-        			});
-        			
-          /* eslint-enable no-mixed-spaces-and-tabs */
-          const reader = response.body?.getReader();
-          if (!reader) {
-            throw new Error('Response body is not readable');
-          }
-          
-          const decoder = new TextDecoder();
-          let buffer = '';
-          
-          try {
-            while (true) { // eslint-disable-line no-constant-condition
-              const { done, value } = await reader.read();
-              if (done) break;
-          
-              // Append new chunk to buffer
-              buffer += decoder.decode(value, { stream: true });
-          
-              // Process complete lines from buffer
-              while (true) { // eslint-disable-line no-constant-condition
-                const lineEnd = buffer.indexOf('\n');
-                if (lineEnd === -1) break;
-          
-                const line = buffer.slice(0, lineEnd).trim();
-                buffer = buffer.slice(lineEnd + 1);
-          
-                if (line.startsWith('data: ')) {
-                  const data = line.slice(6);
-                  if (data === '[DONE]') break;
-          
-                  try {
-                    const parsed = JSON.parse(data);
-                    const content = parsed.choices[0].delta.content;
-                    if (content) {
-                      this.responseText += content
-                      if (this.responseText.startsWith('<think>') && !/<\/think>\n{1,2}/.test(this.responseText)) continue
-                      else if (this.responseText.startsWith('<think>')) this.responseText = this.responseText.replace(/^<think>\n.+\n<\/think>\n{1,2}/s, '')
-                      this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
-                      if (this.translatedText.length === 0) continue
-                      if (this.abortController.signal.aborted as boolean) break
-                      resolve(this.translatedText, this.text, options)
-                    }
-                  } catch {
-                    // Ignore invalid JSON
-                  }
-                }
-              }
-            }
-          } finally {
-            reader.cancel();
-          }
-    		}  // eslint-disable-line no-mixed-spaces-and-tabs
-        break
       case Translators.GROQ_TRANSLATE: {
         const { groqModelId, GROQ_API_KEY, isGroqWebSearchEnabled } = options
         const groq = new Groq({ apiKey: GROQ_API_KEY, dangerouslyAllowBrowser: true });
@@ -445,7 +350,7 @@ class Translation {
               }))),
               {
                 "role": "user",
-                "content": searchResults.length > 0 ? this.getWebSearchPrompt(searchResults, noEmptyLinesPrompt, isNotDeepseekModel) : prompt
+                "content": searchResults.length > 0 ? this.getWebSearchPrompt(searchResults, noEmptyLinesPrompt, isNotDeepseekModel) : noEmptyLinesPrompt
               }
             ],
             "model": groqModelId,
@@ -505,7 +410,14 @@ class Translation {
                 "type": "text"
               }
             },
-            reasoning: { ...MODELS.OPENAI.Reasoning.includes(openaiModelId as string) && effort !== 'medium' ? { "effort": effort } : {} },
+            reasoning: MODELS.OPENAI.Reasoning.includes(openaiModelId as string) && effort !== 'medium'
+              ? {
+                  "effort": effort,
+                  "summary": "auto"
+                }
+              : {
+                  "summary": "auto"
+                },
             tools: [
               ...isOpenaiWebSearchEnabled
                 ? [{
@@ -542,13 +454,15 @@ class Translation {
         }
         break
       case Translators.OPENROUTER_TRANSLATE: {
-        const { isOpenrouterWebSearchEnabled, openrouterModelId, OPENROUTER_API_KEY } = options
+        const { doesReasoning, openrouterWebSearch, openrouterModelId, OPENROUTER_API_KEY } = options
         const openai = new OpenAI({
           baseURL: "https://openrouter.ai/api/v1",
           apiKey: OPENROUTER_API_KEY,
           dangerouslyAllowBrowser: true,
         });
         this.translateText = async (resolve) => {
+          const isNotDeepseekModel = !(openrouterModelId as string).startsWith('deepseek/')
+          const searchResults = openrouterWebSearch === OpenrouterWebSearchs.TAVILY ? await this.webSearchWithTavily().then(value => value.map((element, index) => `[webpage ${index + 1} begin]${element}[webpage ${index + 1} end]`).join('\n')) : ''
           const completion = await openai.chat.completions.create({
             model: openrouterModelId,
             messages: [
@@ -558,14 +472,17 @@ class Translation {
               }))),
               {
                 "role": "user",
-                "content": noEmptyLinesPrompt
+                "content": searchResults.length > 0 ? this.getWebSearchPrompt(searchResults, noEmptyLinesPrompt, isNotDeepseekModel) : noEmptyLinesPrompt
               }
             ],
             ...temperature as number > -1 ? { temperature } : {},
             ...topP as number > -1 ? { top_p: topP } : {},
             ...topK as number > -1 ? { top_k: topK } : {},
-            reasoning: { "exclude": true },
-            ...isOpenrouterWebSearchEnabled ? { plugins: [{ "id": "web" }] } : {},
+            reasoning: {
+              "exclude": true,
+              ...doesReasoning ? { "enabled": true } : {}
+            },
+            ...openrouterWebSearch === OpenrouterWebSearchs.EXA ? { plugins: [{ "id": "web" }] } : {},
             ...doesStream ? { stream: true } : {},
           }, { signal: this.abortController.signal });
         
@@ -601,13 +518,18 @@ class Translation {
             ...temperature as number > -1 ? { temperature } : {},
             ...topP as number > -1 ? { topP } : {},
             ...topK as number > -1 ? { topK } : {},
-            ...((googleGenaiModelId as string).startsWith('gemini-2.5-flash') || googleGenaiModelId === 'gemini-2.5-pro-preview-06-05') && !isThinkingModeEnabled
+            ...(googleGenaiModelId as string).startsWith('gemini-2.5-flash') && !isThinkingModeEnabled
               ? {
                   thinkingConfig: {
+                    includeThoughts: true,
                     thinkingBudget: 0,
                   },
                 }
-              : {},
+              : {
+                  thinkingConfig: {
+                    includeThoughts: true,
+                  },
+                },
             safetySettings: [
               {
                 category: HarmCategory.HARM_CATEGORY_HARASSMENT,
@@ -680,7 +602,7 @@ class Translation {
         return `### TEXT SENTENCE WITH UUID:
 {${this.text.split('\n').map(element => {
           const uuidParts = crypto.randomUUID().split('-')
-          return `'${uuidParts[0]}#${uuidParts[2].substring(1)}': ${element.includes("'") && !element.includes('"')  ? `"${element.replace(/^\s+|\s+$/g, '')}"` : `'${element.replace(/^\s+|\s+$/g, '').replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`}`
+          return `'${uuidParts[0]}#${uuidParts[2].substring(1)}': ${element.includes("'") && !element.includes('"')  ? `"${element.replace(/^\s+|\s+$/g, '').replace(/\\/g, '\\\\')}"` : `'${element.replace(/^\s+|\s+$/g, '').replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`}`
         }).join(', ')}}
 ### TRANSLATED TEXT WITH UUID:`
       default:
@@ -1115,6 +1037,7 @@ Your output must only contain the translated text and cannot include explanation
     if (Utils.isValidJson(potentialJsonString)) {
       // @ts-expect-error JSON5
       const parsedResult = JSON5.parse(potentialJsonString)
+      const textSentenceWithUuids = Object.entries(textSentenceWithUuid)
       let translatedStringMap: Record<string, string> = {}
       if (typeof parsedResult.translated_string !== 'string') {
         if (doesTranslatedStringExist) console.log('isJson', true)
@@ -1127,17 +1050,17 @@ Your output must only contain the translated text and cannot include explanation
         /* eslint-disable camelcase */
         const { translated_string } = parsedResult
         const uuidAmount = [...translated_string.matchAll(new RegExp(`(?<!^)(?:${UUID_PATTERN}: )`, 'g'))].length
-        const translatedString = uuidAmount - [...translated_string.matchAll(new RegExp(`, ?${UUID_PATTERN}: `, 'g'))].length <= 1 ? translated_string.replace(new RegExp(`(?:, ?)(?=${UUID_PATTERN}: )`, 'g'), '\n') : translated_string
+        const translatedString = uuidAmount - [...translated_string.matchAll(new RegExp(`, ?${UUID_PATTERN}: `, 'g'))].length <= (textSentenceWithUuids.length <= 2 ? 0 : 1) ? translated_string.replace(new RegExp(`(?:, ?)(?=${UUID_PATTERN}: )`, 'g'), '\n') : translated_string
         /* eslint-enable camelcase */
         const COMMA_PATTERN = '(?: , |,)'
-        const mayIncludesComma = uuidAmount - [...translatedString.matchAll(new RegExp(`${COMMA_PATTERN}\\n${UUID_PATTERN}: `, 'g'))].length <= 1
+        const mayIncludesComma = uuidAmount - [...translatedString.matchAll(new RegExp(`${COMMA_PATTERN}\\n${UUID_PATTERN}: `, 'g'))].length <= (textSentenceWithUuids.length <= 2 ? 0 : 1)
         translatedStringMap = Object.fromEntries([...translatedString.matchAll(new RegExp(`(${UUID_PATTERN}): (.+(?=${mayIncludesComma ? COMMA_PATTERN : ''}\\n(?: |\\n|" +\\n")?${UUID_PATTERN}: |\\n?$)(?:\\n(?!(?: |\\n|" +\\n")?${UUID_PATTERN}: ))?)+`, 'g'))].map(element => element.slice(1)))
       }
       if (Object.keys(translatedStringMap ?? {}).length > 0) {
-        return Object.entries(textSentenceWithUuid).map(([first, second]) => parsedResult[first] ?? translatedStringMap[first] ?? (second.replace(/^\s+/, '').length > 0 ? '' : second)).join('\n')
+        return textSentenceWithUuids.map(([first, second]) => parsedResult[first] ?? translatedStringMap[first] ?? (second.replace(/^\s+/, '').length > 0 ? '' : second)).join('\n')
       }
     }
     return ''
   }
 }
-export { DictionaryEntry, Domains, Efforts, MODELS, Options, SystemInstructions, Tones, Translation }
+export { DictionaryEntry, Domains, Efforts, MODELS, OpenrouterWebSearchs, Options, SystemInstructions, Tones, Translation }
