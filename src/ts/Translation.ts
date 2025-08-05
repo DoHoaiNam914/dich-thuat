@@ -363,7 +363,7 @@ class Translation {
           for await (const chunk of chatCompletion) {
             this.responseText += chunk.choices[0]?.delta?.content || ''
             if (/^<think>/.test(this.responseText) && (!this.responseText.includes('</think>') || /<\/think>\n*$/.test(this.responseText))) {
-              resolve((this.responseText.match(/^<think>(.+)<\/think>/s) as RegExpMatchArray)[1], this.text, { ...options, isBilingualEnabled: false })
+              resolve((this.responseText.match(/^<think>(.+)(?:<\/think>)?/s) as RegExpMatchArray)[1], this.text, { ...options, isBilingualEnabled: false })
             } else {
               if (!/^<think>/.test(this.responseText) || /<\/think>\n+(?!$)/.test(this.responseText)) this.responseText = this.responseText.replace(/^<think>.+<\/think>\n+/s, '')
               this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
@@ -491,7 +491,7 @@ class Translation {
             for await (const chunk of completion) {
               this.responseText += chunk.choices[0].delta.content ?? ''
               if (/^<think>/.test(this.responseText) && (!this.responseText.includes('</think>') || /<\/think>\n*$/.test(this.responseText))) {
-                resolve((this.responseText.match(/^<think>(.+)<\/think>/s) as RegExpMatchArray)[1], this.text, { ...options, isBilingualEnabled: false })
+                resolve((this.responseText.match(/^<think>(.+)(?:<\/think>)?/s) as RegExpMatchArray)[1], this.text, { ...options, isBilingualEnabled: false })
               } else {
                 if (!/^<think>/.test(this.responseText) || /<\/think>\n+(?!$)/.test(this.responseText)) this.responseText = this.responseText.replace(/^<think>.+<\/think>\n+/s, '')
                 this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
