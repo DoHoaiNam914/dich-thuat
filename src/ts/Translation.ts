@@ -490,15 +490,12 @@ class Translation {
           if (doesStream) {
             for await (const chunk of completion) {
               this.responseText += chunk.choices[0].delta.content ?? ''
-              if (/^<think>/.test(this.responseText) && (!this.responseText.includes('</think>') || /<\/think>\n*$/.test(this.responseText))) {
-                resolve((this.responseText.match(/^<think>(.+)(?:<\/think>)?/s) as RegExpMatchArray)[1], this.text, { ...options, isBilingualEnabled: false })
-              } else {
-                if (!/^<think>/.test(this.responseText) || /<\/think>\n+(?!$)/.test(this.responseText)) this.responseText = this.responseText.replace(/^<think>.+<\/think>\n+/s, '')
-                this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
-                if (this.translatedText.length === 0) continue
-                if (this.abortController.signal.aborted as boolean) break
-                resolve(this.translatedText, this.text, options)
-              }
+              if (/^<think>/.test(this.responseText) && !/<\/think>\n+(?!$)/.test(this.responseText)) continue
+              else this.responseText = this.responseText.replace(/^<think>.+<\/think>\n+/s, '')
+              this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
+              if (this.translatedText.length === 0) continue
+              if (this.abortController.signal.aborted as boolean) break
+              resolve(this.translatedText, this.text, options)
             }
           } else {
             this.responseText = completion.choices[0].message.content.replace(/^<think>.+<\/think>\n+/s, '')
