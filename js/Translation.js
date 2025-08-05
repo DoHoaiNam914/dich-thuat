@@ -1,17 +1,27 @@
 'use strict'
 /* global crypto, fetch, JSON5 */
 import {
-  GoogleGenAI, HarmBlockThreshold, HarmCategory
+  GoogleGenAI,
+  HarmBlockThreshold,
+  HarmCategory
 // @ts-expect-error @google/genai
-} from 'https://esm.run/@google/genai'
+} from 'https://esm.run/@google/genai';
 // @ts-expect-error groq-sdk
-import { Groq } from 'https://esm.run/groq-sdk'
+import { Groq } from 'https://esm.run/groq-sdk';
 // @ts-expect-error openai
-import OpenAI from 'https://esm.run/openai'
+import OpenAI from "https://esm.run/openai";
 // // @ts-expect-error @tavily/core
 // import { tavily } from 'https://esm.run/@tavily/core';
 import Utils from './Utils.js'
-const MODELS = {
+interface Model {
+  modelId: string
+  modelName?: string
+  selected?: boolean
+}
+type ModelEntry = string | Model
+type ModelGroup = Record<string, ModelEntry[]>
+type ModelsType = Record<string, ModelGroup>
+const MODELS: ModelsType = {
   GOOGLE_GENAI: {
     'Gemini 2.5': [
       {
@@ -165,90 +175,128 @@ const MODELS = {
     'Moonshot AI': ['moonshotai/kimi-k2-instruct']
   }
 }
-let Domains;
-(function (Domains) {
-  Domains.BANKING = 'Banking'
-  Domains.ACCOUNTING = 'Accounting'
-  Domains.MANAGEMENT = 'Management'
-  Domains.LAW = 'Law'
-  Domains.LOGISTICS = 'Logistics'
-  Domains.MARKETING = 'Marketing'
-  Domains.SECURITIES_AND_INVESTMENT = 'Securities - Investment'
-  Domains.INSURANCE = 'Insurance'
-  Domains.REAL_ESTATE = 'Real Estate'
-  Domains.MUSIC = 'Music'
-  Domains.PAINTING = 'Painting'
-  Domains.THEATER_AND_CINEMA = 'Theater - Cinema'
-  Domains.GAMES = 'Games'
-  Domains.POETRY = 'Poetry'
-  Domains.EPIC = 'Epic'
-  Domains.CHILDRENS_STORIES = "Children's Stories"
-  Domains.HISTORICAL_STORIES = 'Historical Stories'
-  Domains.FICTION = 'Fiction'
-  Domains.SHORT_STORIES = 'Short Stories'
-  Domains.PHYSICS = 'Physics'
-  Domains.CHEMISTRY = 'Chemistry'
-  Domains.INFORMATICS = 'Informatics'
-  Domains.ELECTRONICS = 'Electronics'
-  Domains.MEDICINE = 'Medicine'
-  Domains.MECHANICS = 'Mechanics'
-  Domains.METEOROLOGY_AND_HYDROLOGY = 'Meteorology - Hydrology'
-  Domains.AGRICULTURE = 'Agriculture'
-  Domains.LEGAL_DOCUMENTS = 'Legal Documents'
-  Domains.INTERNAL_DOCUMENTS = 'Internal Documents'
-  Domains.EMAIL = 'Email'
-  Domains.HEALTH = 'Health'
-  Domains.SPORTS = 'Sports'
-  Domains.CULTURE_AND_TOURISM = 'Culture - Tourism'
-  Domains.PRESS = 'Press'
-  Domains.ANIMALS = 'Animals'
-  Domains.NONE = 'None'
-  Domains.FAST_TRANSLATION = 'Fast Translation'
-})(Domains || (Domains = {}))
-let Efforts;
-(function (Efforts) {
-  Efforts.LOW = 'low'
-  Efforts.MEDIUM = 'medium'
-  Efforts.HIGH = 'high'
-})(Efforts || (Efforts = {}))
-let OpenrouterWebSearchs;
-(function (OpenrouterWebSearchs) {
-  OpenrouterWebSearchs.DISABLED = ''
-  OpenrouterWebSearchs.EXA = 'exa'
-  OpenrouterWebSearchs.TAVILY = 'tavily'
-})(OpenrouterWebSearchs || (OpenrouterWebSearchs = {}))
-let SystemInstructions;
-(function (SystemInstructions) {
-  SystemInstructions.GPT4OMINI = 'gpt-4o-mini'
-  SystemInstructions.COCCOC_EDU = 'coccocEdu'
-  SystemInstructions.DOCTRANSLATE_IO = 'doctranslateIo'
-})(SystemInstructions || (SystemInstructions = {}))
-let Tones;
-(function (Tones) {
-  Tones.NONE = 'None'
-  Tones.SERIOUS = 'Serious'
-  Tones.FRIENDLY = 'Friendly'
-  Tones.HUMOROUS = 'Humorous'
-  Tones.FORMAL = 'Formal'
-  Tones.ROMANTIC = 'Romantic'
-})(Tones || (Tones = {}))
-let Translators;
-(function (Translators) {
-  Translators.BAIDU_TRANSLATE = 'baiduTranslate'
-  Translators.DEEPL_TRANSLATE = 'deeplTranslate'
-  Translators.GOOGLE_GENAI_TRANSLATE = 'googleGenaiTranslate'
-  Translators.GOOGLE_TRANSLATE = 'googleTranslate'
-  Translators.GROQ_TRANSLATE = 'groqTranslate'
-  Translators.LINGVANEX = 'lingvanex'
-  Translators.MICROSOFT_TRANSLATOR = 'microsoftTranslator'
-  Translators.OPENAI_TRANSLATOR = 'openaiTranslator'
-  Translators.OPENROUTER_TRANSLATE = 'openrouterTranslate'
-  Translators.PAPAGO = 'papago'
-})(Translators || (Translators = {}))
+interface DictionaryEntry {
+  ori_lang: string
+  des_lang: string
+  ori_word: string
+  des_word: string
+}
+enum Domains {
+  BANKING = 'Banking',
+  ACCOUNTING = 'Accounting',
+  MANAGEMENT = 'Management',
+  LAW = 'Law',
+  LOGISTICS = 'Logistics',
+  MARKETING = 'Marketing',
+  SECURITIES_AND_INVESTMENT = 'Securities - Investment',
+  INSURANCE = 'Insurance',
+  REAL_ESTATE = 'Real Estate',
+  MUSIC = 'Music',
+  PAINTING = 'Painting',
+  THEATER_AND_CINEMA = 'Theater - Cinema',
+  GAMES = 'Games',
+  POETRY = 'Poetry',
+  EPIC = 'Epic',
+  CHILDRENS_STORIES = "Children's Stories",
+  HISTORICAL_STORIES = 'Historical Stories',
+  FICTION = 'Fiction',
+  SHORT_STORIES = 'Short Stories',
+  PHYSICS = 'Physics',
+  CHEMISTRY = 'Chemistry',
+  INFORMATICS = 'Informatics',
+  ELECTRONICS = 'Electronics',
+  MEDICINE = 'Medicine',
+  MECHANICS = 'Mechanics',
+  METEOROLOGY_AND_HYDROLOGY = 'Meteorology - Hydrology',
+  AGRICULTURE = 'Agriculture',
+  LEGAL_DOCUMENTS = 'Legal Documents',
+  INTERNAL_DOCUMENTS = 'Internal Documents',
+  EMAIL = 'Email',
+  HEALTH = 'Health',
+  SPORTS = 'Sports',
+  CULTURE_AND_TOURISM = 'Culture - Tourism',
+  PRESS = 'Press',
+  ANIMALS = 'Animals',
+  NONE = 'None',
+  FAST_TRANSLATION = 'Fast Translation'
+}
+enum Efforts {
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high'
+}
+enum OpenrouterWebSearchs {
+  DISABLED = '',
+  EXA = 'exa',
+  TAVILY = 'tavily'
+}
+interface Options {
+  B2B_AUTH_TOKEN?: string
+  customDictionary?: DictionaryEntry[]
+  customPrompt?: string
+  doesReasoning?: boolean
+  doesStream?: boolean
+  domain?: Domains
+  effort?: Efforts
+  GEMINI_API_KEY?: string
+  googleGenaiModelId?: string
+  groqModelId?: string
+  GROQ_API_KEY?: string
+  isBilingualEnabled?: boolean
+  isCustomDictionaryEnabled?: boolean
+  isCustomPromptEnabled?: boolean
+  isGroqWebSearchEnabled?: boolean
+  isGroundingWithGoogleSearchEnabled?: boolean
+  isOpenaiWebSearchEnabled?: boolean
+  isThinkingModeEnabled?: boolean
+  openaiModelId?: string
+  openrouterModelId?: string,
+  openrouterWebSearch?: OpenrouterWebSearchs
+  OPENROUTER_API_KEY?: string,
+  systemInstruction?: SystemInstructions
+  temperature?: number
+  tone?: Tones
+  topP?: number
+  topK?: number
+  translatorId?: Translators
+  TVLY_API_KEY?: string
+}
+enum SystemInstructions {
+  GPT4OMINI = 'gpt-4o-mini',
+  COCCOC_EDU = 'coccocEdu',
+  DOCTRANSLATE_IO = 'doctranslateIo'
+}
+enum Tones {
+  NONE = 'None',
+  SERIOUS = 'Serious',
+  FRIENDLY = 'Friendly',
+  HUMOROUS = 'Humorous',
+  FORMAL = 'Formal',
+  ROMANTIC = 'Romantic'
+}
+enum Translators {
+  BAIDU_TRANSLATE = 'baiduTranslate',
+  DEEPL_TRANSLATE = 'deeplTranslate',
+  GOOGLE_GENAI_TRANSLATE = 'googleGenaiTranslate',
+  GOOGLE_TRANSLATE = 'googleTranslate',
+  GROQ_TRANSLATE = 'groqTranslate',
+  LINGVANEX = 'lingvanex',
+  MICROSOFT_TRANSLATOR = 'microsoftTranslator',
+  OPENAI_TRANSLATOR = 'openaiTranslator',
+  OPENROUTER_TRANSLATE = 'openrouterTranslate',
+  PAPAGO = 'papago'
+}
 class Translation {
-  constructor (text, destLang, originalLang = null, options = {}) {
-    this.responseText = ''
-    this.translatedText = ''
+  private readonly text
+  private readonly destLang
+  private readonly originalLang
+  private readonly B2B_AUTH_TOKEN
+  private readonly TVLY_API_KEY
+  public readonly abortController: AbortController
+  public translateText: (resolve: (translateText: string, text: string, options: Options) => void) => Promise<void>
+  public responseText = ''
+  public translatedText = ''
+  constructor (text: string, destLang: string, originalLang: string | null = null, options: Options = {}) {
     this.text = text
     this.destLang = destLang
     this.originalLang = originalLang
@@ -260,18 +308,18 @@ class Translation {
       doesStream: false,
       domain: Domains.NONE,
       effort: Efforts.MEDIUM,
-      googleGenaiModelId: Object.values(MODELS.GOOGLE_GENAI).flat().filter(element => typeof element === 'object').find((element) => element.selected)?.modelId,
-      groqModelId: Object.values(MODELS.GROQ).flat().filter(element => typeof element === 'object').find((element) => element.selected)?.modelId,
+      googleGenaiModelId: (Object.values(MODELS.GOOGLE_GENAI) as ModelEntry[][]).flat().filter(element => typeof element === 'object').find((element: Model) => element.selected)?.modelId,
+      groqModelId: (Object.values(MODELS.GROQ) as ModelEntry[][]).flat().filter(element => typeof element === 'object').find((element: Model) => element.selected)?.modelId,
       isBilingualEnabled: false,
       isCustomDictionaryEnabled: false,
       isCustomPromptEnabled: false,
       isGroqWebSearchEnabled: false,
       isGroundingWithGoogleSearchEnabled: false,
       isOpenaiWebSearchEnabled: false,
-      openrouterWebSearch: OpenrouterWebSearchs.DISABLED,
       isThinkingModeEnabled: true,
-      openaiModelId: Object.values(MODELS.OPENAI).flat().filter(element => typeof element === 'object').find((element) => element.selected)?.modelId,
+      openaiModelId: (Object.values(MODELS.OPENAI) as ModelEntry[][]).flat().filter(element => typeof element === 'object').find((element: Model) => element.selected)?.modelId,
       openrouterModelId: 'openai/gpt-4o',
+      openrouterWebSearch: OpenrouterWebSearchs.DISABLED,
       systemInstruction: SystemInstructions.GPT4OMINI,
       temperature: 0.1,
       tone: Tones.SERIOUS,
@@ -283,43 +331,44 @@ class Translation {
     const { B2B_AUTH_TOKEN, doesStream, systemInstruction, temperature, topP, topK, TVLY_API_KEY } = options
     this.B2B_AUTH_TOKEN = B2B_AUTH_TOKEN
     this.TVLY_API_KEY = TVLY_API_KEY
-    const prompt = this.getPrompt(systemInstruction)
+    const prompt = this.getPrompt(systemInstruction as SystemInstructions)
     const noEmptyLinesPrompt = prompt.replace(/^(?<=### TEXT SENTENCE WITH UUID:\n{)'[a-z0-9]{8}#[a-z0-9]{3}': '\s*', |, '[a-z0-9]{8}#[a-z0-9]{3}': '\s*'/g, '')
     // @ts-expect-error JSON5
-    const textSentenceWithUuid = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? JSON5.parse(prompt.match(/(?<=^### TEXT SENTENCE WITH UUID:\n).+(?=\n### TRANSLATED TEXT WITH UUID:$)/s)[0]) : {}
+    const textSentenceWithUuid = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? JSON5.parse((prompt.match(/(?<=^### TEXT SENTENCE WITH UUID:\n).+(?=\n### TRANSLATED TEXT WITH UUID:$)/s) as RegExpMatchArray)[0]) as Record<string, string> : {}
     switch (options.translatorId) {
       case Translators.GROQ_TRANSLATE: {
         const { groqModelId, GROQ_API_KEY, isGroqWebSearchEnabled } = options
-        const groq = new Groq({ apiKey: GROQ_API_KEY, dangerouslyAllowBrowser: true })
+        const groq = new Groq({ apiKey: GROQ_API_KEY, dangerouslyAllowBrowser: true });
         this.translateText = async (resolve) => {
           const isNotDeepseekModel = groqModelId !== 'deepseek-r1-distill-llama-70b'
           const searchResults = isGroqWebSearchEnabled ? await this.webSearchWithTavily().then(value => value.map((element, index) => `[webpage ${index + 1} begin]${element}[webpage ${index + 1} end]`).join('\n')) : ''
           const chatCompletion = await groq.chat.completions.create({
-            messages: [
+            "messages": [
               ...await this.getSystemInstructions(options).then(value => value.map(element => ({
-                role: 'system',
-                content: element
+                "role": "system",
+                "content": element
               }))),
               {
-                role: 'user',
-                content: searchResults.length > 0 ? this.getWebSearchPrompt(searchResults, noEmptyLinesPrompt, isNotDeepseekModel) : noEmptyLinesPrompt
+                "role": "user",
+                "content": searchResults.length > 0 ? this.getWebSearchPrompt(searchResults, noEmptyLinesPrompt, isNotDeepseekModel) : noEmptyLinesPrompt
               }
             ],
-            model: groqModelId,
-            temperature: temperature === -1 ? 1 : temperature,
-            top_p: topP === -1 ? 1 : topP,
-            stream: true,
-            stop: null
-          })
+            "model": groqModelId,
+            "temperature": temperature === -1 ? 1 : temperature,
+            "top_p": topP === -1 ? 1 : topP,
+            "stream": true,
+            "stop": null,
+          });
+
           for await (const chunk of chatCompletion) {
             this.responseText += chunk.choices[0]?.delta?.content || ''
             if (/^<think>/.test(this.responseText) && /<\/think>\n*$/.test(this.responseText)) {
-              resolve(this.responseText.match(/^<think>(.+)<\/think>/s)[1], this.text, { ...options, isBilingualEnabled: false })
+              resolve((this.responseText.match(/^<think>(.+)<\/think>/s) as RegExpMatchArray)[1], this.text, { ...options, isBilingualEnabled: false })
             } else {
-              if (!/^<think>/.test(this.responseText) || /<\/think>\n+(?!$)/.test(this.responseText)) { this.responseText = this.responseText.replace(/^<think>.+<\/think>\n+/s, '') }
+              if (!/^<think>/.test(this.responseText) || /<\/think>\n+(?!$)/.test(this.responseText)) this.responseText = this.responseText.replace(/^<think>.+<\/think>\n+/s, '')
               this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
-              if (this.translatedText.length === 0) { continue }
-              if (this.abortController.signal.aborted) { break }
+              if (this.translatedText.length === 0) continue
+              if (this.abortController.signal.aborted as boolean) break
               resolve(this.translatedText, this.text, options)
             }
           }
@@ -329,78 +378,81 @@ class Translation {
       case Translators.OPENAI_TRANSLATOR:
         this.translateText = async (resolve) => {
           const { effort, isOpenaiWebSearchEnabled, openaiModelId } = options
+
           const openai = new OpenAI({
             apiKey: '5N3NR9SDGLS7VLUWSEN9J30P',
             baseURL: 'https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1',
             fetchOptions: { signal: this.abortController.signal },
             defaultHeaders: { 'air-user-id': crypto.randomUUID() },
-            dangerouslyAllowBrowser: true
-          })
+            dangerouslyAllowBrowser: true,
+          });
+
           const response = await openai.responses.create({
             model: openaiModelId,
             input: [
               ...await this.getSystemInstructions(options).then(value => value.map(element => ({
-                role: MODELS.OPENAI.Reasoning.includes(openaiModelId) ? (openaiModelId.startsWith('o1-mini') ? 'user' : 'developer') : 'system',
-                content: [
+                "role": MODELS.OPENAI.Reasoning.includes(openaiModelId as string) ? ((openaiModelId as string).startsWith('o1-mini') ? 'user' : 'developer') : 'system',
+                "content": [
                   {
-                    type: 'input_text',
-                    text: element
+                    "type": "input_text",
+                    "text": element
                   }
                 ]
               }))),
               {
-                role: 'user',
-                content: [
+                "role": 'user',
+                "content": [
                   {
-                    type: 'input_text',
-                    text: noEmptyLinesPrompt
+                    "type": "input_text",
+                    "text": noEmptyLinesPrompt
                   }
                 ]
               }
             ],
             text: {
-              format: {
-                type: 'text'
+              "format": {
+                "type": "text"
               }
             },
-            reasoning: MODELS.OPENAI.Reasoning.includes(openaiModelId) && effort !== 'medium'
+            reasoning: MODELS.OPENAI.Reasoning.includes(openaiModelId as string) && effort !== 'medium'
               ? {
-                  effort,
-                  summary: 'auto'
+                  "effort": effort,
+                  "summary": "auto"
                 }
               : {
-                  summary: 'auto'
+                  "summary": "auto"
                 },
             tools: [
               ...isOpenaiWebSearchEnabled
                 ? [{
-                    type: 'web_search_preview',
-                    user_location: {
-                      type: 'approximate'
+                    "type": "web_search_preview",
+                    "user_location": {
+                      "type": "approximate"
                     },
-                    search_context_size: 'medium'
+                    "search_context_size": "medium"
                   }]
                 : []
             ],
-            ...MODELS.OPENAI.Reasoning.includes(openaiModelId) ? {} : { temperature: temperature === -1 ? 1 : temperature },
+            ...MODELS.OPENAI.Reasoning.includes(openaiModelId as string) ? {} : { temperature: temperature === -1 ? 1 : temperature },
             max_output_tokens: null,
-            ...MODELS.OPENAI.Reasoning.includes(openaiModelId) ? {} : { top_p: topP === -1 ? 1 : topP },
+            ...MODELS.OPENAI.Reasoning.includes(openaiModelId as string) ? {} : { top_p: topP === -1 ? 1 : topP },
             store: false,
             ...doesStream ? { stream: true } : {}
-          })
+          });
+
           if (doesStream) {
             for await (const event of response) {
-              if (event.type !== 'response.output_text.delta') { continue }
+              if (event.type !== 'response.output_text.delta') continue
               this.responseText += event.delta
               this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
-              if (this.translatedText.length === 0) { continue }
-              if (this.abortController.signal.aborted) { break }
+              if (this.translatedText.length === 0) continue
+              if (this.abortController.signal.aborted as boolean) break
               resolve(this.translatedText, this.text, options)
             }
           } else {
-            this.responseText = response.output.filter((element) => element.type === 'message')[0].content[0].text
+            this.responseText = response.output.filter((element: { type: string }) => element.type === 'message')[0].content[0].text
             this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
-            if (this.abortController.signal.aborted) { return }
+            if (this.abortController.signal.aborted as boolean) return
             resolve(this.translatedText, this.text, options)
           }
         }
@@ -408,49 +460,50 @@ class Translation {
       case Translators.OPENROUTER_TRANSLATE: {
         const { doesReasoning, openrouterWebSearch, openrouterModelId, OPENROUTER_API_KEY } = options
         const openai = new OpenAI({
-          baseURL: 'https://openrouter.ai/api/v1',
+          baseURL: "https://openrouter.ai/api/v1",
           apiKey: OPENROUTER_API_KEY,
-          dangerouslyAllowBrowser: true
-        })
+          dangerouslyAllowBrowser: true,
+        });
         this.translateText = async (resolve) => {
-          const isNotDeepseekModel = !openrouterModelId.startsWith('deepseek/')
+          const isNotDeepseekModel = !(openrouterModelId as string).startsWith('deepseek/')
           const searchResults = openrouterWebSearch === OpenrouterWebSearchs.TAVILY ? await this.webSearchWithTavily().then(value => value.map((element, index) => `[webpage ${index + 1} begin]${element}[webpage ${index + 1} end]`).join('\n')) : ''
           const completion = await openai.chat.completions.create({
             model: openrouterModelId,
             messages: [
               ...await this.getSystemInstructions(options).then(value => value.map(element => ({
-                role: 'system',
-                content: element
+                "role": "system",
+                "content": element
               }))),
               {
-                role: 'user',
-                content: searchResults.length > 0 ? this.getWebSearchPrompt(searchResults, noEmptyLinesPrompt, isNotDeepseekModel) : noEmptyLinesPrompt
+                "role": "user",
+                "content": searchResults.length > 0 ? this.getWebSearchPrompt(searchResults, noEmptyLinesPrompt, isNotDeepseekModel) : noEmptyLinesPrompt
               }
             ],
-            ...temperature > -1 ? { temperature } : {},
-            ...topP > -1 ? { top_p: topP } : {},
-            ...topK > -1 ? { top_k: topK } : {},
-            ...doesReasoning ? { reasoning: { enabled: true } } : {},
-            ...openrouterWebSearch === OpenrouterWebSearchs.EXA ? { plugins: [{ id: 'web' }] } : {},
-            ...doesStream ? { stream: true } : {}
-          }, { signal: this.abortController.signal })
+            ...temperature as number > -1 ? { temperature } : {},
+            ...topP as number > -1 ? { top_p: topP } : {},
+            ...topK as number > -1 ? { top_k: topK } : {},
+            ...doesReasoning ? { reasoning: { "enabled": true } } : {},
+            ...openrouterWebSearch === OpenrouterWebSearchs.EXA ? { plugins: [{ "id": "web" }] } : {},
+            ...doesStream ? { stream: true } : {},
+          }, { signal: this.abortController.signal });
+        
           if (doesStream) {
             for await (const chunk of completion) {
               this.responseText += chunk.choices[0].delta.content ?? ''
               if (/^<think>/.test(this.responseText) && /<\/think>\n*$/.test(this.responseText)) {
-                resolve(this.responseText.match(/^<think>(.+)<\/think>/s)[1], this.text, { ...options, isBilingualEnabled: false })
+                resolve((this.responseText.match(/^<think>(.+)<\/think>/s) as RegExpMatchArray)[1], this.text, { ...options, isBilingualEnabled: false })
               } else {
-                if (!/^<think>/.test(this.responseText) || /<\/think>\n+(?!$)/.test(this.responseText)) { this.responseText = this.responseText.replace(/^<think>.+<\/think>\n+/s, '') }
+                if (!/^<think>/.test(this.responseText) || /<\/think>\n+(?!$)/.test(this.responseText)) this.responseText = this.responseText.replace(/^<think>.+<\/think>\n+/s, '')
                 this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
-                if (this.translatedText.length === 0) { continue }
-                if (this.abortController.signal.aborted) { break }
+                if (this.translatedText.length === 0) continue
+                if (this.abortController.signal.aborted as boolean) break
                 resolve(this.translatedText, this.text, options)
               }
             }
           } else {
             this.responseText = completion.choices[0].message.content.replace(/^<think>.+<\/think>\n+/s, '')
             this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
-            if (this.abortController.signal.aborted) { return }
+            if (this.abortController.signal.aborted as boolean) return
             resolve(this.translatedText, this.text, options)
           }
         }
@@ -461,27 +514,27 @@ class Translation {
         this.translateText = async (resolve) => {
           const { GEMINI_API_KEY, googleGenaiModelId, isGroundingWithGoogleSearchEnabled, isThinkingModeEnabled } = options
           const ai = new GoogleGenAI({
-            apiKey: GEMINI_API_KEY
-          })
+            apiKey: GEMINI_API_KEY,
+          });
           const tools = [
-            ...isGroundingWithGoogleSearchEnabled ? [{ googleSearch: {} }] : []
-          ]
+            ...isGroundingWithGoogleSearchEnabled? [{ googleSearch: {} }] : [],
+          ];
           const config = {
             abortSignal: this.abortController.signal,
-            ...temperature > -1 ? { temperature } : {},
-            ...topP > -1 ? { topP } : {},
-            ...topK > -1 ? { topK } : {},
-            ...googleGenaiModelId.startsWith('gemini-2.5-flash') && !isThinkingModeEnabled
+            ...temperature as number > -1 ? { temperature } : {},
+            ...topP as number > -1 ? { topP } : {},
+            ...topK as number > -1 ? { topK } : {},
+            ...(googleGenaiModelId as string).startsWith('gemini-2.5-flash') && !isThinkingModeEnabled
               ? {
                   thinkingConfig: {
                     includeThoughts: true,
-                    thinkingBudget: 0
-                  }
+                    thinkingBudget: 0,
+                  },
                 }
               : {
                   thinkingConfig: {
-                    includeThoughts: true
-                  }
+                    includeThoughts: true,
+                  },
                 },
             safetySettings: [
               {
@@ -499,71 +552,70 @@ class Translation {
               {
                 category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
                 threshold: HarmBlockThreshold.BLOCK_NONE // Block none
-              }
+              },
             ],
             ...tools.length > 0 ? { tools } : {},
             responseMimeType: 'text/plain',
             systemInstruction: await this.getSystemInstructions(options).then(value => value.map(element => ({
               text: element
-            })))
-          }
-          const model = options.googleGenaiModelId
+            }))),
+          };
+          const model = options.googleGenaiModelId;
           const contents = [
             {
               role: 'user',
               parts: [
                 {
                   text: `${noEmptyLinesPrompt}`
-                }
-              ]
-            }
-          ]
+                },
+              ],
+            },
+          ];
+
           const response = await ai.models.generateContentStream({
             model,
             config,
-            contents
-          })
+            contents,
+          });
           for await (const chunk of response) {
             this.responseText += chunk.text ?? ''
             this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
-            if (this.translatedText.length === 0) { continue }
-            if (this.abortController.signal.aborted) { break }
+            if (this.translatedText.length === 0) continue
+            if (this.abortController.signal.aborted as boolean) break
             resolve(this.translatedText, this.text, options)
           }
         }
     }
   }
-
-  async webSearchWithTavily () {
+  private async webSearchWithTavily (): Promise<string[]> {
     // const client = tavily({ apiKey: TVLY_API_KEY });
     // return await client.search(this.text)
     // .then((value: { results: { title: string, content: string }[] }) => value.results.map(({ title, content }) => `# ${title}\n${content}`)) ?? [];
     const options = {
       method: 'POST',
-      headers: { Authorization: `Bearer ${this.TVLY_API_KEY}`, 'Content-Type': 'application/json' },
+      headers: {Authorization: `Bearer ${this.TVLY_API_KEY}`, 'Content-Type': 'application/json'},
       body: `{"query":"${this.text}"}`,
       signal: this.abortController.signal
-    }
+    };
+    
     return await fetch('https://api.tavily.com/search', options)
       .then(response => response.json())
-      .then((response) => response.results.map(({ content }) => content))
+      .then((response: { results: { content: string }[] }) => response.results.map(({ content }) => content));
   }
-
-  getPrompt (systemInstruction) {
+  private getPrompt (systemInstruction: SystemInstructions): string {
     switch (systemInstruction) {
       case SystemInstructions.DOCTRANSLATE_IO:
         return `### TEXT SENTENCE WITH UUID:
 {${this.text.split('\n').map(element => {
-                    const uuidParts = crypto.randomUUID().split('-')
-                    return `'${uuidParts[0]}#${uuidParts[2].substring(1)}': ${element.includes("'") && !element.includes('"') ? `"${element.replace(/^\s+|\s+$/g, '').replace(/\\/g, '\\\\')}"` : `'${element.replace(/^\s+|\s+$/g, '').replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`}`
-                }).join(', ')}}
+          const uuidParts = crypto.randomUUID().split('-')
+          return `'${uuidParts[0]}#${uuidParts[2].substring(1)}': ${element.includes("'") && !element.includes('"')  ? `"${element.replace(/^\s+|\s+$/g, '').replace(/\\/g, '\\\\')}"` : `'${element.replace(/^\s+|\s+$/g, '').replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`}`
+        }).join(', ')}}
 ### TRANSLATED TEXT WITH UUID:`
       default:
         return this.text.split('\n').filter(element => element.replace(/^\s+/, '').length > 0).join('\n')
     }
   }
-
-  getWebSearchPrompt (searchResults, question, isEnglishQuery = false) {
+  private getWebSearchPrompt (searchResults: string, question: string, isEnglishQuery = false): string {
     const dateTimeFormat = new Intl.DateTimeFormat(isEnglishQuery ? 'en' : 'zh-CN', {
       day: 'numeric',
       month: 'long',
@@ -571,7 +623,7 @@ class Translation {
       year: 'numeric'
     })
     const date = new Date()
-    return isEnglishQuery
+    return isEnglishQuery 
       ? `# The following contents are the search results related to the user's message:
 ${searchResults}
 In the search results I provide to you, each result is formatted as [webpage X begin]...[webpage X end], where X represents the numerical index of each article. Please cite the context at the end of the relevant sentence when appropriate. Use the citation format [citation:X] in the corresponding part of your answer. If a sentence is derived from multiple contexts, list all relevant citation numbers, such as [citation:3][citation:5]. Be sure not to cluster all citations at the end; instead, include them in the corresponding parts of the answer.
@@ -603,8 +655,7 @@ ${searchResults}
 # 用户消息为：
 ${question}`
   }
-
-  async detectLanguage () {
+  private async detectLanguage (): Promise<string> {
     const options = {
       method: 'POST',
       headers: {
@@ -612,16 +663,16 @@ ${question}`
         'content-type': 'application/json',
         Authorization: this.B2B_AUTH_TOKEN
       },
-      body: JSON.stringify({ q: this.text }),
+      body: JSON.stringify({q: this.text}),
       signal: this.abortController.signal
-    }
-    return await fetch('https://api-gl.lingvanex.com/language/translate/v2/detect', options)
+    };
+    
+    return await fetch('https://api-gl.lingvanex.com/language/translate/v2/detect', options as RequestInit)
       .then(res => res.json())
       .then(res => res.data.detections[0][0].language.replace('-Hans', '-cn').replace('-Hant', '-tw').replace(/^ms$/, 'ms-MY').replace(/^tl$/, 'fil').replace(/^cs$/, 'cs-CZ'))
   }
-
-  getDoctranslateIoInstruction (originalLang, destLang, domain, tone, customDictionary, isCustomDictionaryEnabled, isCustomPromptEnabled, customPrompt) {
-    const LANGUAGE_MAP = {
+  private getDoctranslateIoInstruction (originalLang: string, destLang: string, domain: Domains, tone: Tones, customDictionary: DictionaryEntry[], isCustomDictionaryEnabled: boolean, isCustomPromptEnabled: boolean, customPrompt: string): string {
+    const LANGUAGE_MAP: Record<string, string> = {
       en: 'English',
       vi: 'Vietnamese',
       ja: 'Japanese',
@@ -654,7 +705,7 @@ ${question}`
       lo: 'Lao',
       'cs-CZ': 'Czech'
     }
-    const STYLE_INSTRUCTION_MAP = {
+    const STYLE_INSTRUCTION_MAP: Record<string, string> = {
       Serious: `
     - Language should be neutral, precise and technical, avoiding emotional elements.
     - Make everything clear and logical.
@@ -890,13 +941,12 @@ uuid: ${upperCaseDestinationLanguage} translation of the sentence when using rul
 }`
     }
   }
-
-  async getSystemInstructions (options) {
-    const systemInstructions = []
+  private async getSystemInstructions (options: Options): Promise<string[]> {
+    const systemInstructions: string[] = []
     const detectedLanguage = this.originalLang == null ? await this.detectLanguage() : ''
     switch (options.systemInstruction) {
       case SystemInstructions.COCCOC_EDU: {
-        const LANGUAGE_MAP = {
+        const LANGUAGE_MAP: Record<string, string> = {
           en: 'English',
           vi: 'Vietnamese',
           ar: 'Arabic',
@@ -942,12 +992,12 @@ Your output must only contain the translated text and cannot include explanation
       case SystemInstructions.DOCTRANSLATE_IO: {
         const originalLanguage = this.originalLang ?? detectedLanguage
         const { customDictionary, customPrompt, domain, isCustomDictionaryEnabled, isCustomPromptEnabled, tone } = options
-        systemInstructions.push(this.getDoctranslateIoInstruction(originalLanguage, this.destLang, domain, tone, customDictionary, isCustomDictionaryEnabled, isCustomPromptEnabled, customPrompt))
+        systemInstructions.push(this.getDoctranslateIoInstruction(originalLanguage, this.destLang, domain as Domains, tone as Tones, customDictionary as DictionaryEntry[], isCustomDictionaryEnabled as boolean, isCustomPromptEnabled as boolean, customPrompt as string))
         break
       }
       case SystemInstructions.GPT4OMINI:
       default: {
-        const LANGUAGE_MAP = {
+        const LANGUAGE_MAP: Record<string, string> = {
           ar: 'Arabic',
           bn: 'Bengali',
           'zh-cn': 'Chinese',
@@ -985,22 +1035,21 @@ Your output must only contain the translated text and cannot include explanation
     }
     return systemInstructions
   }
-
-  doctranslateIoPostprocess (translatedTextWithUuid, textSentenceWithUuid) {
+  private doctranslateIoPostprocess (translatedTextWithUuid: string, textSentenceWithUuid: Record<string, string>): string {
     const UUID_PATTERN = '(?:[a-z0-9]{8}#[a-z0-9]{3})'
     const translateText = translatedTextWithUuid.replace(/^\}$.+/ms, '').replace(new RegExp(UUID_PATTERN, 'gi'), (match) => match.toLowerCase()).replace(new RegExp(`(?<=${UUID_PATTERN})(?:>|')`, 'g'), '')
     const doesTranslatedStringExist = /"translated_string": ?"/.test(translateText)
-    const potentialJsonString = doesTranslatedStringExist ? translateText.replace(/\\$/, '').replace(/(\\")?(?:",?)?(?:\n?\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(new RegExp(`\\n(?=  ${UUID_PATTERN}: |"(?:\\n\\}|${UUID_PATTERN}: |\\})|${UUID_PATTERN}: )|\\\\\\n(?=${UUID_PATTERN}: )`, 'g'), '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s)[0].replace(/insight": .+(?=translated_string": ")/s, '') : JSON.stringify({ translated_string: textSentenceWithUuid })
+    const potentialJsonString = doesTranslatedStringExist ? (translateText.replace(/\\$/, '').replace(/(\\")?(?:",?)?(?:\n?\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(new RegExp(`\\n(?=  ${UUID_PATTERN}: |"(?:\\n\\}|${UUID_PATTERN}: |\\})|${UUID_PATTERN}: )|\\\\\\n(?=${UUID_PATTERN}: )`, 'g'), '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s) as RegExpMatchArray)[0].replace(/insight": .+(?=translated_string": ")/s, '') : JSON.stringify({ translated_string: textSentenceWithUuid })
     if (Utils.isValidJson(potentialJsonString)) {
       // @ts-expect-error JSON5
       const parsedResult = JSON5.parse(potentialJsonString)
       const textSentenceWithUuids = Object.entries(textSentenceWithUuid)
-      let translatedStringMap = {}
+      let translatedStringMap: Record<string, string> = {}
       if (typeof parsedResult.translated_string !== 'string') {
-        if (doesTranslatedStringExist) { console.log('isJson', true) }
+        if (doesTranslatedStringExist) console.log('isJson', true)
         // translatedStringMap = parsedResult.translated_string
       } else if (Utils.isValidJson(parsedResult.translated_string)) {
-        if (doesTranslatedStringExist) { console.log('isStringifyJson', parsedResult.translated_string) }
+        if (doesTranslatedStringExist) console.log('isStringifyJson', parsedResult.translated_string)
         // // @ts-expect-error JSON5
         // translatedStringMap = JSON5.parse(parsedResult.translated_string)
       } else {
@@ -1020,4 +1069,4 @@ Your output must only contain the translated text and cannot include explanation
     return ''
   }
 }
-export { Domains, Efforts, MODELS, OpenrouterWebSearchs, SystemInstructions, Tones, Translation }
+export { DictionaryEntry, Domains, Efforts, MODELS, OpenrouterWebSearchs, Options, SystemInstructions, Tones, Translation }
