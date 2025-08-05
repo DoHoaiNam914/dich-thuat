@@ -362,7 +362,7 @@ class Translation {
 
           for await (const chunk of chatCompletion) {
             this.responseText += chunk.choices[0]?.delta?.content || ''
-            if (/^<think>/.test(this.responseText) && /<\/think>\n*$/.test(this.responseText)) {
+            if (/^<think>/.test(this.responseText) && (!this.responseText.includes('</think>') || /<\/think>\n*$/.test(this.responseText))) {
               resolve((this.responseText.match(/^<think>(.+)<\/think>/s) as RegExpMatchArray)[1], this.text, { ...options, isBilingualEnabled: false })
             } else {
               if (!/^<think>/.test(this.responseText) || /<\/think>\n+(?!$)/.test(this.responseText)) this.responseText = this.responseText.replace(/^<think>.+<\/think>\n+/s, '')
@@ -490,7 +490,7 @@ class Translation {
           if (doesStream) {
             for await (const chunk of completion) {
               this.responseText += chunk.choices[0].delta.content ?? ''
-              if (/^<think>/.test(this.responseText) && /<\/think>\n*$/.test(this.responseText)) {
+              if (/^<think>/.test(this.responseText) && (!this.responseText.includes('</think>') || /<\/think>\n*$/.test(this.responseText))) {
                 resolve((this.responseText.match(/^<think>(.+)<\/think>/s) as RegExpMatchArray)[1], this.text, { ...options, isBilingualEnabled: false })
               } else {
                 if (!/^<think>/.test(this.responseText) || /<\/think>\n+(?!$)/.test(this.responseText)) this.responseText = this.responseText.replace(/^<think>.+<\/think>\n+/s, '')
