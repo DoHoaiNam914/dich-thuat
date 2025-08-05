@@ -358,15 +358,19 @@ class Translation {
             "top_p": topP === -1 ? 1 : topP,
             "stream": true,
             "stop": null,
-            ...['qwen-qwq-32b', 'deepseek-r1-distill-llama-70b'].some(element => element === groqModelId) ? { "reasoning_format": "hidden" } : {}
           });
 
           for await (const chunk of chatCompletion) {
             this.responseText += chunk.choices[0]?.delta?.content || ''
-            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
-            if (this.translatedText.length === 0) continue
-            if (this.abortController.signal.aborted as boolean) break
-            resolve(this.translatedText, this.text, options)
+            if (/^<think>/.test(this.responseText) && /<\/think>\n*$/.test(this.responseText)) {
+              resolve((this.responseText.match(/^<think>(.+)<\/think>/s) as RegExpMatchArray)[1], this.text, { ...options, isBilingualEnabled: false })
+            } else {
+              if (!/^<think>/.test(this.responseText) || /<\/think>\n+(?!$)/.test(this.responseText)) this.responseText = this.responseText.replace(/^<think>.+<\/think>\n+/s, '')
+              this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
+              if (this.translatedText.length === 0) continue
+              if (this.abortController.signal.aborted as boolean) break
+              resolve(this.translatedText, this.text, options)
+            }
           }
         }
         break
@@ -478,24 +482,26 @@ class Translation {
             ...temperature as number > -1 ? { temperature } : {},
             ...topP as number > -1 ? { top_p: topP } : {},
             ...topK as number > -1 ? { top_k: topK } : {},
-            reasoning: {
-              "exclude": true,
-              ...doesReasoning ? { "enabled": true } : {}
-            },
+            ...doesReasoning ? { reasoning: { "enabled": true } } : {},
             ...openrouterWebSearch === OpenrouterWebSearchs.EXA ? { plugins: [{ "id": "web" }] } : {},
             ...doesStream ? { stream: true } : {},
           }, { signal: this.abortController.signal });
         
           if (doesStream) {
             for await (const chunk of completion) {
-                this.responseText += chunk.choices[0].delta.content ?? ''
+              this.responseText += chunk.choices[0].delta.content ?? ''
+              if (/^<think>/.test(this.responseText) && /<\/think>\n*$/.test(this.responseText)) {
+                resolve((this.responseText.match(/^<think>(.+)<\/think>/s) as RegExpMatchArray)[1], this.text, { ...options, isBilingualEnabled: false })
+              } else {
+                if (!/^<think>/.test(this.responseText) || /<\/think>\n+(?!$)/.test(this.responseText)) this.responseText = this.responseText.replace(/^<think>.+<\/think>\n+/s, '')
                 this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
                 if (this.translatedText.length === 0) continue
-                if (this.abortController.signal.aborted as boolean) return
+                if (this.abortController.signal.aborted as boolean) break
                 resolve(this.translatedText, this.text, options)
+              }
             }
           } else {
-            this.responseText = completion.choices[0].message.content
+            this.responseText = completion.choices[0].message.content.replace(/^<think>.+<\/think>\n+/s, '')
             this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
             if (this.abortController.signal.aborted as boolean) return
             resolve(this.translatedText, this.text, options)
