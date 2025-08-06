@@ -145,24 +145,24 @@ const MODELS = {
     ]
   },
   GROQ: {
-    'Alibaba Cloud': [
-      'qwen/qwen3-32b'
-    ],
+    'Alibaba Cloud': ['qwen/qwen3-32b'],
     'DeepSeek / Meta': ['deepseek-r1-distill-llama-70b'],
     Google: ['gemma2-9b-it'],
     Meta: [
       'llama-3.1-8b-instant',
       'llama-3.3-70b-versatile',
       'llama3-70b-8192',
-      'llama3-8b-8192',
       'meta-llama/llama-4-maverick-17b-128e-instruct',
       {
         modelId: 'meta-llama/llama-4-scout-17b-16e-instruct',
         selected: true
       }
     ],
-    Mistral: ['mistral-saba-24b'],
-    'Moonshot AI': ['moonshotai/kimi-k2-instruct']
+    'Moonshot AI': ['moonshotai/kimi-k2-instruct'],
+    OpenAI: [
+      'openai/gpt-oss-120b',
+      'openai/gpt-oss-20b'
+    ]
   }
 }
 let Domains;
