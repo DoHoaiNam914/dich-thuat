@@ -340,7 +340,7 @@ class Translation {
         this.translateText = async (resolve) => {
           const { effort, isOpenaiWebSearchEnabled, openaiModelId } = options
           const isReasoningModel = MODELS.OPENAI.Reasoning.includes(openaiModelId)
-          const isGpt5 = MODELS.OPENAI['GPT-5'].map(element => element.modelId ?? element).includes(openaiModelId)
+          const isReasoningGpt5 = MODELS.OPENAI['GPT-5'].map(element => element.modelId ?? element).includes(openaiModelId as string) && openaiModelId !== 'gpt-5-chat-latest'
           const openai = new OpenAI({
             apiKey: '5N3NR9SDGLS7VLUWSEN9J30P',
             baseURL: 'https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1',
@@ -375,7 +375,7 @@ class Translation {
                 type: 'text'
               }
             },
-            reasoning: (isReasoningModel || isGpt5) && effort !== 'medium' && (effort !== 'minimal' || isGpt5)
+            reasoning: (isReasoningModel || isReasoningGpt5) && effort !== 'medium' && (effort !== 'minimal' || isReasoningGpt5)
               ? {
                   effort,
                   summary: 'auto'
@@ -394,9 +394,9 @@ class Translation {
                   }]
                 : []
             ],
-            ...isReasoningModel || isGpt5 ? {} : { temperature: temperature === -1 ? 1 : temperature },
+            ...isReasoningModel || isReasoningGpt5 ? {} : { temperature: temperature === -1 ? 1 : temperature },
             max_output_tokens: null,
-            ...isReasoningModel || isGpt5 ? {} : { top_p: topP === -1 ? 1 : topP },
+            ...isReasoningModel || isReasoningGpt5 ? {} : { top_p: topP === -1 ? 1 : topP },
             store: false,
             ...doesStream ? { stream: true } : {}
           })
