@@ -230,6 +230,7 @@ enum Domains {
   FAST_TRANSLATION = 'Fast Translation'
 }
 enum Efforts {
+  MINIMAL = 'minimal',
   LOW = 'low',
   MEDIUM = 'medium',
   HIGH = 'high'
@@ -387,6 +388,8 @@ class Translation {
       case Translators.OPENAI_TRANSLATOR:
         this.translateText = async (resolve) => {
           const { effort, isOpenaiWebSearchEnabled, openaiModelId } = options
+          const isReasoningModel = MODELS.OPENAI.Reasoning.includes(openaiModelId as string)
+          const isGpt5 = MODELS.OPENAI['GPT-5'].map(element => element.modelId ?? element).includes(openaiModelId as string)
 
           const openai = new OpenAI({
             apiKey: '5N3NR9SDGLS7VLUWSEN9J30P',
@@ -400,7 +403,7 @@ class Translation {
             model: openaiModelId,
             input: [
               ...await this.getSystemInstructions(options).then(value => value.map(element => ({
-                "role": MODELS.OPENAI.Reasoning.includes(openaiModelId as string) ? ((openaiModelId as string).startsWith('o1-mini') ? 'user' : 'developer') : 'system',
+                "role": (openaiModelId as string).startsWith('o1-mini') ? 'user' : 'system',
                 "content": [
                   {
                     "type": "input_text",
@@ -423,7 +426,7 @@ class Translation {
                 "type": "text"
               }
             },
-            reasoning: MODELS.OPENAI.Reasoning.includes(openaiModelId as string) && effort !== 'medium'
+            reasoning: (isReasoningModel || isGpt5) && effort !== 'medium' && (isGpt5 || effort !== 'minimal')
               ? {
                   "effort": effort,
                   "summary": "auto"
@@ -442,9 +445,9 @@ class Translation {
                   }]
                 : []
             ],
-            ...MODELS.OPENAI.Reasoning.includes(openaiModelId as string) ? {} : { temperature: temperature === -1 ? 1 : temperature },
+            ...isReasoningModel || isGpt5 ? {} : { temperature: temperature === -1 ? 1 : temperature },
             max_output_tokens: null,
-            ...MODELS.OPENAI.Reasoning.includes(openaiModelId as string) ? {} : { top_p: topP === -1 ? 1 : topP },
+            ...isReasoningModel || isGpt5 ? {} : { top_p: topP === -1 ? 1 : topP },
             store: false,
             ...doesStream ? { stream: true } : {}
           });
