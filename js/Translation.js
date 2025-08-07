@@ -339,6 +339,7 @@ class Translation {
       case Translators.OPENAI_TRANSLATOR:
         this.translateText = async (resolve) => {
           const { effort, isOpenaiWebSearchEnabled, openaiModelId } = options
+          const isReasoningModel = MODELS.OPENAI.Reasoning.includes(openaiModelId)
           const isGpt5 = MODELS.OPENAI['GPT-5'].map(element => element.modelId ?? element).includes(openaiModelId)
           const openai = new OpenAI({
             apiKey: '5N3NR9SDGLS7VLUWSEN9J30P',
@@ -374,7 +375,7 @@ class Translation {
                 type: 'text'
               }
             },
-            reasoning: (MODELS.OPENAI.Reasoning.includes(openaiModelId) || isGpt5) && effort !== 'medium' && (isGpt5 || effort !== 'minimal')
+            reasoning: (isReasoningModel || isGpt5) && effort !== 'medium' && (effort !== 'minimal' || isGpt5)
               ? {
                   effort,
                   summary: 'auto'
@@ -393,9 +394,9 @@ class Translation {
                   }]
                 : []
             ],
-            ...MODELS.OPENAI.Reasoning.includes(openaiModelId) ? {} : { temperature: temperature === -1 ? 1 : temperature },
+            ...isReasoningModel || isGpt5 ? {} : { temperature: temperature === -1 ? 1 : temperature },
             max_output_tokens: null,
-            ...MODELS.OPENAI.Reasoning.includes(openaiModelId) ? {} : { top_p: topP === -1 ? 1 : topP },
+            ...isReasoningModel || isGpt5 ? {} : { top_p: topP === -1 ? 1 : topP },
             store: false,
             ...doesStream ? { stream: true } : {}
           })
