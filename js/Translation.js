@@ -340,7 +340,7 @@ class Translation {
         this.translateText = async (resolve) => {
           const { effort, isOpenaiWebSearchEnabled, openaiModelId } = options
           const isReasoningModel = MODELS.OPENAI.Reasoning.includes(openaiModelId)
-          const isReasoningGpt5 = MODELS.OPENAI['GPT-5'].map(element => element.modelId ?? element).includes(openaiModelId as string) && openaiModelId !== 'gpt-5-chat-latest'
+          const isReasoningGpt5 = MODELS.OPENAI['GPT-5'].map(element => element.modelId ?? element).includes(openaiModelId) && openaiModelId !== 'gpt-5-chat-latest'
           const openai = new OpenAI({
             apiKey: '5N3NR9SDGLS7VLUWSEN9J30P',
             baseURL: 'https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1',
