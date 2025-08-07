@@ -426,7 +426,7 @@ class Translation {
                 "type": "text"
               }
             },
-            reasoning: (isReasoningModel || isGpt5) && effort !== 'medium' && (isGpt5 || effort !== 'minimal')
+            reasoning: (isReasoningModel || isGpt5) && effort !== 'medium' && (effort !== 'minimal' || isGpt5)
               ? {
                   "effort": effort,
                   "summary": "auto"
