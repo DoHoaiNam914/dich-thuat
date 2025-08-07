@@ -216,6 +216,7 @@ let Domains;
 })(Domains || (Domains = {}))
 let Efforts;
 (function (Efforts) {
+  Efforts.MINIMAL = 'minimal'
   Efforts.LOW = 'low'
   Efforts.MEDIUM = 'medium'
   Efforts.HIGH = 'high'
@@ -338,6 +339,7 @@ class Translation {
       case Translators.OPENAI_TRANSLATOR:
         this.translateText = async (resolve) => {
           const { effort, isOpenaiWebSearchEnabled, openaiModelId } = options
+          const isGpt5 = MODELS.OPENAI['GPT-5'].map(element => element.modelId ?? element).includes(openaiModelId)
           const openai = new OpenAI({
             apiKey: '5N3NR9SDGLS7VLUWSEN9J30P',
             baseURL: 'https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1',
@@ -349,7 +351,7 @@ class Translation {
             model: openaiModelId,
             input: [
               ...await this.getSystemInstructions(options).then(value => value.map(element => ({
-                role: MODELS.OPENAI.Reasoning.includes(openaiModelId) ? (openaiModelId.startsWith('o1-mini') ? 'user' : 'developer') : 'system',
+                role: openaiModelId.startsWith('o1-mini') ? 'user' : 'system',
                 content: [
                   {
                     type: 'input_text',
@@ -372,7 +374,7 @@ class Translation {
                 type: 'text'
               }
             },
-            reasoning: MODELS.OPENAI.Reasoning.includes(openaiModelId) && effort !== 'medium'
+            reasoning: (MODELS.OPENAI.Reasoning.includes(openaiModelId) || isGpt5) && effort !== 'medium' && (isGpt5 || effort !== 'minimal')
               ? {
                   effort,
                   summary: 'auto'
