@@ -41,7 +41,7 @@
   background-color: #000;
 }
 
-[data-bs-theme="light"] .apple-books-original {
+.apple-books-original {
   --reader-color: #000;
   --reader-hyperlink-color: #007aff;
   background-color: #fff;
@@ -53,9 +53,9 @@
   background-color: #000;
 }
 
-[data-bs-theme="light"] .apple-books-quiet {
-  --opt-color: #ebebf5;
-  --opt-hyperlink-color: #009ddc;
+.apple-books-quiet {
+  --reader-color: #ebebf5;
+  --reader-hyperlink-color: #009ddc;
   background-color: #4a4a4d;
 }
 
@@ -65,7 +65,7 @@
   background-color: #000;
 }
 
-[data-bs-theme="light"] .apple-books-paper {
+.apple-books-paper {
   --reader-color: #1e1a1a;
   --reader-hyperlink-color: #0071ed;
   background-color: #eeeded;
@@ -77,7 +77,7 @@
   background-color: #1c1c1e;
 }
 
-[data-bs-theme="light"] .apple-books-bold {
+.apple-books-bold {
   --reader-color: #1c1c1e;
   --reader-hyperlink-color: #007aff;
   background-color: #fff;
@@ -89,7 +89,7 @@
   background-color: #000;
 }
 
-[data-bs-theme="light"] .apple-books-calm {
+.apple-books-calm {
   --reader-color: #34281c;
   --reader-hyperlink-color: #b48128;
   background-color: #f1e2c9;
@@ -101,7 +101,7 @@
   background-color: #423b30;
 }
 
-[data-bs-theme="light"] .apple-books-focus {
+.apple-books-focus {
   --reader-color: #141200;
   --reader-hyperlink-color: #bf902e;
   background-color: #fefcf3;
@@ -130,7 +130,7 @@
   background-color: #f6f3e9;
 }
 
-[data-bs-theme="light"] .calibre-system {
+.calibre-system {
   --reader-color: #000000;
   background-color: #ffffff;
 }
