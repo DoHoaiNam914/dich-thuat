@@ -169,7 +169,7 @@ $( document ).ready(() => {
   })
   $checkedOptions.each((_index, element) => {
     const storedCheck = sessionStorage.getItem(($( element ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join(''))
-    if (storedCheck != null)
+    if (storedCheck == null) return
     $( element ).prop( "checked", Boolean(storedCheck) )
   })
   $apiKeyTexts.each((index, element) => {
