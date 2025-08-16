@@ -168,7 +168,9 @@ $(document).ready(() => {
     $(element).val(parseFloat(sessionStorage.getItem($(element).prop('id').split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')) ?? $(element).val()))
   })
   $checkedOptions.each((_index, element) => {
-    $(element).prop('checked', Boolean(sessionStorage.getItem($(element).prop('id').split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join(''))) ?? $(element).prop('checked'))
+    const storedCheck = sessionStorage.getItem($(element).prop('id').split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join(''))
+    if (storedCheck == null) return
+    $(element).prop('checked', Boolean(storedCheck))
   })
   $apiKeyTexts.each((index, element) => {
     $(element).val(localStorage.getItem($(element).prop('id').split('-').slice(0, -1).join('_').toUpperCase()) ?? '')
