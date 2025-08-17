@@ -150,9 +150,7 @@ const MODELS = {
       'gpt-3.5-turbo-0125',
       'gpt-3.5-turbo'
     ],
-    Other: [
-      'chatgpt-4o-latest'
-    ]
+    Other: ['chatgpt-4o-latest']
   },
   GROQ: {
     'Alibaba Cloud': ['qwen/qwen3-32b'],
@@ -162,16 +160,17 @@ const MODELS = {
       'llama-3.1-8b-instant',
       'llama-3.3-70b-versatile',
       'llama3-70b-8192',
+      'llama3-8b-8192',
       'meta-llama/llama-4-maverick-17b-128e-instruct',
-      {
-        modelId: 'meta-llama/llama-4-scout-17b-16e-instruct',
-        selected: true
-      }
+      'meta-llama/llama-4-scout-17b-16e-instruct'
     ],
     'Moonshot AI': ['moonshotai/kimi-k2-instruct'],
     OpenAI: [
       'openai/gpt-oss-120b',
-      'openai/gpt-oss-20b'
+      {
+        modelId: 'openai/gpt-oss-20b',
+        selected: true
+      }
     ]
   }
 }
@@ -340,8 +339,57 @@ class Translation {
       case Translators.OPENAI_TRANSLATOR:
         this.translateText = async (resolve) => {
           const { effort, isOpenaiWebSearchEnabled, openaiModelId } = options
+          const MAX_OUTPUT_TOKEN = {
+            'gpt-5': 128000,
+            'gpt-5-nano-2025-08-07': 128000,
+            'gpt-5-nano': 128000,
+            'gpt-5-mini-2025-08-07': 128000,
+            'gpt-5-mini': 128000,
+            'gpt-5-chat-latest': 16384,
+            'gpt-5-2025-08-07': 128000,
+            'gpt-4.1': 32768,
+            'gpt-4.1-mini': 32768,
+            'gpt-4.1-nano': 32768,
+            'gpt-4.1-nano-2025-04-14': 32768,
+            'gpt-4.1-mini-2025-04-14': 32768,
+            'gpt-4.1-2025-04-14': 32768,
+            o3: 100000,
+            'o4-mini': 100000,
+            'o1-pro': 100000,
+            o1: 100000,
+            'o1-2024-12-17': 100000,
+            'o1-mini': 65536,
+            'o1-mini-2024-09-12': 65536,
+            'o1-preview': 32768,
+            'o1-preview-2024-09-12': 32768,
+            'o1-pro-2025-03-19': 100000,
+            'o3-2025-04-16': 100000,
+            'o3-mini': 100000,
+            'o3-mini-2025-01-31': 100000,
+            'o3-pro': 100000,
+            'o3-pro-2025-06-10': 100000,
+            'o4-mini-2025-04-16': 100000,
+            'gpt-4o': 16384,
+            'gpt-4o-mini': 16384,
+            'gpt-4o-mini-2024-07-18': 16384,
+            'gpt-4o-2024-11-20': 16384,
+            'gpt-4o-2024-08-06': 16384,
+            'gpt-4o-2024-05-13': 4096,
+            'gpt-4-turbo-preview': 4096,
+            'gpt-4-turbo-2024-04-09': 4096,
+            'gpt-4-turbo': 4096,
+            'gpt-4-1106-preview': 4096,
+            'gpt-4-0613': 8192,
+            'gpt-4-0125-preview': 4096,
+            'gpt-4': 8192,
+            'gpt-3.5-turbo-16k': 16385,
+            'gpt-3.5-turbo-1106': 4096,
+            'gpt-3.5-turbo-0125': 4096,
+            'gpt-3.5-turbo': 4096,
+            'chatgpt-4o-latest': 8192
+          }
           const isReasoningModel = MODELS.OPENAI.Reasoning.includes(openaiModelId)
-          const isReasoningGpt5 = MODELS.OPENAI['GPT-5'].map(element => element.modelId ?? element).includes(openaiModelId) && openaiModelId !== 'gpt-5-chat-latest'
+          const isReasoningGptFive = MODELS.OPENAI['GPT-5'].map(element => element.modelId ?? element).includes(openaiModelId) && openaiModelId !== 'gpt-5-chat-latest'
           const openai = new OpenAI({
             apiKey: '5N3NR9SDGLS7VLUWSEN9J30P',
             baseURL: 'https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1',
@@ -353,7 +401,7 @@ class Translation {
             model: openaiModelId,
             input: [
               ...await this.getSystemInstructions(options).then(value => value.map(element => ({
-                role: openaiModelId.startsWith('o1-mini') ? 'user' : 'system',
+                role: isReasoningModel || isReasoningGptFive ? (openaiModelId.startsWith('o1-mini') ? 'user' : 'developer') : 'system',
                 content: [
                   {
                     type: 'input_text',
@@ -376,7 +424,7 @@ class Translation {
                 type: 'text'
               }
             },
-            reasoning: (isReasoningModel || isReasoningGpt5) && effort !== 'medium' && (effort !== 'minimal' || isReasoningGpt5)
+            reasoning: (isReasoningModel || isReasoningGptFive) && effort !== 'medium' && (effort !== 'minimal' || isReasoningGptFive)
               ? {
                   effort,
                   summary: 'auto'
@@ -395,16 +443,19 @@ class Translation {
                   }]
                 : []
             ],
-            ...isReasoningModel || isReasoningGpt5 ? {} : { temperature: temperature === -1 ? 1 : temperature },
-            max_output_tokens: null,
-            ...isReasoningModel || isReasoningGpt5 ? {} : { top_p: topP === -1 ? 1 : topP },
+            ...isReasoningModel || isReasoningGptFive
+              ? {}
+              : {
+                  temperature: temperature === -1 ? 1 : temperature,
+                  max_output_tokens: MAX_OUTPUT_TOKEN[openaiModelId],
+                  top_p: topP === -1 ? 1 : topP
+                },
             store: false,
             ...doesStream ? { stream: true } : {}
           })
           if (doesStream) {
             for await (const event of response) {
-              if (event.type !== 'response.output_text.delta') { continue }
-              this.responseText += event.delta
+              if (event.type === 'response.output_text.delta') { this.responseText += event.delta } else if (event.type === 'response.completed') { this.responseText += event.response.output.find(({ type }) => type === 'message').content[0].text } else { continue }
               this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
               if (this.translatedText.length === 0) { continue }
               if (this.abortController.signal.aborted) { break }
@@ -473,25 +524,25 @@ class Translation {
             apiKey: GEMINI_API_KEY
           })
           const tools = [
-            ...isGroundingWithGoogleSearchEnabled ? [{ googleSearch: {} }] : []
+            ...isGroundingWithGoogleSearchEnabled
+              ? [{
+                  googleSearch: {}
+                }]
+              : []
           ]
           const config = {
             abortSignal: this.abortController.signal,
             ...temperature > -1 ? { temperature } : {},
             ...topP > -1 ? { topP } : {},
             ...topK > -1 ? { topK } : {},
-            ...googleGenaiModelId.startsWith('gemini-2.5-flash') && !isThinkingModeEnabled
+            ...googleGenaiModelId.startsWith('gemini-2.5-')
               ? {
                   thinkingConfig: {
                     includeThoughts: true,
-                    thinkingBudget: 0
+                    thinkingBudget: googleGenaiModelId.startsWith('gemini-2.5-flash') && !isThinkingModeEnabled ? 0 : -1
                   }
                 }
-              : {
-                  thinkingConfig: {
-                    includeThoughts: true
-                  }
-                },
+              : {},
             safetySettings: [
               {
                 category: HarmCategory.HARM_CATEGORY_HARASSMENT,
@@ -511,12 +562,11 @@ class Translation {
               }
             ],
             ...tools.length > 0 ? { tools } : {},
-            responseMimeType: 'text/plain',
             systemInstruction: await this.getSystemInstructions(options).then(value => value.map(element => ({
-              text: element
+              text: `${element}`
             })))
           }
-          const model = options.googleGenaiModelId
+          const model = googleGenaiModelId
           const contents = [
             {
               role: 'user',
@@ -532,8 +582,9 @@ class Translation {
             config,
             contents
           })
+          const fileIndex = 0 // eslint-disable-line no-unused-vars
           for await (const chunk of response) {
-            this.responseText += chunk.text ?? ''
+            this.responseText += chunk.text
             this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
             if (this.translatedText.length === 0) { continue }
             if (this.abortController.signal.aborted) { break }
@@ -1006,20 +1057,18 @@ Your output must only contain the translated text and cannot include explanation
       const textSentenceWithUuids = Object.entries(textSentenceWithUuid)
       let translatedStringMap = {}
       if (typeof parsedResult.translated_string !== 'string') {
-        if (doesTranslatedStringExist) { console.log('isJson', true) }
-        // translatedStringMap = parsedResult.translated_string
+        translatedStringMap = parsedResult.translated_string
       } else if (Utils.isValidJson(parsedResult.translated_string)) {
-        if (doesTranslatedStringExist) { console.log('isStringifyJson', parsedResult.translated_string) }
-        // // @ts-expect-error JSON5
-        // translatedStringMap = JSON5.parse(parsedResult.translated_string)
+        // @ts-expect-error JSON5
+        translatedStringMap = JSON5.parse(parsedResult.translated_string)
       } else {
         /* eslint-disable camelcase */
         const { translated_string } = parsedResult
         const uuidAmount = [...translated_string.matchAll(new RegExp(`(?<!^)(?:${UUID_PATTERN}: )`, 'g'))].length
-        const translatedString = uuidAmount - [...translated_string.matchAll(new RegExp(`, ?${UUID_PATTERN}: `, 'g'))].length <= (textSentenceWithUuids.length <= 2 ? 0 : 1) ? translated_string.replace(new RegExp(`(?:, ?)(?=${UUID_PATTERN}: )`, 'g'), '\n') : translated_string
+        const translatedString = uuidAmount === [...translated_string.matchAll(new RegExp(`, ?${UUID_PATTERN}: `, 'g'))].length ? translated_string.replace(new RegExp(`(?:, ?)(?=${UUID_PATTERN}: )`, 'g'), '\n') : translated_string
         /* eslint-enable camelcase */
         const COMMA_PATTERN = '(?: , |,)'
-        const mayIncludesComma = uuidAmount - [...translatedString.matchAll(new RegExp(`${COMMA_PATTERN}\\n${UUID_PATTERN}: `, 'g'))].length <= (textSentenceWithUuids.length <= 2 ? 0 : 1)
+        const mayIncludesComma = uuidAmount === [...translatedString.matchAll(new RegExp(`${COMMA_PATTERN}\\n${UUID_PATTERN}: `, 'g'))].length
         translatedStringMap = Object.fromEntries([...translatedString.matchAll(new RegExp(`(${UUID_PATTERN}): (.+(?=${mayIncludesComma ? COMMA_PATTERN : ''}\\n(?: |\\n|" +\\n")?${UUID_PATTERN}: |\\n?$)(?:\\n(?!(?: |\\n|" +\\n")?${UUID_PATTERN}: ))?)+`, 'g'))].map(element => element.slice(1)))
       }
       if (Object.keys(translatedStringMap ?? {}).length > 0) {
