@@ -161,14 +161,14 @@ $( document ).ready(() => {
       $( a ).append( optgroup )
     })
   })
-  $('.string-value-option').each((index, element) => {
-    $( element ).val( sessionStorage.getItem(($( element ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')) ?? $( element ).val() as string )
+  $('.string-value-option').each((a, element) => {
+    $( element ).val( sessionStorage.getItem(($( element ).prop( "id" ) as string).split('-').slice(0, -1).map((element, b) => b > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')) ?? $( element ).val() as string )
   })
-  $('.number-value-option').each((index, element) => {
-    $( element ).val( parseFloat(sessionStorage.getItem(($( element ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')) ?? $( element ).val() as string) )
+  $('.number-value-option').each((a, element) => {
+    $( element ).val( parseFloat(sessionStorage.getItem(($( element ).prop( "id" ) as string).split('-').slice(0, -1).map((element, b) => b > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')) ?? $( element ).val() as string) )
   })
-  $checkedOptions.each((index, element) => {
-    const storedCheck = sessionStorage.getItem(($( element ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join(''))
+  $checkedOptions.each((a, element) => {
+    const storedCheck = sessionStorage.getItem(($( element ).prop( "id" ) as string).split('-').slice(0, -1).map((element, b) => b > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join(''))
     if (storedCheck == null) return
     $( element ).prop( "checked", JSON.parse(storedCheck) )
   })
