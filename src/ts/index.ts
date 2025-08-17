@@ -161,16 +161,16 @@ $( document ).ready(() => {
       $( a ).append( optgroup )
     })
   })
-  $('.string-value-option').each((_index, element) => {
+  $('.string-value-option').each((index, element) => {
     $( element ).val( sessionStorage.getItem(($( element ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')) ?? $( element ).val() as string )
   })
-  $('.number-value-option').each((_index, element) => {
+  $('.number-value-option').each((index, element) => {
     $( element ).val( parseFloat(sessionStorage.getItem(($( element ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')) ?? $( element ).val() as string) )
   })
-  $checkedOptions.each((_index, element) => {
+  $checkedOptions.each((index, element) => {
     const storedCheck = sessionStorage.getItem(($( element ).prop( "id" ) as string).split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join(''))
     if (storedCheck == null) return
-    $( element ).prop( "checked", Boolean(storedCheck) )
+    $( element ).prop( "checked", JSON.parse(storedCheck) )
   })
   $apiKeyTexts.each((index, element) => {
     $( element ).val( localStorage.getItem($( element ).prop( "id" ).split('-').slice(0, -1).join('_').toUpperCase()) ?? "" )
