@@ -302,7 +302,7 @@ $translationTranslators.on('click', function () {
     domain: $(`#dictionary-${$domainSelect.prop('id')}`).val(),
     customDictionary,
     isCustomPromptEnabled: $('#dictionary-custom-prompt-switch').prop('checked'),
-    customPrompt: $('#dictionary-custom-prompt-textarea').val()
+    customPrompt: $('#dictionary-text-custom-prompt-textarea').val()
   })
   dictionaryTranslation.translateText(translatedText => {
     $targetTextarea.val(translatedText).trigger('input')
@@ -466,7 +466,7 @@ $translateButton.on('click', function () {
         tone: $('#tone-select').val(),
         domain: $domainSelect.val(),
         customDictionary,
-        isCustomPromptEnabled: $('#custom-prompt-switch').prop('checked'),
+        isCustomPromptEnabled: $('#text-custom-prompt-switch').prop('checked'),
         customPrompt: $('#custom-prompt-textarea').val(),
         isCustomDictionaryEnabled: $customDictionarySwitch.prop('checked'),
         B2B_AUTH_TOKEN: b2bAuthToken
