@@ -784,6 +784,56 @@
   src: local(IowanOldStyle-Titling), url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/Iowan%20Old%20Style.ttc#IowanOldStyle-Titling) format('collection');
 }
 
+/* Lexend Deca */
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Deca';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/deca/LexendDeca-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Deca';
+  font-style: normal;
+  font-weight: 500;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/deca/LexendDeca-Medium.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Deca';
+  font-style: normal;
+  font-weight: 600;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/deca/LexendDeca-SemiBold.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Deca';
+  font-style: normal;
+  font-weight: 700;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/deca/LexendDeca-Bold.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Deca';
+  font-style: normal;
+  font-weight: 800;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/deca/LexendDeca-ExtraBold.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Deca';
+  font-style: normal;
+  font-weight: 900;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/deca/LexendDeca-Black.ttf) format('truetype');
+}
+
 /* Minion Pro */
 
 @font-face {
