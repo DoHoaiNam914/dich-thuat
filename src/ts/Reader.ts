@@ -155,7 +155,7 @@ export default class Reader {
   public static readonly FONT_MAP: string[][] = Object.entries({
     'Phông chữ Bootstrap 5 sans serif': '--bs-font-sans-serif',
     'Phông chữ Bootstrap 5 monospace': '--bs-font-monospace',
-  
+
     /* Các phông chữ của Readium */
     'Họ phông chữ hệ thống': '--system-font-family',
     'Kiểu chữ kiểu cũ': '--oldStyleTf',
@@ -170,7 +170,7 @@ export default class Reader {
     'Sans serif Nhật dọc': '--sans-serif-ja-v',
     'Họ phông chữ Trung Hoa': '--chineseFontFamily',
     'Họ phông chữ Đài Loan': '--taiwanFontFamily',
-  
+
     /* Các phông chữ của Waka */
     Bookerly: 'Bookerly',
     'Minion Pro': 'Minion Pro',
@@ -182,7 +182,7 @@ export default class Reader {
     'P22 Typewriter': 'P22 Typewriter',
     'SVN-Helvetica Neue': 'SVN-Helvetica Neue',
     'Trixi Pro': 'Trixi Pro',
-  
+
     /* Các phông chữ của Google Play Sách */
     Helvetica: 'Helvetica-ttf',
     Verdana: 'Verdana',
@@ -191,14 +191,14 @@ export default class Reader {
     Cochin: 'Cochin-ttc',
     Palatino: 'Palatino-ttc',
     Times: 'Times-ttc',
-  
+
     /* Các phông chữ của Rakuten Kobo */
     Avenir: 'Avenir-ttc',
     Georgia: 'Georgia',
     OpenDyslexic: 'OpenDyslexic',
     Optima: 'Optima-ttc',
     'Trebuchet MS': 'Trebuchet MS',
-  
+
     /* Các phông chữ của Apple Sách */
     // Athelas: 'Athelas-ttc',
     // 'Avenir Next': 'Avenir Next-ttc',
@@ -211,7 +211,8 @@ export default class Reader {
     'New York': 'New York Small',
     // Seravek: 'Seravek-ttc',
     'Times New Roman': 'Times New Roman',
-  
+
+    /* Khác */
     'Amazon Ember': 'Amazon Ember',
     'Apple SD Gothic Neo': 'Apple SD Gothic Neo-otf',
     'Atkinson Hyperlegible': 'Atkinson Hyperlegible',
@@ -227,9 +228,8 @@ export default class Reader {
     'Hiragino Mincho Pro': 'Hiragino Mincho Pro-otf',
     'Hiragino Mincho ProN': 'Hiragino Mincho ProN-otf',
     'Hiragino Sans': 'Hiragino Sans-otf',
+    'Lexend Deca': 'Lexend Deca',
     Lora: 'Lora',
-    'PingFang SC': 'PingFang SC-ttc',
-    'PingFang TC': 'PingFang TC-ttc',
     'new-york': 'new-york',
     'Noto Sans': 'Noto Sans',
     'Noto Sans JP': 'Noto Sans JP',
@@ -238,6 +238,8 @@ export default class Reader {
     'Noto Serif JP': 'Noto Serif JP',
     'Noto Serif SC': 'Noto Serif SC',
     'Noto Serif TC': 'Noto Serif TC',
+    'PingFang SC': 'PingFang SC-ttc',
+    'PingFang TC': 'PingFang TC-ttc',
     // Sitka: 'Sitka-ttf',
     'Songti SC': 'Songti SC-ttc',
     'Songti TC': 'Songti TC-ttc',
