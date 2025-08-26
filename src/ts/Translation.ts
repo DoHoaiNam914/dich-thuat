@@ -1102,8 +1102,8 @@ Your output must only contain the translated text and cannot include explanation
   private doctranslateIoPostprocess (translatedTextWithUuid: string, textSentenceWithUuid: Record<string, string>): string {
     const UUID_PATTERN = '(?:[a-z0-9]{8}#[a-z0-9]{3})'
     const translateText = translatedTextWithUuid.replace(/^\}$.+/ms, '').replace(new RegExp(UUID_PATTERN, 'gi'), (match) => match.toLowerCase()).replace(new RegExp(`(?<=${UUID_PATTERN})(?:>|')`, 'g'), '')
-    const doesTranslatedStringExist = /"translated_string": ?"/.test(translateText)
-    const potentialJsonString = doesTranslatedStringExist ? (translateText.replace(/\\$/, '').replace(/(\\")?(?:",?)?(?:\n?\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(new RegExp(`\\n(?=  ${UUID_PATTERN}: |"(?:\\n\\}|${UUID_PATTERN}: |\\})|${UUID_PATTERN}: )|\\\\\\n(?=${UUID_PATTERN}: )`, 'g'), '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s) as RegExpMatchArray)[0].replace(/insight": .+(?=translated_string": ")/s, '') : JSON.stringify({ translated_string: textSentenceWithUuid })
+    if (!/"translated_string": ?"/.test(translateText)) return
+    const potentialJsonString = (translateText.replace(/\\$/, '').replace(/(\\")?(?:",?)?(?:\n?\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(new RegExp(`\\n(?=  ${UUID_PATTERN}: |"(?:\\n\\}|${UUID_PATTERN}: |\\})|${UUID_PATTERN}: )|\\\\\\n(?=${UUID_PATTERN}: )`, 'g'), '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s) as RegExpMatchArray)[0].replace(/insight": .+(?=translated_string": ")/s, '')
     if (Utils.isValidJson(potentialJsonString)) {
       // @ts-expect-error JSON5
       const parsedResult = JSON5.parse(potentialJsonString)
