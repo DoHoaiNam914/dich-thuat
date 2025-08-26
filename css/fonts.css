@@ -791,7 +791,7 @@
   font-family: 'Lexend Deca';
   font-style: normal;
   font-weight: 400;
-  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/deca/ttfLexendDeca-Regular.ttf) format('truetype');
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/deca/ttf/LexendDeca-Regular.ttf) format('truetype');
 }
 
 @font-face {
@@ -799,7 +799,7 @@
   font-family: 'Lexend Deca';
   font-style: normal;
   font-weight: 500;
-  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/deca/ttfLexendDeca-Medium.ttf) format('truetype');
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/deca/ttf/LexendDeca-Medium.ttf) format('truetype');
 }
 
 @font-face {
@@ -807,7 +807,7 @@
   font-family: 'Lexend Deca';
   font-style: normal;
   font-weight: 600;
-  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/deca/ttfLexendDeca-SemiBold.ttf) format('truetype');
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/deca/ttf/LexendDeca-SemiBold.ttf) format('truetype');
 }
 
 @font-face {
@@ -815,7 +815,7 @@
   font-family: 'Lexend Deca';
   font-style: normal;
   font-weight: 700;
-  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/deca/ttfLexendDeca-Bold.ttf) format('truetype');
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/deca/ttf/LexendDeca-Bold.ttf) format('truetype');
 }
 
 @font-face {
@@ -823,7 +823,7 @@
   font-family: 'Lexend Deca';
   font-style: normal;
   font-weight: 800;
-  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/deca/ttfLexendDeca-ExtraBold.ttf) format('truetype');
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/deca/ttf/LexendDeca-ExtraBold.ttf) format('truetype');
 }
 
 @font-face {
@@ -831,7 +831,7 @@
   font-family: 'Lexend Deca';
   font-style: normal;
   font-weight: 900;
-  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/deca/ttfLexendDeca-Black.ttf) format('truetype');
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/deca/ttf/LexendDeca-Black.ttf) format('truetype');
 }
 
 /* Minion Pro */
