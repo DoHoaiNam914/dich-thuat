@@ -467,7 +467,7 @@ $translateButton.on('click', function () {
         domain: $domainSelect.val(),
         customDictionary,
         isCustomPromptEnabled: $('#text-custom-prompt-switch').prop('checked'),
-        customPrompt: $('#custom-prompt-textarea').val(),
+        customPrompt: $('#text-custom-prompt-textarea').val(),
         isCustomDictionaryEnabled: $customDictionarySwitch.prop('checked'),
         B2B_AUTH_TOKEN: b2bAuthToken
       })
