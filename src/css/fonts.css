@@ -732,6 +732,7 @@
   font-family: 'Iowan Old Style-ttc';
   font-style: normal;
   font-weight: 400;
+  font-feature-settings: normal;
   src: local(IowanOldStyle-Roman), url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/Iowan%20Old%20Style.ttc#IowanOldStyle-Roman) format('collection');
 }
 
@@ -740,6 +741,7 @@
   font-family: 'Iowan Old Style-ttc';
   font-style: normal;
   font-weight: 700;
+  font-feature-settings: normal;
   src: local(IowanOldStyle-Bold), url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/Iowan%20Old%20Style.ttc#IowanOldStyle-Bold) format('collection');
 }
 
@@ -748,6 +750,7 @@
   font-family: 'Iowan Old Style-ttc';
   font-style: italic;
   font-weight: 400;
+  font-feature-settings: normal;
   src: local(IowanOldStyle-Italic), url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/Iowan%20Old%20Style.ttc#IowanOldStyle-Italic) format('collection');
 }
 
@@ -756,6 +759,7 @@
   font-family: 'Iowan Old Style-ttc';
   font-style: italic;
   font-weight: 700;
+  font-feature-settings: normal;
   src: local(IowanOldStyle-BoldItalic), url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/Iowan%20Old%20Style.ttc#IowanOldStyle-BoldItalic) format('collection');
 }
 
@@ -764,6 +768,7 @@
   font-family: 'Iowan Old Style-ttc';
   font-style: normal;
   font-weight: 900;
+  font-feature-settings: normal;
   src: local(IowanOldStyle-Black), url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/Iowan%20Old%20Style.ttc#IowanOldStyle-Black) format('collection');
 }
 
@@ -772,6 +777,7 @@
   font-family: 'Iowan Old Style-ttc';
   font-style: italic;
   font-weight: 900;
+  font-feature-settings: normal;
   src: local(IowanOldStyle-BlackItalic), url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/Iowan%20Old%20Style.ttc#IowanOldStyle-BlackItalic) format('collection');
 }
 
@@ -780,7 +786,7 @@
   font-family: 'Iowan Old Style-ttc';
   font-style: normal;
   font-weight: 400;
-  font-feature-settings: 'titl' on;
+  font-feature-settings: 'titl';
   src: local(IowanOldStyle-Titling), url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/Iowan%20Old%20Style.ttc#IowanOldStyle-Titling) format('collection');
 }
 
