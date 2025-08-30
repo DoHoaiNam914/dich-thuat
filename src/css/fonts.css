@@ -780,7 +780,7 @@
   font-family: 'Iowan Old Style-ttc';
   font-style: normal;
   font-weight: 400;
-  font-feature-settings: 'titl';
+  font-feature-settings: 'titl' on;
   src: local(IowanOldStyle-Titling), url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/Iowan%20Old%20Style.ttc#IowanOldStyle-Titling) format('collection');
 }
 
