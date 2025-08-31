@@ -293,6 +293,7 @@ Reader.FONT_MAP = Object.entries({
   'Hiragino Sans': 'Hiragino Sans-otf',
   Lora: 'Lora',
   'new-york': 'new-york',
+  'Open Sans': 'Open Sans',
   'PingFang SC': 'PingFang SC-ttc',
   'PingFang TC': 'PingFang TC-ttc',
   // Sitka: 'Sitka-ttf',
