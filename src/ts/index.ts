@@ -295,6 +295,7 @@ $translationTranslators.on( "click", function () {
     openrouterModelId: $( "#dictionary-openrouter-model-text" ).val() as string,
     doesReasoning: $( "#dictionary-reasoning-switch" ).prop( "checked" ),
     openrouterWebSearch: $( "#openrouter-web-search-select" ).val() as OpenrouterWebSearchs,
+    doesStream: true,
     systemInstruction: $( "#dictionary-system-instruction-select" ).val() as SystemInstructions,
     temperature: parseFloat($( "#dictionary-temperature-text" ).val() as string),
     topP: parseFloat($( "#dictionary-top-p-text" ).val() as string),
