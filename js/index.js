@@ -294,6 +294,7 @@ $translationTranslators.on('click', function () {
     openrouterModelId: $('#dictionary-openrouter-model-text').val(),
     doesReasoning: $('#dictionary-reasoning-switch').prop('checked'),
     openrouterWebSearch: $('#openrouter-web-search-select').val(),
+    doesStream: true,
     systemInstruction: $('#dictionary-system-instruction-select').val(),
     temperature: parseFloat($('#dictionary-temperature-text').val()),
     topP: parseFloat($('#dictionary-top-p-text').val()),
