@@ -172,10 +172,7 @@ const MODELS: ModelsType = {
       'meta-llama/llama-4-maverick-17b-128e-instruct',
       'meta-llama/llama-4-scout-17b-16e-instruct'
     ],
-    'Moonshot AI': [
-      'moonshotai/kimi-k2-instruct',
-      'moonshotai/kimi-k2-instruct-0905'
-    ],
+    'Moonshot AI': ['moonshotai/kimi-k2-instruct-0905'],
     OpenAI: [
       'openai/gpt-oss-120b',
       {
