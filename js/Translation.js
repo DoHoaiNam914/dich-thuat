@@ -20,6 +20,14 @@ const MODELS = {
         selected: true
       },
       {
+        modelId: 'gemini-flash-latest',
+        modelName: 'Gemini Flash Latest'
+      },
+      {
+        modelId: 'gemini-flash-lite-latest',
+        modelName: 'Gemini Flash-Lite Latest'
+      },
+      {
         modelId: 'gemini-2.5-flash',
         modelName: 'Gemini 2.5 Flash'
       },
@@ -449,6 +457,12 @@ class Translation {
                   top_p: topP === -1 ? 1 : topP
                 },
             store: false,
+            include: !(isReasoningModel || isReasoningGptFive)
+              ? ["web_search_call.action.sources"]
+              : [
+                  "reasoning.encrypted_content",
+                  "web_search_call.action.sources"
+                ],
             ...doesStream ? { stream: true } : {}
           })
           if (doesStream) {
