@@ -346,35 +346,13 @@ class Translation {
         this.translateText = async (resolve) => {
           const { effort, isOpenaiWebSearchEnabled, openaiModelId } = options
           const MAX_OUTPUT_TOKEN = {
-            'gpt-5': 128000,
-            'gpt-5-nano-2025-08-07': 128000,
-            'gpt-5-nano': 128000,
-            'gpt-5-mini-2025-08-07': 128000,
-            'gpt-5-mini': 128000,
             'gpt-5-chat-latest': 16384,
-            'gpt-5-2025-08-07': 128000,
             'gpt-4.1': 32768,
             'gpt-4.1-mini': 32768,
             'gpt-4.1-nano': 32768,
             'gpt-4.1-nano-2025-04-14': 32768,
             'gpt-4.1-mini-2025-04-14': 32768,
             'gpt-4.1-2025-04-14': 32768,
-            o3: 100000,
-            'o4-mini': 100000,
-            'o1-pro': 100000,
-            o1: 100000,
-            'o1-2024-12-17': 100000,
-            'o1-mini': 65536,
-            'o1-mini-2024-09-12': 65536,
-            'o1-preview': 32768,
-            'o1-preview-2024-09-12': 32768,
-            'o1-pro-2025-03-19': 100000,
-            'o3-2025-04-16': 100000,
-            'o3-mini': 100000,
-            'o3-mini-2025-01-31': 100000,
-            'o3-pro': 100000,
-            'o3-pro-2025-06-10': 100000,
-            'o4-mini-2025-04-16': 100000,
             'gpt-4o': 16384,
             'gpt-4o-mini': 16384,
             'gpt-4o-mini-2024-07-18': 16384,
@@ -547,11 +525,11 @@ class Translation {
             ...temperature > -1 ? { temperature } : {},
             ...topP > -1 ? { topP } : {},
             ...topK > -1 ? { topK } : {},
-            ...googleGenaiModelId.startsWith('gemini-2.5-')
+            .../^gemini-(2\.5|flash)-/.test(googleGenaiModelId)
               ? {
                   thinkingConfig: {
                     includeThoughts: true,
-                    thinkingBudget: googleGenaiModelId.startsWith('gemini-2.5-flash') && !isThinkingModeEnabled ? 0 : -1
+                    thinkingBudget: /^gemini(-2\.5)?-flash/.test(googleGenaiModelId) && !isThinkingModeEnabled ? 0 : -1
                   }
                 }
               : {},
