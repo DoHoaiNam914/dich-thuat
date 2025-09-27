@@ -46,23 +46,6 @@ const MODELS = {
         modelName: 'Gemini 2.0 Flash-Lite'
       }
     ],
-    'Gemini 1.5': [
-      {
-        modelId: 'gemini-1.5-flash',
-        modelName: 'Gemini 1.5 Flash'
-      },
-      'gemini-1.5-flash-001',
-      'gemini-1.5-flash-002',
-      {
-        modelId: 'gemini-1.5-flash-8b',
-        modelName: 'Gemini 1.5 Flash-8B'
-      },
-      {
-        modelId: 'gemini-1.5-pro',
-        modelName: 'Gemini 1.5 Pro'
-      },
-      'gemini-1.5-pro-001'
-    ],
     Gemma: [
       {
         modelId: 'gemma-3n-e2b-it',
