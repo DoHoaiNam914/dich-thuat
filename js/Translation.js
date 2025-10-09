@@ -147,7 +147,6 @@ const MODELS = {
   },
   GROQ: {
     'Alibaba Cloud': ['qwen/qwen3-32b'],
-    'DeepSeek / Meta': ['deepseek-r1-distill-llama-70b'],
     Google: ['gemma2-9b-it'],
     Meta: [
       'llama-3.1-8b-instant',
