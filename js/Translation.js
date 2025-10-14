@@ -33,7 +33,7 @@ const MODELS = {
       },
       {
         modelId: 'gemini-2.5-flash-lite',
-        modelName: 'Gemini 2.5 Flash Lite'
+        modelName: 'Gemini 2.5 Flash-Lite'
       }
     ],
     'Gemini 2.0': [
