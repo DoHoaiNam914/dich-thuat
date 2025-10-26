@@ -284,7 +284,7 @@ class Translation {
     this.B2B_AUTH_TOKEN = B2B_AUTH_TOKEN
     this.TVLY_API_KEY = TVLY_API_KEY
     const prompt = this.getPrompt(systemInstruction)
-    const noEmptyLinesPrompt = prompt.replace(/^(?<=### TEXT SENTENCE WITH UUID:\n{)'[a-z0-9]{8}#[a-z0-9]{3}': '\s*', |, '[a-z0-9]{8}#[a-z0-9]{3}': '\s*'/g, '')
+    const noEmptyLinesPrompt = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? prompt.replace(/^(?<=### TEXT SENTENCE WITH UUID:\n{)'[a-z0-9]{8}#[a-z0-9]{3}': '\s*', |, '[a-z0-9]{8}#[a-z0-9]{3}': '\s*'/g, '') : prompt
     // @ts-expect-error JSON5
     const textSentenceWithUuid = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? JSON5.parse(prompt.match(/(?<=^### TEXT SENTENCE WITH UUID:\n).+(?=\n### TRANSLATED TEXT WITH UUID:$)/s)[0]) : {}
     switch (options.translatorId) {
