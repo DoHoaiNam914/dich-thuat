@@ -558,6 +558,7 @@ class Translation {
           })
           const fileIndex = 0 // eslint-disable-line no-unused-vars
           for await (const chunk of response) {
+            if (chunk.text == null) { continue }
             this.responseText += chunk.text
             this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
             if (this.translatedText.length === 0) { continue }
