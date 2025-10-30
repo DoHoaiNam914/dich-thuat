@@ -223,7 +223,7 @@ Reader.THEMES = [
     ]
   },
   {
-    label: 'Calibre',
+    title: 'Calibre',
     themes: [
       {
         name: 'Black',
@@ -248,7 +248,7 @@ Reader.THEMES = [
     ]
   },
   {
-    label: 'Google Play Sách',
+    title: 'Google Play Sách',
     themes: [
       {
         name: 'Sáng',
@@ -274,7 +274,7 @@ Reader.THEMES = [
     ]
   },
   {
-    label: 'Rakuten Kobo',
+    title: 'Rakuten Kobo',
     themes: [
       {
         name: 'Light',
@@ -307,7 +307,7 @@ Reader.THEMES = [
     ]
   },
   {
-    label: 'Readium',
+    title: 'Readium',
     themes: [
       {
         name: 'Day',
@@ -333,7 +333,7 @@ Reader.THEMES = [
     ]
   },
   {
-    label: 'Waka',
+    title: 'Waka',
     themes: [
       {
         name: 'Trắng',
