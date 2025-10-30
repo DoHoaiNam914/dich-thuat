@@ -167,7 +167,7 @@ Reader.THEMES = [
     ]
   },
   {
-    title: 'Apple Sách',
+    title: 'Apple Books',
     themes: [
       {
         name: 'Nguyên bản',
@@ -196,7 +196,7 @@ Reader.THEMES = [
         name: 'Đậm',
         fontSize: 1.28125,
         value: 'apple-books-bold',
-        fontFamily: 'San Francisco, New York',
+        fontFamily: 'San Francisco',
         fontWeight: 300,
         boldText: true,
         lineHeight: 1.5,
@@ -215,10 +215,153 @@ Reader.THEMES = [
         name: 'Tập trung',
         fontSize: 1.125,
         value: 'apple-books-focus',
-        fontFamily: 'Proxima Nova, New York',
+        fontFamily: 'Proxima Nova',
         fontWeight: 300,
         lineHeight: 1.4,
         justifyText: true
+      }
+    ]
+  },
+  {
+    label: 'Calibre',
+    themes: [
+      {
+        name: 'Black',
+        value: 'calibre-black'
+      },
+      {
+        name: 'Sepia dark',
+        value: 'calibre-sepia-dark'
+      },
+      {
+        name: 'Sepia light',
+        value: 'calibre-sepia-light'
+      },
+      {
+        name: 'System',
+        value: 'calibre-system'
+      },
+      {
+        name: 'White',
+        value: 'calibre-white'
+      }
+    ]
+  },
+  {
+    label: 'Google Play Sách',
+    themes: [
+      {
+        name: 'Sáng',
+        value: 'google-play-books-light',
+        fontFamily: 'Literata',
+        fontSize: 1.125,
+        lineHeight: 1.25
+      },
+      {
+        name: 'Tối',
+        value: 'google-play-books-dark',
+        fontFamily: 'Literata',
+        fontSize: 1.125,
+        lineHeight: 1.25
+      },
+      {
+        name: 'Nâu đỏ',
+        value: 'google-play-books-sepia',
+        fontFamily: 'Literata',
+        fontSize: 1.125,
+        lineHeight: 1.25
+      },
+    ]
+  },
+  {
+    label: 'Rakuten Kobo',
+    themes: [
+      {
+        name: 'Light',
+        value: 'rakuten-kobo-light',
+        fontFamily: 'Georgia',
+        fontSize: 1.25,
+        lineHeight: 1.5
+      },
+      {
+        name: 'Sepia',
+        value: 'rakuten-kobo-sepia',
+        fontFamily: 'Georgia',
+        fontSize: 1.25,
+        lineHeight: 1.5
+      },
+      {
+        name: 'Dark',
+        value: 'rakuten-kobo-dark',
+        fontFamily: 'Georgia',
+        fontSize: 1.25,
+        lineHeight: 1.5
+      },
+      {
+        name: 'Charcoal',
+        value: 'rakuten-kobo-charcoal',
+        fontFamily: 'Georgia',
+        fontSize: 1.25,
+        lineHeight: 1.5
+      }
+    ]
+  },
+  {
+    label: 'Readium',
+    themes: [
+      {
+        name: 'Day',
+        value: 'readium-day',
+        fontFamily: '--oldStyleTf',
+        fontSize: 1,
+        lineHeight: '--readiumLineHeight'
+      },
+      {
+        name: 'Night',
+        value: 'readium-night',
+        fontFamily: '--oldStyleTf',
+        fontSize: 1,
+        lineHeight: '--readiumLineHeight'
+      },
+      {
+        name: 'Sepia',
+        value: 'readium-sepia',
+        fontFamily: '--oldStyleTf',
+        fontSize: 1,
+        lineHeight: '--readiumLineHeight'
+      }
+    ]
+  },
+  {
+    label: 'Waka',
+    themes: [
+      {
+        name: 'Trắng',
+        value: 'waka-white',
+        fontFamily: 'Noto Serif',
+        fontSize: 1.25,
+        lineHeight: 1.2
+      },
+      {
+        name: 'Xám',
+        value: 'waka-gray',
+        fontFamily: 'Noto Serif',
+        fontSize: 1.25,
+        lineHeight: 1.2
+      },
+      {
+        name: 'Nâu đỏ',
+        value: 'waka-sepia',
+        fontFamily: 'Noto Serif',
+        fontSize: 1.25,
+        lineHeight: 1.2
+      },
+      {
+        name: 'Đen',
+        value: 'waka-black',
+        fontFamily: 'Noto Serif',
+        fontSize: 1.25,
+        lineHeight: 1.2
       }
     ]
   }
