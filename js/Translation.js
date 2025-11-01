@@ -517,31 +517,35 @@ class Translation {
                   }
                 }
               : {},
-            safetySettings: [
-              {
-                category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-                threshold: HarmBlockThreshold.BLOCK_NONE // Block none
-              },
-              {
-                category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-                threshold: HarmBlockThreshold.BLOCK_NONE // Block none
-              },
-              {
-                category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-                threshold: HarmBlockThreshold.BLOCK_NONE // Block none
-              },
-              {
-                category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-                threshold: HarmBlockThreshold.BLOCK_NONE // Block none
-              }
-            ],
             ...tools.length > 0 ? { tools } : {},
-            systemInstruction: await this.getSystemInstructions(options).then(value => value.map(element => ({
-              text: `${element}`
-            })))
+            ...googleGenaiModelId.startsWith('gemma')
+              ? {}
+              : {
+                  systemInstruction: await this.getSystemInstructions(options).then(value => value.map(element => ({
+                    text: `${element}`
+                  })))
+                }
           }
           const model = googleGenaiModelId
           const contents = [
+            ...googleGenaiModelId.startsWith('gemma')
+              ? await this.getSystemInstructions(options).then(value => value.map(element => ({
+                    role: 'user',
+                    parts: [
+                      {
+                        text: `${element}`
+                      }
+                    ]
+                  })))
+                : {},
+              {
+                role: 'user',
+                parts: [
+                  {
+                    text: `${noEmptyLinesPrompt}`
+                  }
+                ]
+              }
             {
               role: 'user',
               parts: [
