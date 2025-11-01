@@ -538,14 +538,6 @@ class Translation {
                     ]
                   })))
                 : [],
-              {
-                role: 'user',
-                parts: [
-                  {
-                    text: `${noEmptyLinesPrompt}`
-                  }
-                ]
-              }
             {
               role: 'user',
               parts: [
