@@ -537,7 +537,7 @@ class Translation {
                       }
                     ]
                   })))
-                : {},
+                : [],
               {
                 role: 'user',
                 parts: [
