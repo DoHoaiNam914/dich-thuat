@@ -81,8 +81,11 @@ const MODELS = {
   },
   OPENAI: {
     'GPT-5': [
+      'gpt-5',
+      'gpt-5.1-chat-latest',
+      'gpt-5.1-2025-11-13',
       {
-        modelId: 'gpt-5',
+        modelId: 'gpt-5.1',
         selected: true
       },
       'gpt-5-pro-2025-10-06',
@@ -206,7 +209,7 @@ let Domains;
 })(Domains || (Domains = {}))
 let Efforts;
 (function (Efforts) {
-  Efforts.MINIMAL = 'minimal'
+  Efforts.NONE = 'none'
   Efforts.LOW = 'low'
   Efforts.MEDIUM = 'medium'
   Efforts.HIGH = 'high'
@@ -330,6 +333,7 @@ class Translation {
         this.translateText = async (resolve) => {
           const { effort, isOpenaiWebSearchEnabled, openaiModelId } = options
           const MAX_OUTPUT_TOKEN = {
+            'gpt-5.1-chat-latest': 16384,
             'gpt-5-chat-latest': 16384,
             'gpt-4.1': 32768,
             'gpt-4.1-mini': 32768,
@@ -357,10 +361,11 @@ class Translation {
             'chatgpt-4o-latest': 8192
           }
           const isReasoningModel = MODELS.OPENAI.Reasoning.includes(openaiModelId)
-          const isReasoningGptFive = MODELS.OPENAI['GPT-5'].map(element => element.modelId ?? element).includes(openaiModelId) && openaiModelId !== 'gpt-5-chat-latest'
+          const isReasoningGptFive = MODELS.OPENAI['GPT-5'].map(element => element.modelId ?? element).includes(openaiModelId) && openaiModelId !== 'gpt-5.1-chat-latest' && openaiModelId !== 'gpt-5-chat-latest'
           const openai = new OpenAI({
-            apiKey: '5N3NR9SDGLS7VLUWSEN9J30P',
+            apiKey: 'OPENAI_API_KEY',
             baseURL: 'https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1',
+            timeout: 15 * 1000 * 60,
             fetchOptions: { signal: this.abortController.signal },
             defaultHeaders: { 'air-user-id': crypto.randomUUID() },
             dangerouslyAllowBrowser: true
@@ -392,18 +397,16 @@ class Translation {
                 type: 'text'
               }
             },
-            reasoning: (isReasoningModel || isReasoningGptFive) && effort !== 'medium' && (effort !== 'minimal' || isReasoningGptFive)
+            reasoning: isReasoningModel || isReasoningGptFive
               ? {
-                  effort,
+                  effort: /^gpt-5(?!\.1)/.test(openaiModelId) && effort === Efforts.NONE ? 'minimal' : effort,
                   summary: 'auto'
                 }
-              : {
-                  summary: 'auto'
-                },
+              : {},
             tools: [
               ...isOpenaiWebSearchEnabled
                 ? [{
-                    type: 'web_search_preview',
+                    type: 'web_search',
                     user_location: {
                       type: 'approximate'
                     },
