@@ -84,10 +84,7 @@ const MODELS = {
       'gpt-5',
       'gpt-5.1-chat-latest',
       'gpt-5.1-2025-11-13',
-      {
-        modelId: 'gpt-5.1',
-        selected: true
-      },
+      'gpt-5.1',
       'gpt-5-pro-2025-10-06',
       'gpt-5-pro',
       'gpt-5-nano-2025-08-07',
@@ -98,7 +95,10 @@ const MODELS = {
       'gpt-5-2025-08-07'
     ],
     'GPT-4.1': [
-      'gpt-4.1',
+      {
+        modelId: 'gpt-4.1',
+        selected: true
+      },
       'gpt-4.1-mini',
       'gpt-4.1-nano',
       'gpt-4.1-nano-2025-04-14',
@@ -111,8 +111,6 @@ const MODELS = {
       'o1-pro',
       'o1',
       'o1-2024-12-17',
-      'o1-mini',
-      'o1-mini-2024-09-12',
       'o1-preview',
       'o1-preview-2024-09-12',
       'o1-pro-2025-03-19',
@@ -279,7 +277,7 @@ class Translation {
       temperature: 0.1,
       tone: Tones.SERIOUS,
       topP: 0.95,
-      topK: -1,
+      topK: 50,
       translatorId: Translators.GOOGLE_GENAI_TRANSLATE,
       ...options
     }
