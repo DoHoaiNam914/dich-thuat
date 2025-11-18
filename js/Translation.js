@@ -13,11 +13,15 @@ import OpenAI from 'https://esm.run/openai'
 import Utils from './Utils.js'
 const MODELS = {
   GOOGLE_GENAI: {
-    'Gemini 2.5': [
+    'Gemini': [
+      {
+        modelId: 'gemini-3-pro-preview',
+        modelName: 'Gemini 3 Pro Preview',
+        selected: true
+      },
       {
         modelId: 'gemini-2.5-pro',
-        modelName: 'Gemini 2.5 Pro',
-        selected: true
+        modelName: 'Gemini 2.5 Pro'
       },
       {
         modelId: 'gemini-flash-latest',
@@ -34,9 +38,7 @@ const MODELS = {
       {
         modelId: 'gemini-2.5-flash-lite',
         modelName: 'Gemini 2.5 Flash-Lite'
-      }
-    ],
-    'Gemini 2.0': [
+      },
       {
         modelId: 'gemini-2.0-flash',
         modelName: 'Gemini 2.0 Flash'
@@ -510,14 +512,21 @@ class Translation {
             ...temperature > -1 ? { temperature } : {},
             ...topP > -1 ? { topP } : {},
             ...topK > -1 ? { topK } : {},
-            .../^gemini-(2\.5|flash)-/.test(googleGenaiModelId)
+            ...googleGenaiModelId.startsWith('gemini-3-') 
               ? {
                   thinkingConfig: {
                     includeThoughts: true,
-                    thinkingBudget: /^gemini(-2\.5)?-flash/.test(googleGenaiModelId) && !isThinkingModeEnabled ? 0 : -1
+                    thinkingLevel: !isThinkingModeEnabled ? 'LOW' : 'HIGH'
                   }
                 }
-              : {},
+              : (/^gemini-(2\.5|flash)-/.test(googleGenaiModelId)
+              ? {
+                  thinkingConfig: {
+                    includeThoughts: true,
+                    thinkingBudget: /^gemini(-2\.5)?-flash-(?:lite)?/.test(googleGenaiModelId) && !isThinkingModeEnabled ? 0 : -1
+                  }
+                }
+              : {}),
             ...tools.length > 0 ? { tools } : {},
             ...googleGenaiModelId.startsWith('gemma')
               ? {}
