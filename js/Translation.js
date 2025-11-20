@@ -471,7 +471,7 @@ class Translation {
             ...temperature > -1 ? { temperature } : {},
             ...topP > -1 ? { top_p: topP } : {},
             ...topK > -1 ? { top_k: topK } : {},
-            ...doesReasoning ? { reasoning: { enabled: true } } : {},
+            ...{ reasoning: { enabled: doesReasoning } },
             ...openrouterWebSearch === OpenrouterWebSearchs.EXA ? { plugins: [{ id: 'web' }] } : {},
             ...doesStream ? { stream: true } : {}
           }, { signal: this.abortController.signal })
