@@ -83,7 +83,10 @@ const MODELS = {
   },
   OPENAI: {
     'GPT-5': [
-      'gpt-5',
+      {
+        modelId: 'gpt-5',
+        selected: true
+      },
       'gpt-5.1-chat-latest',
       'gpt-5.1-2025-11-13',
       'gpt-5.1',
@@ -97,10 +100,7 @@ const MODELS = {
       'gpt-5-2025-08-07'
     ],
     'GPT-4.1': [
-      {
-        modelId: 'gpt-4.1',
-        selected: true
-      },
+      'gpt-4.1',
       'gpt-4.1-mini',
       'gpt-4.1-nano',
       'gpt-4.1-nano-2025-04-14',
