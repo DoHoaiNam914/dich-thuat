@@ -432,7 +432,7 @@ class Translation {
           })
           if (doesStream) {
             for await (const event of response) {
-              if (event.type === 'response.output_text.delta') { this.responseText += event.delta } else if (event.type === 'response.completed') { this.responseText += event.response.output.find(({ type }) => type === 'message').content[0].text } else { continue }
+              if (event.type === 'response.output_text.delta') { this.responseText += event.delta } else if (event.type === 'response.completed') { this.responseText = event.response.output.find(({ type }) => type === 'message').content[0].text } else { continue }
               this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
               if (this.translatedText.length === 0) { continue }
               if (this.abortController.signal.aborted) { break }
