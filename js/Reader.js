@@ -114,7 +114,7 @@ Reader.THEMES = [
       },
       {
         name: 'White (Japan)',
-        fontFamily: 'Hiragino Mincho ProN',
+        fontFamily: 'Hiragino Mincho ProN, Georgia',
         fontSize: 1.09375,
         value: 'jp-co-amazon-kindle-white',
         lineHeight: 1.55
@@ -129,7 +129,7 @@ Reader.THEMES = [
       },
       {
         name: 'Sepia (Japan)',
-        fontFamily: 'Hiragino Mincho ProN',
+        fontFamily: 'Hiragino Mincho ProN, Georgia',
         fontSize: 1.09375,
         value: 'jp-co-amazon-kindle-sepia',
         lineHeight: 1.55
@@ -144,7 +144,7 @@ Reader.THEMES = [
       },
       {
         name: 'Green (Japan)',
-        fontFamily: 'Hiragino Mincho ProN',
+        fontFamily: 'Hiragino Mincho ProN, Georgia',
         fontSize: 1.09375,
         value: 'jp-co-amazon-kindle-green',
         lineHeight: 1.55
@@ -159,7 +159,7 @@ Reader.THEMES = [
       },
       {
         name: 'Black (Japan)',
-        fontFamily: 'Hiragino Mincho ProN',
+        fontFamily: 'Hiragino Mincho ProN, Georgia',
         fontSize: 1.09375,
         value: 'jp-co-amazon-kindle-black',
         lineHeight: 1.55
@@ -178,7 +178,7 @@ Reader.THEMES = [
         name: 'Yên tĩnh',
         fontSize: 1.125,
         value: 'apple-books-quiet',
-        fontFamily: 'Publico Text, New York',
+        fontFamily: 'Publico, New York',
         fontWeight: 300,
         lineHeight: 1.4,
         justifyText: true
@@ -206,7 +206,7 @@ Reader.THEMES = [
         name: 'Êm dịu',
         fontSize: 1.25,
         value: 'apple-books-calm',
-        fontFamily: 'Canela Text, New York',
+        fontFamily: 'Canela, New York',
         fontWeight: 300,
         lineHeight: 1.55,
         justifyText: false
