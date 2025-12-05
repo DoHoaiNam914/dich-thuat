@@ -73,12 +73,6 @@ const MODELS = {
         modelId: 'gemma-3-27b-it',
         modelName: 'Gemma 3 27B'
       }
-    ],
-    Other: [
-      {
-        modelId: 'learnlm-2.0-flash-experimental',
-        modelName: 'LearnLM 2.0 Flash Experimental'
-      }
     ]
   },
   OPENAI: {
