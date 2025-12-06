@@ -1,1258 +1,1258 @@
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-0S2D2QYxoUKIkn98pRl9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-kS2D2QYxoUKIkn98pRl9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-US2D2QYxoUKIkn98pRl9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-ES2D2QYxoUKIkn98pRl9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_0S2D2QYxoUKIkn98pRl9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_US2D2QYxoUKIkn98pRl9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb80S2D2QYxoUKIkn98pRl9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb88S2D2QYxoUKIkn98pRl9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb8kS2D2QYxoUKIkn98pRl9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb8US2D2QYxoUKIkn98pRl9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb90S2D2QYxoUKIkn98pRl9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb9US2D2QYxoUKIkn98pRl9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-kSGD2QYxoUKIkn98pRl9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_0SGD2QYxoUKIkn98pRl9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_ESGD2QYxoUKIkn98pRl9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-0S2D2QYxoUKIkn98pdF9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-kS2D2QYxoUKIkn98pdF9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-US2D2QYxoUKIkn98pdF9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-ES2D2QYxoUKIkn98pdF9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_0S2D2QYxoUKIkn98pdF9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_US2D2QYxoUKIkn98pdF9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb80S2D2QYxoUKIkn98pdF9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb88S2D2QYxoUKIkn98pdF9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb8kS2D2QYxoUKIkn98pdF9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb8US2D2QYxoUKIkn98pdF9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb90S2D2QYxoUKIkn98pdF9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb9US2D2QYxoUKIkn98pdF9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-kSGD2QYxoUKIkn98pdF9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_0SGD2QYxoUKIkn98pdF9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_ESGD2QYxoUKIkn98pdF9dCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-0S2D2QYxoUKIkn98pmFhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-kS2D2QYxoUKIkn98pmFhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-US2D2QYxoUKIkn98pmFhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-ES2D2QYxoUKIkn98pmFhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_0S2D2QYxoUKIkn98pmFhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_US2D2QYxoUKIkn98pmFhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb80S2D2QYxoUKIkn98pmFhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb88S2D2QYxoUKIkn98pmFhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb8kS2D2QYxoUKIkn98pmFhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb8US2D2QYxoUKIkn98pmFhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb90S2D2QYxoUKIkn98pmFhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb9US2D2QYxoUKIkn98pmFhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-kSGD2QYxoUKIkn98pmFhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_0SGD2QYxoUKIkn98pmFhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_ESGD2QYxoUKIkn98pmFhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-0S2D2QYxoUKIkn98poVhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-kS2D2QYxoUKIkn98poVhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-US2D2QYxoUKIkn98poVhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-ES2D2QYxoUKIkn98poVhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_0S2D2QYxoUKIkn98poVhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_US2D2QYxoUKIkn98poVhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb80S2D2QYxoUKIkn98poVhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb88S2D2QYxoUKIkn98poVhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb8kS2D2QYxoUKIkn98poVhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb8US2D2QYxoUKIkn98poVhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb90S2D2QYxoUKIkn98poVhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb9US2D2QYxoUKIkn98poVhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-kSGD2QYxoUKIkn98poVhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_0SGD2QYxoUKIkn98poVhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_ESGD2QYxoUKIkn98poVhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-0S2D2QYxoUKIkn98pxlhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-kS2D2QYxoUKIkn98pxlhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-US2D2QYxoUKIkn98pxlhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-ES2D2QYxoUKIkn98pxlhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_0S2D2QYxoUKIkn98pxlhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_US2D2QYxoUKIkn98pxlhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb80S2D2QYxoUKIkn98pxlhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb88S2D2QYxoUKIkn98pxlhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb8kS2D2QYxoUKIkn98pxlhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb8US2D2QYxoUKIkn98pxlhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb90S2D2QYxoUKIkn98pxlhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb9US2D2QYxoUKIkn98pxlhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-kSGD2QYxoUKIkn98pxlhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_0SGD2QYxoUKIkn98pxlhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_ESGD2QYxoUKIkn98pxlhdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-0S2D2QYxoUKIkn98p71hdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-kS2D2QYxoUKIkn98p71hdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-US2D2QYxoUKIkn98p71hdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-ES2D2QYxoUKIkn98p71hdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_0S2D2QYxoUKIkn98p71hdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_US2D2QYxoUKIkn98p71hdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb80S2D2QYxoUKIkn98p71hdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb88S2D2QYxoUKIkn98p71hdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb8kS2D2QYxoUKIkn98p71hdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb8US2D2QYxoUKIkn98p71hdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb90S2D2QYxoUKIkn98p71hdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb9US2D2QYxoUKIkn98p71hdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb-kSGD2QYxoUKIkn98p71hdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_0SGD2QYxoUKIkn98p71hdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: italic;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_ESGD2QYxoUKIkn98p71hdCw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUff6OAVIJmeUDygwjihdqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUbf6OAVIJmeUDygwjihdqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUXf6OAVIJmeUDygwjihdqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUTf6OAVIJmeUDygwjihdqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUPf6OAVIJmeUDygwjihdqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUHf6OAVIJmeUDygwjihdqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU_f6OAVIJmeUDygwjihdqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU9f6OAVIJmeUDygwjihdqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU7f6OAVIJmeUDygwjihdqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU3f6OAVIJmeUDygwjihdqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUvf6OAVIJmeUDygwjihdqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUnf6OAVIJmeUDygwjihdqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUbf2OAVIJmeUDygwjihdqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUPf2OAVIJmeUDygwjihdqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUDf2OAVIJmeUDygwjihdqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUff6OAVIJmeUDygwjiiVqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUbf6OAVIJmeUDygwjiiVqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUXf6OAVIJmeUDygwjiiVqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUTf6OAVIJmeUDygwjiiVqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUPf6OAVIJmeUDygwjiiVqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUHf6OAVIJmeUDygwjiiVqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU_f6OAVIJmeUDygwjiiVqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU9f6OAVIJmeUDygwjiiVqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU7f6OAVIJmeUDygwjiiVqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU3f6OAVIJmeUDygwjiiVqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUvf6OAVIJmeUDygwjiiVqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUnf6OAVIJmeUDygwjiiVqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUbf2OAVIJmeUDygwjiiVqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUPf2OAVIJmeUDygwjiiVqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUDf2OAVIJmeUDygwjiiVqrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUff6OAVIJmeUDygwjisltrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUbf6OAVIJmeUDygwjisltrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUXf6OAVIJmeUDygwjisltrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUTf6OAVIJmeUDygwjisltrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUPf6OAVIJmeUDygwjisltrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUHf6OAVIJmeUDygwjisltrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU_f6OAVIJmeUDygwjisltrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU9f6OAVIJmeUDygwjisltrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU7f6OAVIJmeUDygwjisltrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU3f6OAVIJmeUDygwjisltrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUvf6OAVIJmeUDygwjisltrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUnf6OAVIJmeUDygwjisltrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUbf2OAVIJmeUDygwjisltrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUPf2OAVIJmeUDygwjisltrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUDf2OAVIJmeUDygwjisltrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUff6OAVIJmeUDygwjivBtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUbf6OAVIJmeUDygwjivBtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUXf6OAVIJmeUDygwjivBtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUTf6OAVIJmeUDygwjivBtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUPf6OAVIJmeUDygwjivBtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUHf6OAVIJmeUDygwjivBtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU_f6OAVIJmeUDygwjivBtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU9f6OAVIJmeUDygwjivBtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU7f6OAVIJmeUDygwjivBtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU3f6OAVIJmeUDygwjivBtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUvf6OAVIJmeUDygwjivBtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUnf6OAVIJmeUDygwjivBtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUbf2OAVIJmeUDygwjivBtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUPf2OAVIJmeUDygwjivBtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUDf2OAVIJmeUDygwjivBtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUff6OAVIJmeUDygwjipdtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUbf6OAVIJmeUDygwjipdtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUXf6OAVIJmeUDygwjipdtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUTf6OAVIJmeUDygwjipdtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUPf6OAVIJmeUDygwjipdtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUHf6OAVIJmeUDygwjipdtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU_f6OAVIJmeUDygwjipdtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU9f6OAVIJmeUDygwjipdtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU7f6OAVIJmeUDygwjipdtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU3f6OAVIJmeUDygwjipdtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUvf6OAVIJmeUDygwjipdtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUnf6OAVIJmeUDygwjipdtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUbf2OAVIJmeUDygwjipdtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUPf2OAVIJmeUDygwjipdtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 800;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUDf2OAVIJmeUDygwjipdtrhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUff6OAVIJmeUDygwjir5trhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUbf6OAVIJmeUDygwjir5trhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUXf6OAVIJmeUDygwjir5trhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUTf6OAVIJmeUDygwjir5trhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUPf6OAVIJmeUDygwjir5trhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUHf6OAVIJmeUDygwjir5trhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU_f6OAVIJmeUDygwjir5trhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU9f6OAVIJmeUDygwjir5trhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU7f6OAVIJmeUDygwjir5trhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU3f6OAVIJmeUDygwjir5trhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUvf6OAVIJmeUDygwjir5trhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUnf6OAVIJmeUDygwjir5trhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUbf2OAVIJmeUDygwjir5trhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 900;
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUPf2OAVIJmeUDygwjir5trhw.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Serif 4';
+  font-family: 'Source Serif 4 Variable';
   font-style: normal;
   font-weight: 900;
   font-display: swap;
