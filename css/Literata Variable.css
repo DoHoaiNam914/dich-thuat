@@ -1,0 +1,1428 @@
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeEVK4RYzNiCp1OUedn8_7XWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeH1KoRYzNiCp1OUedn8_7XWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHlKoRYzNiCp1OUedn8_7XWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHVKoRYzNiCp1OUedn8_7XWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHFKoRYzNiCp1OUedn8_7XWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeG1KoRYzNiCp1OUedn8_7XWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeGVKoRYzNiCp1OUedn8_7XWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeF1KoRYzNiCp1OUedn8_7XWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeF9KoRYzNiCp1OUedn8_7XWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeFlKoRYzNiCp1OUedn8_7XWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeFVKoRYzNiCp1OUedn8_7XWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeE1KoRYzNiCp1OUedn8_7XWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeEVKoRYzNiCp1OUedn8_7XWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHlKYRYzNiCp1OUedn8_7XWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeG1KYRYzNiCp1OUedn8_7XWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeGFKYRYzNiCp1OUedn8_7XWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeFlKYRYzNiCp1OUedn8_7XWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeEVK4RYzNiCp1OUedn8zbXWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeH1KoRYzNiCp1OUedn8zbXWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHlKoRYzNiCp1OUedn8zbXWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHVKoRYzNiCp1OUedn8zbXWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHFKoRYzNiCp1OUedn8zbXWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeG1KoRYzNiCp1OUedn8zbXWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeGVKoRYzNiCp1OUedn8zbXWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeF1KoRYzNiCp1OUedn8zbXWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeF9KoRYzNiCp1OUedn8zbXWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeFlKoRYzNiCp1OUedn8zbXWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeFVKoRYzNiCp1OUedn8zbXWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeE1KoRYzNiCp1OUedn8zbXWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeEVKoRYzNiCp1OUedn8zbXWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHlKYRYzNiCp1OUedn8zbXWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeG1KYRYzNiCp1OUedn8zbXWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeGFKYRYzNiCp1OUedn8zbXWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeFlKYRYzNiCp1OUedn8zbXWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeEVK4RYzNiCp1OUedn8IbLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeH1KoRYzNiCp1OUedn8IbLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHlKoRYzNiCp1OUedn8IbLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHVKoRYzNiCp1OUedn8IbLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHFKoRYzNiCp1OUedn8IbLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeG1KoRYzNiCp1OUedn8IbLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeGVKoRYzNiCp1OUedn8IbLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeF1KoRYzNiCp1OUedn8IbLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeF9KoRYzNiCp1OUedn8IbLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeFlKoRYzNiCp1OUedn8IbLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeFVKoRYzNiCp1OUedn8IbLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeE1KoRYzNiCp1OUedn8IbLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeEVKoRYzNiCp1OUedn8IbLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHlKYRYzNiCp1OUedn8IbLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeG1KYRYzNiCp1OUedn8IbLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeGFKYRYzNiCp1OUedn8IbLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeFlKYRYzNiCp1OUedn8IbLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeEVK4RYzNiCp1OUedn8GLLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeH1KoRYzNiCp1OUedn8GLLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHlKoRYzNiCp1OUedn8GLLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHVKoRYzNiCp1OUedn8GLLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHFKoRYzNiCp1OUedn8GLLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeG1KoRYzNiCp1OUedn8GLLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeGVKoRYzNiCp1OUedn8GLLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeF1KoRYzNiCp1OUedn8GLLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeF9KoRYzNiCp1OUedn8GLLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeFlKoRYzNiCp1OUedn8GLLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeFVKoRYzNiCp1OUedn8GLLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeE1KoRYzNiCp1OUedn8GLLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeEVKoRYzNiCp1OUedn8GLLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHlKYRYzNiCp1OUedn8GLLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeG1KYRYzNiCp1OUedn8GLLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeGFKYRYzNiCp1OUedn8GLLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeFlKYRYzNiCp1OUedn8GLLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeEVK4RYzNiCp1OUedn8f7LWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeH1KoRYzNiCp1OUedn8f7LWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHlKoRYzNiCp1OUedn8f7LWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHVKoRYzNiCp1OUedn8f7LWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHFKoRYzNiCp1OUedn8f7LWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeG1KoRYzNiCp1OUedn8f7LWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeGVKoRYzNiCp1OUedn8f7LWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeF1KoRYzNiCp1OUedn8f7LWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeF9KoRYzNiCp1OUedn8f7LWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeFlKoRYzNiCp1OUedn8f7LWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeFVKoRYzNiCp1OUedn8f7LWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeE1KoRYzNiCp1OUedn8f7LWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeEVKoRYzNiCp1OUedn8f7LWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHlKYRYzNiCp1OUedn8f7LWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeG1KYRYzNiCp1OUedn8f7LWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeGFKYRYzNiCp1OUedn8f7LWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeFlKYRYzNiCp1OUedn8f7LWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeEVK4RYzNiCp1OUedn8VrLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeH1KoRYzNiCp1OUedn8VrLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHlKoRYzNiCp1OUedn8VrLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHVKoRYzNiCp1OUedn8VrLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHFKoRYzNiCp1OUedn8VrLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeG1KoRYzNiCp1OUedn8VrLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeGVKoRYzNiCp1OUedn8VrLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeF1KoRYzNiCp1OUedn8VrLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeF9KoRYzNiCp1OUedn8VrLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeFlKoRYzNiCp1OUedn8VrLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeFVKoRYzNiCp1OUedn8VrLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeE1KoRYzNiCp1OUedn8VrLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeEVKoRYzNiCp1OUedn8VrLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeHlKYRYzNiCp1OUedn8VrLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeG1KYRYzNiCp1OUedn8VrLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeGFKYRYzNiCp1OUedn8VrLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3NQ6P12-iJxAIgLYT1PLs1Zd0nfUwAbeFlKYRYzNiCp1OUedn8VrLWSQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVjaHPYLanFLHpPf2TbBG_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVbaDPYLanFLHpPf2TbBG_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVfaDPYLanFLHpPf2TbBG_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVTaDPYLanFLHpPf2TbBG_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVXaDPYLanFLHpPf2TbBG_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVLaDPYLanFLHpPf2TbBG_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVDaDPYLanFLHpPf2TbBG_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV7aDPYLanFLHpPf2TbBG_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV5aDPYLanFLHpPf2TbBG_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV_aDPYLanFLHpPf2TbBG_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVzaDPYLanFLHpPf2TbBG_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVraDPYLanFLHpPf2TbBG_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVjaDPYLanFLHpPf2TbBG_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVfaPPYLanFLHpPf2TbBG_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVLaPPYLanFLHpPf2TbBG_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVHaPPYLanFLHpPf2TbBG_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV_aPPYLanFLHpPf2TbBG_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVjaHPYLanFLHpPf2TbCO_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVbaDPYLanFLHpPf2TbCO_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVfaDPYLanFLHpPf2TbCO_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVTaDPYLanFLHpPf2TbCO_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVXaDPYLanFLHpPf2TbCO_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVLaDPYLanFLHpPf2TbCO_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVDaDPYLanFLHpPf2TbCO_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV7aDPYLanFLHpPf2TbCO_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV5aDPYLanFLHpPf2TbCO_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV_aDPYLanFLHpPf2TbCO_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVzaDPYLanFLHpPf2TbCO_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVraDPYLanFLHpPf2TbCO_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVjaDPYLanFLHpPf2TbCO_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVfaPPYLanFLHpPf2TbCO_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVLaPPYLanFLHpPf2TbCO_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVHaPPYLanFLHpPf2TbCO_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV_aPPYLanFLHpPf2TbCO_F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVjaHPYLanFLHpPf2TbM-4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVbaDPYLanFLHpPf2TbM-4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVfaDPYLanFLHpPf2TbM-4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVTaDPYLanFLHpPf2TbM-4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVXaDPYLanFLHpPf2TbM-4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVLaDPYLanFLHpPf2TbM-4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVDaDPYLanFLHpPf2TbM-4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV7aDPYLanFLHpPf2TbM-4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV5aDPYLanFLHpPf2TbM-4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV_aDPYLanFLHpPf2TbM-4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVzaDPYLanFLHpPf2TbM-4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVraDPYLanFLHpPf2TbM-4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVjaDPYLanFLHpPf2TbM-4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVfaPPYLanFLHpPf2TbM-4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVLaPPYLanFLHpPf2TbM-4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVHaPPYLanFLHpPf2TbM-4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV_aPPYLanFLHpPf2TbM-4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVjaHPYLanFLHpPf2TbPa4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVbaDPYLanFLHpPf2TbPa4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVfaDPYLanFLHpPf2TbPa4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVTaDPYLanFLHpPf2TbPa4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVXaDPYLanFLHpPf2TbPa4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVLaDPYLanFLHpPf2TbPa4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVDaDPYLanFLHpPf2TbPa4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV7aDPYLanFLHpPf2TbPa4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV5aDPYLanFLHpPf2TbPa4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV_aDPYLanFLHpPf2TbPa4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVzaDPYLanFLHpPf2TbPa4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVraDPYLanFLHpPf2TbPa4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVjaDPYLanFLHpPf2TbPa4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVfaPPYLanFLHpPf2TbPa4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVLaPPYLanFLHpPf2TbPa4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVHaPPYLanFLHpPf2TbPa4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV_aPPYLanFLHpPf2TbPa4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVjaHPYLanFLHpPf2TbJG4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVbaDPYLanFLHpPf2TbJG4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVfaDPYLanFLHpPf2TbJG4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVTaDPYLanFLHpPf2TbJG4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVXaDPYLanFLHpPf2TbJG4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVLaDPYLanFLHpPf2TbJG4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVDaDPYLanFLHpPf2TbJG4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV7aDPYLanFLHpPf2TbJG4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV5aDPYLanFLHpPf2TbJG4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV_aDPYLanFLHpPf2TbJG4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVzaDPYLanFLHpPf2TbJG4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVraDPYLanFLHpPf2TbJG4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVjaDPYLanFLHpPf2TbJG4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVfaPPYLanFLHpPf2TbJG4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVLaPPYLanFLHpPf2TbJG4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVHaPPYLanFLHpPf2TbJG4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV_aPPYLanFLHpPf2TbJG4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVjaHPYLanFLHpPf2TbLi4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVbaDPYLanFLHpPf2TbLi4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVfaDPYLanFLHpPf2TbLi4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVTaDPYLanFLHpPf2TbLi4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVXaDPYLanFLHpPf2TbLi4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVLaDPYLanFLHpPf2TbLi4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVDaDPYLanFLHpPf2TbLi4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV7aDPYLanFLHpPf2TbLi4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV5aDPYLanFLHpPf2TbLi4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV_aDPYLanFLHpPf2TbLi4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVzaDPYLanFLHpPf2TbLi4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVraDPYLanFLHpPf2TbLi4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVjaDPYLanFLHpPf2TbLi4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVfaPPYLanFLHpPf2TbLi4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVLaPPYLanFLHpPf2TbLi4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVHaPPYLanFLHpPf2TbLi4F_Y.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oV_aPPYLanFLHpPf2TbLi4F_Y.ttf) format('truetype');
+}
