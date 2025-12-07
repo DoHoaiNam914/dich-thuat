@@ -192,6 +192,14 @@
 
 @font-face {
   font-display: swap;
+  font-family: 'Atkinson Hyperlegible Next VF';
+  font-style: normal;
+  font-weight: 400 900;
+  src: url(https://raw.20Hyperlegible%20Next/For%20Professional%20Use%20Only/Variable/AtkinsonHyperlegibleNextVF-Variable.woff2) format('woff2');
+}
+
+@font-face {
+  font-display: swap;
   font-family: 'Atkinson Hyperlegible Next';
   font-style: normal;
   font-weight: 400;
@@ -794,6 +802,14 @@
 
 @font-face {
   font-display: swap;
+  font-family: 'Lexend Deca Variable';
+  font-style: normal;
+  font-weight: 400 900;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/deca/variable/LexendDeca[wght].ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
   font-family: 'Lexend Deca';
   font-style: normal;
   font-weight: 400;
@@ -875,6 +891,24 @@
 }
 
 /* New York */
+
+@font-face {
+  font-display: swap;
+  font-family: 'New York Variable';
+  font-style: normal;
+  font-weight: 400 900;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/NY%20Fonts/NewYork.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'New York Variable';
+  font-style: italic;
+  font-weight: 400 900;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/NY%20Fonts/NewYorkItalic.ttf) format('truetype');
+}
+
+/* New York Small */
 
 @font-face {
   font-display: swap;
@@ -1544,6 +1578,24 @@
   font-style: normal;
   font-weight: 700;
   src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/Waka%20Fonts/QuicksandFamily-master/fonts/statics/Quicksand-Bold.ttf) format('truetype');
+}
+
+/* SF Pro */
+
+@font-face {
+  font-display: swap;
+  font-family: 'SF Pro';
+  font-style: normal;
+  font-weight: 400 900;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/SF%20Pro%20Fonts/SF-Pro.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'SF Pro';
+  font-style: italic;
+  font-weight: 400 900;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/SF%20Pro%20Fonts/SF-Pro-Italic.ttf) format('truetype');
 }
 
 /* SF Pro Text */
