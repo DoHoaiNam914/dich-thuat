@@ -18,6 +18,7 @@ const $geminiApiKeyText = $('#gemini-api-key-text')
 const $groqApiKeyText = $('#groq-api-key-text')
 const $inputTextarea = $('#input-textarea')
 const $justifyTextSwitch = $('#justify-text-switch')
+const $languageSelects = $('.language-select')
 const $lineHeightText = $('#line-height-text')
 const $openrouterApiKeyText = $('#openrouter-api-key-text')
 const $originalLanguageSelect = $('#original-language-select')
@@ -183,6 +184,7 @@ $(document).ready(() => {
     if ($originalLanguageSelect.val() === 'null') { $originalLanguageSelect.val('en') }
     $originalLanguageSelect.find("option[value='null']").remove()
   })
+  $languageSelects.change()
 })
 $(document).on('keydown', (event) => {
   if (event.altKey) {
@@ -426,7 +428,7 @@ $('.paste-button').on('click', function () {
 $retranslateButton.on('click', () => {
   if (confirm('Bạn có chắc chắn muốn dịch lại?')) { $translateButton.click().click() }
 })
-$('.language-select').on('change', function () {
+$languageSelects.on('change', function () {
   const $textLanguageSelect = $textLanguageSelects.filter(`#${$(this).prop('id').replace('original', 'source-text').replace('destination', 'target-text')}`)
   const value = $(this).val()
   $textLanguageSelect.val(value !== 'null' ? value : $textLanguageSelect.val()).change()
