@@ -189,23 +189,11 @@
   background-color: #333;
 }
 
-.readium-day {
+.readium {
   --reader-color: #121212;
-  background-color: #ffffff;
-}
-
-.readium-night {
-  --reader-color: #fefefe;
-  background-color: #000000;
-  --reader-hyperlink-color: #63caff;
-  --reader-visited-hyperlink-color: #0099e5;
-}
-
-.readium-sepia {
-  --reader-color: #121212;
-  background-color: #faf4e8;
-  --reader-hyperlink-color: #0000ee;
-  --reader-visited-hyperlink-color: #551a8b;
+  background-color: #FFFFFF;
+  --reader-hyperlink-color: #0000EE;
+  --reader-visited-hyperlink-color: #551A8B;
 }
 
 .waka-white {
