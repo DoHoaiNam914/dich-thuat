@@ -307,30 +307,11 @@ Reader.THEMES = [
     ]
   },
   {
-    title: 'Readium',
-    themes: [
-      {
-        name: 'Day',
-        value: 'readium-day',
-        fontFamily: '--oldStyleTf',
-        fontSize: 1,
-        lineHeight: '--readiumLineHeight'
-      },
-      {
-        name: 'Night',
-        value: 'readium-night',
-        fontFamily: '--oldStyleTf',
-        fontSize: 1,
-        lineHeight: '--readiumLineHeight'
-      },
-      {
-        name: 'Sepia',
-        value: 'readium-sepia',
-        fontFamily: '--oldStyleTf',
-        fontSize: 1,
-        lineHeight: '--readiumLineHeight'
-      }
-    ]
+    name: 'Readium',
+    value: 'readium',
+    fontFamily: '--oldStyleTf',
+    fontSize: 1,
+    lineHeight: '--readiumLineHeight'
   },
   {
     title: 'Waka',
@@ -381,6 +362,7 @@ Reader.FONT_MAP = Object.entries({
   'Sans serif Nhật': '--sans-serif-ja',
   'Serif Nhật dọc': '--serif-ja-v',
   'Sans serif Nhật dọc': '--sans-serif-ja-v',
+  'Họ phông chữ Hàn Quốc': '--koreanFontFamily',
   'Họ phông chữ Trung Hoa': '--chineseFontFamily',
   'Họ phông chữ Đài Loan': '--taiwanFontFamily',
   Bookerly: 'Bookerly',
