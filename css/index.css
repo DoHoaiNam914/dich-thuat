@@ -12,13 +12,15 @@
   --sans-serif-ja:"Hiragino Sans", "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ W3", "YuGothic", "Yu Gothic Medium", "BIZ UDPGothic", "Yu Gothic", "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
   --serif-ja-v:"Hiragino Mincho ProN", "Hiragino Mincho Pro", "YuMincho", "BIZ UDMincho", "Yu Mincho", "ＭＳ明朝", "MS Mincho", serif;
   --sans-serif-ja-v:"Hiragino Sans", "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ W3", "YuGothic", "Yu Gothic Medium", "BIZ UDGothic", "Yu Gothic", "ＭＳゴシック", "MS Gothic", sans-serif;
+  
+  --koreanFontFamily:"Nanum Gothic", "Apple SD Gothic Neo", "Malgun Gothic", roboto, noto, "Noto Sans CJK KR", sans-serif;
 
   --chineseFontFamily:"方体", "PingFang SC", "黑体", "Heiti SC", "Microsoft JhengHei UI", "Microsoft JhengHei", roboto, noto, "Noto Sans CJK SC", sans-serif;
   --taiwanFontFamily:"方體", "PingFang TC", "黑體", "Heiti TC", "Microsoft JhengHei UI", "Microsoft JhengHei", roboto, noto, "Noto Sans CJK TC", sans-serif;
   --hongkongFontFamily:"方體", "PingFang HK", "方體", "PingFang TC", "黑體", "Heiti TC", "Microsoft JhengHei UI", "Microsoft JhengHei", roboto, noto, "Noto Sans CJK TC", sans-serif;
 
   --lineHeightCompensation:1;
-  --readiumLineHeight:calc((1em + (2ex - 1ch) - ((1rem - 16px) * 0.1667)) * var(--lineHeightCompensation));
+  --readiumLineHeight:calc(1.5 * var(--RS__lineHeightCompensation));
   --reader-font-family: serif;
   --reader-font-size: 1em;
   --reader-font-weight: normal;
