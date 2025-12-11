@@ -98,7 +98,7 @@ function appendTranslatedTextIntoOutputTextarea (translatedText, text, options) 
       const paragraph = document.createElement('p')
       if (element.replace(/^\s+/, '').length === 0) {
         $(paragraph).append(document.createElement('br'))
-      } else if (/^\p{P}+$/u.test(element)) {
+      } else if (translatedLines[index] === element.replace(/^\s+/, '') || /^\p{P}+$/u.test(element)) {
         $(paragraph).text(translatedLines[index])
       } else {
         const span = document.createElement('span')
