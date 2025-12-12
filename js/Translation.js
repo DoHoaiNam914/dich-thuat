@@ -422,7 +422,7 @@ class Translation {
                   top_p: topP === -1 ? 1 : topP
                 },
             store: false,
-            include: !(isReasoningModel || isReasoningGptFive) && !/^gpt-5\.[12]-chat-latest/.test(openaiModelId)
+            include: !(isReasoningModel || isReasoningGptFive) && !/^gpt-5\.\d-chat-latest/.test(openaiModelId)
               ? ["web_search_call.action.sources"]
               : [
                   "reasoning.encrypted_content",
