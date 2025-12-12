@@ -212,6 +212,7 @@ let Efforts;
   Efforts.LOW = 'low'
   Efforts.MEDIUM = 'medium'
   Efforts.HIGH = 'high'
+  Efforts.XHIGH = 'xhigh'
 })(Efforts || (Efforts = {}))
 let OpenrouterWebSearchs;
 (function (OpenrouterWebSearchs) {
