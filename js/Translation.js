@@ -332,6 +332,7 @@ class Translation {
         this.translateText = async (resolve) => {
           const { effort, isOpenaiWebSearchEnabled, openaiModelId } = options
           const MAX_OUTPUT_TOKEN = {
+            'gpt-5.2-chat-latest': 16384,
             'gpt-5.1-chat-latest': 16384,
             'gpt-5-chat-latest': 16384,
             'gpt-4.1': 32768,
@@ -360,7 +361,7 @@ class Translation {
             'chatgpt-4o-latest': 8192
           }
           const isReasoningModel = MODELS.OPENAI.Reasoning.includes(openaiModelId)
-          const isReasoningGptFive = MODELS.OPENAI['GPT-5'].map(element => element.modelId ?? element).includes(openaiModelId) && openaiModelId !== 'gpt-5.1-chat-latest' && openaiModelId !== 'gpt-5-chat-latest'
+          const isReasoningGptFive = MODELS.OPENAI['GPT-5'].map(element => element.modelId ?? element).includes(openaiModelId) && !/^gpt-5(?:\.[12])?-chat-latest/.test(openaiModelId)
           const openai = new OpenAI({
             apiKey: 'OPENAI_API_KEY',
             baseURL: 'https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1',
@@ -421,7 +422,7 @@ class Translation {
                   top_p: topP === -1 ? 1 : topP
                 },
             store: false,
-            include: !(isReasoningModel || isReasoningGptFive) && openaiModelId !== 'gpt-5.1-chat-latest'
+            include: !(isReasoningModel || isReasoningGptFive) && !/^gpt-5\.[12]-chat-latest/.test(openaiModelId)
               ? ["web_search_call.action.sources"]
               : [
                   "reasoning.encrypted_content",
