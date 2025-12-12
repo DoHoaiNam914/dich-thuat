@@ -416,12 +416,12 @@ class Translation {
                 : []
             ],
             ...isReasoningModel || isReasoningGptFive
-              ? (!openaiModelId.startsWith('gpt-5.2') || effort !== Efforts.NONE
-                  ? {}
-                  : {
+              ? (openaiModelId.startsWith('gpt-5.2') && effort === Efforts.NONE
+                  ? {
                       temperature: temperature === -1 ? 1 : temperature,
                       top_p: topP === -1 ? 1 : topP
-                    })
+                    }
+                  : {})
               : {
                   temperature: temperature === -1 ? 1 : temperature,
                   max_output_tokens: MAX_OUTPUT_TOKEN[openaiModelId],
