@@ -400,7 +400,7 @@ class Translation {
             },
             reasoning: isReasoningModel || isReasoningGptFive
               ? {
-                  effort: /^gpt-5(?!\.1)/.test(openaiModelId) && effort === Efforts.NONE ? 'minimal' : effort,
+                  effort: /^gpt-5(?!\.\d)/.test(openaiModelId) && effort === Efforts.NONE ? 'minimal' : effort,
                   summary: 'auto'
                 }
               : {},
