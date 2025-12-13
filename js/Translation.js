@@ -419,7 +419,7 @@ class Translation {
               ? (openaiModelId.startsWith('gpt-5.2') && effort === Efforts.NONE
                   ? {
                       temperature: temperature === -1 ? 1 : temperature,
-                      top_p: topP === -1 ? 1 : topP
+                      top_p: topP === -1 ? 0.98 : topP
                     }
                   : {})
               : {
