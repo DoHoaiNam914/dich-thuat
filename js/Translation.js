@@ -20,6 +20,10 @@ const MODELS = {
         selected: true
       },
       {
+        modelId: 'gemini-3-flash-preview',
+        modelName: 'Gemini 3 Flash Preview'
+      },
+      {
         modelId: 'gemini-2.5-pro',
         modelName: 'Gemini 2.5 Pro'
       },
