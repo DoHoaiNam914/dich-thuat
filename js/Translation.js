@@ -3,7 +3,7 @@
 import {
   GoogleGenAI, HarmBlockThreshold, HarmCategory
 // @ts-expect-error @google/genai
-} from 'https://esm.run/@google/genai'
+} from 'https://esm.sh/@google/genai'
 // @ts-expect-error groq-sdk
 import { Groq } from 'https://esm.run/groq-sdk'
 // @ts-expect-error openai
