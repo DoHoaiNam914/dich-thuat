@@ -526,7 +526,7 @@ class Translation {
               ? {
                   thinkingConfig: {
                     includeThoughts: true,
-                    thinkingLevel: !isThinkingModeEnabled ? 'LOW' : 'HIGH'
+                    thinkingLevel: !isThinkingModeEnabled ? (!googleGenaiModelId.startsWith('gemini-3-pro') ? 'MINIMAL' : 'LOW') : 'HIGH'
                   }
                 }
               : (/^gemini-(2\.5|flash)-/.test(googleGenaiModelId)
