@@ -113,7 +113,7 @@ body:not(.bg-body) .textarea > .form-control::placeholder {
 }
 
 .textarea > .form-control > p > i {
-  font: normal var(--reader-font-size)/var(--reader-line-height) 'Iowan Old Style', Sitka, 'Sitka Text', Palatino, 'Book Antiqua', 'URW Palladio L', P052, '方体', 'PingFang SC', '方體', 'PingFang TC', 'PingFang HK', '黑体', 'Heiti SC', '黑體', 'Heiti TC', 'Microsoft JhengHei UI', 'Microsoft JhengHei', yugothic, 'Hiragino Maru Gothic ProN', 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo UI', 'MS Gothic', 'Nanum Gothic', 'Apple SD Gothic Neo', 'Malgun Gothic', roboto, noto, 'Noto Sans CJK SC', 'Noto Sans CJK TC', 'Noto Sans CJK JP', 'Noto Sans CJK KR', sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  font: italic normal var(--reader-font-size)/var(--reader-line-height) 'Iowan Old Style', Sitka, 'Sitka Text', Palatino, 'Book Antiqua', 'URW Palladio L', P052, '方体', 'PingFang SC', '方體', 'PingFang TC', 'PingFang HK', '黑体', 'Heiti SC', '黑體', 'Heiti TC', 'Microsoft JhengHei UI', 'Microsoft JhengHei', yugothic, 'Hiragino Maru Gothic ProN', 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo UI', 'MS Gothic', 'Nanum Gothic', 'Apple SD Gothic Neo', 'Malgun Gothic', roboto, noto, 'Noto Sans CJK SC', 'Noto Sans CJK TC', 'Noto Sans CJK JP', 'Noto Sans CJK KR', sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
 }
 
 .textarea.bold-text > .form-control {
