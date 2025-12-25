@@ -101,9 +101,9 @@ function appendTranslatedTextIntoOutputTextarea (translatedText, text, options) 
       } else if (translatedLines[index] === element.replace(/^\s+/, '') || /^\p{P}+$/u.test(element)) {
         $(paragraph).text(translatedLines[index])
       } else {
-        const span = document.createElement('span')
-        $(span).text(element)
-        $(span).on('dblclick', function () {
+        const idiomaticText = document.createElement('i')
+        $(idiomaticText).text(element)
+        $(idiomaticText).on('dblclick', function () {
           $("[data-bs-target='#dictionary-modal']").click()
           $sourceText.val($(this).text())
         })
