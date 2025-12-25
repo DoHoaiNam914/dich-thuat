@@ -22,9 +22,9 @@
   --lineHeightCompensation:1;
   --readiumLineHeight:calc(1.5 * var(--RS__lineHeightCompensation));
   --reader-font-family: serif;
-  --reader-font-size: 1em;
+  --reader-font-size: 16px;
   --reader-font-weight: normal;
-  --reader-line-height: 1.2em;
+  --reader-line-height: 1.2;
   --viewport-width: 1000px;
   overflow: hidden;
   overscroll-behavior: none;
