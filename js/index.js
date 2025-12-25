@@ -202,14 +202,14 @@ $fontSizeText.on('change', function () {
   const parsed = parseFloat(raw.length === 0 ? $(this).attr('value') : raw)
   const value = Utils.clamp(parsed, $(this).prop('min'), $(this).prop('max'))
   $(this).val(value)
-  $(document.body).css('--reader-font-size', value === 1 ? '' : `${value}em`)
+  $(document.body).css('--reader-font-size', value === 1 ? '' : `${value * 16}px`)
 })
 $lineHeightText.on('change', function () {
   const raw = $(this).val()
   const parsed = parseFloat(raw.length === 0 ? $(this).attr('value') : raw)
   const value = Utils.clamp(parsed, $(this).prop('min'), $(this).prop('max'))
   $(this).val(value)
-  $(document.body).css('--reader-line-height', value === 1.2 ? '' : `${value}em`)
+  $(document.body).css('--reader-line-height', value === 1.2 ? '' : value)
 })
 $boldTextSwitch.on('change', function () {
   if ($(this).prop('checked')) { $('.textarea').addClass('bold-text') } else { $('.textarea').removeClass('bold-text') }
