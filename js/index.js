@@ -107,7 +107,7 @@ function appendTranslatedTextIntoOutputTextarea (translatedText, text, options) 
           $("[data-bs-target='#dictionary-modal']").click()
           $sourceText.val($(this).text())
         })
-        $(paragraph).append(span, document.createElement('br'), translatedLines[index])
+        $(paragraph).append(idiomaticText, document.createElement('br'), translatedLines[index])
       }
       $outputTextarea.append(paragraph)
     })
