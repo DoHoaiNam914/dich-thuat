@@ -904,8 +904,6 @@ ${`- Translate the following paragraphs into ${upperCaseDestinationLanguage}, en
 - There can only be 1 translation for 1 word, do not arbitrarily insert multiple translations/versions for 1 word For example: "you" must translate into "bạn" or "cậu", must not translate into "bạn/cậu"
 - Do not arbitrarily insert strange characters into the translation.
 - Do not add, alter, or invent any names or details not present in the original text 
-- Follow the instruction for translate with domain ${domain}:
-${instructionQuestions}
 - Handle special case:
 + Numbers: Maintain the original numeric values, but adapt formats if necessary (e.g., decimal separators, digit grouping).
 + Currencies: Convert currency symbols or codes as appropriate for the target language and region.
