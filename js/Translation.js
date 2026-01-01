@@ -16,12 +16,12 @@ const MODELS = {
     'Gemini': [
       {
         modelId: 'gemini-3-pro-preview',
-        modelName: 'Gemini 3 Pro Preview',
-        selected: true
+        modelName: 'Gemini 3 Pro Preview'
       },
       {
         modelId: 'gemini-3-flash-preview',
-        modelName: 'Gemini 3 Flash Preview'
+        modelName: 'Gemini 3 Flash Preview',
+        selected: true
       },
       {
         modelId: 'gemini-2.5-pro',
