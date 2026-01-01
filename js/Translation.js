@@ -427,9 +427,9 @@ class Translation {
                     }
                   : {})
               : {
-                  temperature: temperature === -1 ? 1 : (/^gpt-5\.\d-chat-latest/.test(openaiModelId) ? 1 : temperature),
+                  temperature: /^gpt-5\.\d-chat-latest/.test(openaiModelId) ? 1 : (temperature === -1 ? 1 : temperature),
                   max_output_tokens: MAX_OUTPUT_TOKEN[openaiModelId],
-                  top_p: topP === -1 ? 1 : (/^gpt-5\.\d-chat-latest/.test(openaiModelId) ? (openaiModelId.startsWith('gpt-5.1') ? 1 : 0.85) : topP)
+                  top_p: /^gpt-5\.\d-chat-latest/.test(openaiModelId) ? (openaiModelId.startsWith('gpt-5.1') ? 1 : 0.85) : (topP === -1 ? 1 : topP)
                 },
             store: false,
             include: !(isReasoningModel || isReasoningGptFive) && !/^gpt-5\.\d-chat-latest/.test(openaiModelId)
