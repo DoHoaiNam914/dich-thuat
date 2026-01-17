@@ -481,7 +481,7 @@ class Translation {
             ...temperature > -1 ? { temperature } : {},
             ...topP > -1 ? { top_p: topP } : {},
             ...topK > -1 ? { top_k: topK } : {},
-            ...!openrouterModelId.startsWith('qwen') || !openrouterModelId.startsWith('meta-llama') || doesReasoning ? { reasoning: { enabled: doesReasoning } } : {},
+            ...!(openrouterModelId.startsWith('qwen') || openrouterModelId.startsWith('meta-llama')) || doesReasoning ? { reasoning: { enabled: doesReasoning } } : {},
             ...openrouterWebSearch === OpenrouterWebSearchs.EXA ? { plugins: [{ id: 'web' }] } : {},
             ...doesStream ? { stream: true } : {}
           }, { signal: this.abortController.signal })
