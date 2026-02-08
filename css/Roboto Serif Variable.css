@@ -1,0 +1,1824 @@
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wMKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuT-R8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wNKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuT-R8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wOKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuT-R8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wPKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuT-R8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wIKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuT-R8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wKKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuT-R8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wEKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuT-R8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wEqB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuT-R8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wFKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuT-R8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wGKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuT-R8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wAKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuT-R8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wCKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuT-R8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wNKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuT-R8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wIKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuT-R8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wLKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuT-R8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wFKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuT-R8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wAKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuT-R8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wDKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuT-R8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wNKD0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuT-R8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wMKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JufeR8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wNKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JufeR8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wOKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JufeR8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wPKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JufeR8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wIKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JufeR8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wKKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JufeR8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wEKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JufeR8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wEqB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JufeR8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wFKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JufeR8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wGKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JufeR8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wAKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JufeR8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wCKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JufeR8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wNKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JufeR8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wIKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JufeR8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wLKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JufeR8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wFKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JufeR8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wAKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JufeR8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wDKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JufeR8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wNKD0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JufeR8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wMKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JukeN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wNKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JukeN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wOKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JukeN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wPKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JukeN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wIKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JukeN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wKKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JukeN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wEKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JukeN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wEqB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JukeN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wFKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JukeN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wGKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JukeN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wAKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JukeN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wCKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JukeN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wNKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JukeN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wIKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JukeN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wLKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JukeN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wFKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JukeN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wAKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JukeN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wDKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JukeN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wNKD0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JukeN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wMKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuqON8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wNKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuqON8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wOKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuqON8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wPKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuqON8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wIKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuqON8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wKKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuqON8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wEKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuqON8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wEqB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuqON8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wFKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuqON8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wGKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuqON8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wAKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuqON8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wCKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuqON8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wNKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuqON8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wIKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuqON8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wLKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuqON8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wFKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuqON8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wAKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuqON8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wDKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuqON8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wNKD0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-JuqON8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wMKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Juz-N8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wNKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Juz-N8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wOKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Juz-N8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wPKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Juz-N8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wIKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Juz-N8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wKKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Juz-N8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wEKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Juz-N8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wEqB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Juz-N8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wFKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Juz-N8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wGKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Juz-N8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wAKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Juz-N8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wCKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Juz-N8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wNKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Juz-N8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wIKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Juz-N8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wLKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Juz-N8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wFKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Juz-N8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wAKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Juz-N8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wDKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Juz-N8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wNKD0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Juz-N8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wMKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Ju5uN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wNKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Ju5uN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wOKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Ju5uN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wPKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Ju5uN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wIKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Ju5uN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wKKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Ju5uN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wEKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Ju5uN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wEqB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Ju5uN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wFKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Ju5uN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wGKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Ju5uN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wAKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Ju5uN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wCKB0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Ju5uN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wNKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Ju5uN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wIKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Ju5uN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wLKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Ju5uN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wFKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Ju5uN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wAKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Ju5uN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wDKC0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Ju5uN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: italic;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71XjywflP6FLr3gZx7K8UyEVQnyR1E7VN-f51xYuGCQepOvB0KLc2v0wNKD0Q4MSZxyqf2CgAchbDJ69BcVZxkDg-Ju5uN8BQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX70gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEliotp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7kgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEliotp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEliotp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7EgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEliotp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX60gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEliotp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX6UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEliotp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX50gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEliotp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX58gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEliotp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX5kgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEliotp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX5UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEliotp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX40gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEliotp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX4UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEliotp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7kgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEliotp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX60gvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEliotp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX6EgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEliotp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX5kgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEliotp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX40gvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEliotp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX4EgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEliotp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7kg_jL4-3sMM_kB_qXSEXTJQCFLH5-_bcEliotp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX70gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElhgtp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7kgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElhgtp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElhgtp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7EgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElhgtp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX60gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElhgtp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX6UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElhgtp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX50gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElhgtp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX58gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElhgtp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX5kgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElhgtp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX5UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElhgtp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX40gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElhgtp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX4UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElhgtp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7kgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElhgtp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX60gvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElhgtp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX6EgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElhgtp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX5kgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElhgtp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX40gvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElhgtp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX4EgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElhgtp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7kg_jL4-3sMM_kB_qXSEXTJQCFLH5-_bcElhgtp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX70gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElvQqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7kgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElvQqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElvQqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7EgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElvQqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX60gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElvQqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX6UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElvQqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX50gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElvQqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX58gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElvQqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX5kgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElvQqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX5UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElvQqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX40gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElvQqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX4UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElvQqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7kgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElvQqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX60gvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElvQqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX6EgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElvQqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX5kgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElvQqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX40gvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElvQqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX4EgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElvQqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7kg_jL4-3sMM_kB_qXSEXTJQCFLH5-_bcElvQqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX70gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEls0qp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7kgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEls0qp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEls0qp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7EgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEls0qp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX60gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEls0qp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX6UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEls0qp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX50gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEls0qp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX58gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEls0qp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX5kgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEls0qp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX5UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEls0qp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX40gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEls0qp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX4UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEls0qp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7kgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEls0qp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX60gvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEls0qp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX6EgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEls0qp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX5kgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEls0qp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX40gvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEls0qp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX4EgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEls0qp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7kg_jL4-3sMM_kB_qXSEXTJQCFLH5-_bcEls0qp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX70gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElqoqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7kgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElqoqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElqoqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7EgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElqoqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX60gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElqoqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX6UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElqoqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX50gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElqoqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX58gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElqoqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX5kgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElqoqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX5UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElqoqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX40gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElqoqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX4UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElqoqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7kgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElqoqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX60gvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElqoqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX6EgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElqoqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX5kgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElqoqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX40gvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElqoqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX4EgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcElqoqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7kg_jL4-3sMM_kB_qXSEXTJQCFLH5-_bcElqoqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX70gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEloMqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7kgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEloMqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEloMqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7EgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEloMqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX60gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEloMqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX6UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEloMqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX50gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEloMqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX58gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEloMqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX5kgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEloMqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX5UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEloMqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX40gfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEloMqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX4UgfjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEloMqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7kgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEloMqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX60gvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEloMqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX6EgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEloMqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX5kgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEloMqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX40gvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEloMqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX4EgvjL4-3sMM_kB_qXSEXTJQCFLH5-_bcEloMqp6c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto Serif Variable';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoserif/v17/R71RjywflP6FLr3gZx7K8UyuXDs9zVwDmXCb8lxYgmuii32UGoVldX7kg_jL4-3sMM_kB_qXSEXTJQCFLH5-_bcEloMqp6c.ttf) format('truetype');
+}
