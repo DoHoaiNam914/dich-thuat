@@ -875,6 +875,238 @@
   src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/giga/ttf/LexendGiga-Black.ttf) format('truetype');
 } */
 
+/* Lexend Mega */
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Mega';
+  font-style: normal;
+  font-weight: 400 900;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/mega/variable/LexendMega[wght].ttf) format('truetype');
+}
+
+/* @font-face {
+  font-display: swap;
+  font-family: 'Lexend Mega';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/mega/ttf/LexendMega-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Mega';
+  font-style: normal;
+  font-weight: 500;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/mega/ttf/LexendMega-Medium.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Mega';
+  font-style: normal;
+  font-weight: 600;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/mega/ttf/LexendMega-SemiBold.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Mega';
+  font-style: normal;
+  font-weight: 700;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/mega/ttf/LexendMega-Bold.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Mega';
+  font-style: normal;
+  font-weight: 800;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/mega/ttf/LexendMega-ExtraBold.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Mega';
+  font-style: normal;
+  font-weight: 900;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/mega/ttf/LexendMega-Black.ttf) format('truetype');
+} */
+
+/* Lexend Peta */
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Peta';
+  font-style: normal;
+  font-weight: 400 900;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/peta/variable/LexendPeta[wght].ttf) format('truetype');
+}
+
+/* @font-face {
+  font-display: swap;
+  font-family: 'Lexend Peta';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/peta/ttf/LexendPeta-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Peta';
+  font-style: normal;
+  font-weight: 500;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/peta/ttf/LexendPeta-Medium.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Peta';
+  font-style: normal;
+  font-weight: 600;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/peta/ttf/LexendPeta-SemiBold.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Peta';
+  font-style: normal;
+  font-weight: 700;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/peta/ttf/LexendPeta-Bold.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Peta';
+  font-style: normal;
+  font-weight: 800;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/peta/ttf/LexendPeta-ExtraBold.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Peta';
+  font-style: normal;
+  font-weight: 900;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/peta/ttf/LexendPeta-Black.ttf) format('truetype');
+} */
+
+/* Lexend Tera */
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Tera';
+  font-style: normal;
+  font-weight: 400 900;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/tera/variable/LexendTera[wght].ttf) format('truetype');
+}
+
+/* @font-face {
+  font-display: swap;
+  font-family: 'Lexend Tera';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/tera/ttf/LexendTera-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Tera';
+  font-style: normal;
+  font-weight: 500;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/tera/ttf/LexendTera-Medium.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Tera';
+  font-style: normal;
+  font-weight: 600;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/tera/ttf/LexendTera-SemiBold.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Tera';
+  font-style: normal;
+  font-weight: 700;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/tera/ttf/LexendTera-Bold.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Tera';
+  font-style: normal;
+  font-weight: 800;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/tera/ttf/LexendTera-ExtraBold.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Tera';
+  font-style: normal;
+  font-weight: 900;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/tera/ttf/LexendTera-Black.ttf) format('truetype');
+} */
+
+/* Lexend Zetta */
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Zetta';
+  font-style: normal;
+  font-weight: 400 900;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/zetta/variable/LexendZetta[wght].ttf) format('truetype');
+}
+
+/* @font-face {
+  font-display: swap;
+  font-family: 'Lexend Zetta';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/zetta/ttf/LexendZetta-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Zetta';
+  font-style: normal;
+  font-weight: 500;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/zetta/ttf/LexendZetta-Medium.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Zetta';
+  font-style: normal;
+  font-weight: 600;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/zetta/ttf/LexendZetta-SemiBold.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Zetta';
+  font-style: normal;
+  font-weight: 700;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/zetta/ttf/LexendZetta-Bold.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Zetta';
+  font-style: normal;
+  font-weight: 800;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/zetta/ttf/LexendZetta-ExtraBold.ttf) format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lexend Zetta';
+  font-style: normal;
+  font-weight: 900;
+  src: url(https://raw.githubusercontent.com/DoHoaiNam914/CDN/main/phong-chu/lexend-main/fonts/zetta/ttf/LexendZetta-Black.ttf) format('truetype');
+} */
+
 /* Minion Pro */
 
 @font-face {
