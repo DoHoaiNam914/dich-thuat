@@ -148,8 +148,7 @@ const MODELS = {
       'gpt-3.5-turbo-1106',
       'gpt-3.5-turbo-0125',
       'gpt-3.5-turbo'
-    ],
-    Other: ['chatgpt-4o-latest']
+    ]
   },
   GROQ: {
     'Alibaba Cloud': ['qwen/qwen3-32b'],
@@ -363,7 +362,6 @@ class Translation {
             'gpt-3.5-turbo-1106': 4096,
             'gpt-3.5-turbo-0125': 4096,
             'gpt-3.5-turbo': 4096,
-            'chatgpt-4o-latest': 8192
           }
           const isReasoningModel = MODELS.OPENAI.Reasoning.includes(openaiModelId)
           const isReasoningGptFive = MODELS.OPENAI['GPT-5'].map(element => element.modelId ?? element).includes(openaiModelId) && !/^gpt-5(?:\.[12])?-chat-latest/.test(openaiModelId)
