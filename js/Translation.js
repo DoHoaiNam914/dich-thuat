@@ -15,6 +15,10 @@ const MODELS = {
   GOOGLE_GENAI: {
     'Gemini': [
       {
+        modelId: 'gemini-3.1-pro-preview',
+        modelName: 'Gemini 3.1 Pro Preview'
+      },
+      {
         modelId: 'gemini-3-pro-preview',
         modelName: 'Gemini 3 Pro Preview'
       },
