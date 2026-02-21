@@ -3,7 +3,7 @@
 import Utils from './Utils.js'
 class Reader {
   static getCssFontFamily (fontFamily) {
-    return fontFamily.split(', ').map((element) => element.includes(' ') ? `'${element}'` : (element.startsWith('--') ? `var(${element})` : element)).join(', ')
+    return fontFamily.split(/, */).map((element) => /[ .]/.test(element) ? `'${element}'` : (element.startsWith('--') ? `var(${element})` : element)).join(', ')
   }
 
   static setThemeValue (theme, $dropdownItem, valueKey) {
