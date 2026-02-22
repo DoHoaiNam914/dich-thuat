@@ -213,9 +213,17 @@ let Domains;
   Domains.NONE = 'None'
   Domains.FAST_TRANSLATION = 'Fast Translation'
 })(Domains || (Domains = {}))
+let ThinkingLevels;
+(function (ThinkingLevels) {
+  ThinkingLevels.MINIMAL = 'MINIMAL'
+  ThinkingLevels.LOW = 'LOW'
+  ThinkingLevels.MEDIUM = 'MEDIUM'
+  ThinkingLevels.HIGH = 'HIGH'
+})(ThinkingLevels || (ThinkingLevels = {}))
 let Efforts;
 (function (Efforts) {
   Efforts.NONE = 'none'
+  Efforts.MINIMAL = 'minimal'
   Efforts.LOW = 'low'
   Efforts.MEDIUM = 'medium'
   Efforts.HIGH = 'high'
@@ -284,6 +292,7 @@ class Translation {
       openrouterWebSearch: OpenrouterWebSearchs.DISABLED,
       systemInstruction: SystemInstructions.GPT4OMINI,
       temperature: 0.1,
+      thinkingLevel: ThinkingLevels.HIGH,
       tone: Tones.SERIOUS,
       topP: 0.95,
       topK: 50,
@@ -508,7 +517,7 @@ class Translation {
       case Translators.GOOGLE_GENAI_TRANSLATE:
       default:
         this.translateText = async (resolve) => {
-          const { GEMINI_API_KEY, googleGenaiModelId, isGroundingWithGoogleSearchEnabled, isThinkingModeEnabled } = options
+          const { GEMINI_API_KEY, googleGenaiModelId, isGroundingWithGoogleSearchEnabled, isThinkingModeEnabled, thinkingLevel } = options
           const ai = new GoogleGenAI({
             apiKey: GEMINI_API_KEY
           })
@@ -524,11 +533,11 @@ class Translation {
             ...temperature > -1 ? { temperature } : {},
             ...topP > -1 ? { topP } : {},
             ...topK > -1 ? { topK } : {},
-            ...googleGenaiModelId.startsWith('gemini-3-') 
+            ...googleGenaiModelId.startsWith('gemini-3') 
               ? {
                   thinkingConfig: {
                     includeThoughts: true,
-                    thinkingLevel: !isThinkingModeEnabled && !googleGenaiModelId.startsWith('gemini-3-pro') ? 'MINIMAL' : 'LOW'
+                    thinkingLevel
                   }
                 }
               : (/^gemini-(2\.5|flash)-/.test(googleGenaiModelId)
