@@ -19,6 +19,10 @@ const MODELS = {
         modelName: 'Gemini 3.1 Pro Preview'
       },
       {
+        modelId: 'gemini-3.1-flash-lite-preview',
+        modelName: 'Gemini 3.1 Flash Lite Preview'
+      },
+      {
         modelId: 'gemini-3-pro-preview',
         modelName: 'Gemini 3 Pro Preview'
       },
@@ -84,11 +88,19 @@ const MODELS = {
     ]
   },
   OPENAI: {
-    'GPT-5': [
+    'Recommended Models': [
       {
         modelId: 'gpt-5',
         selected: true
       },
+      'gpt-5-mini-2025-08-07'
+    ],
+    'GPT-5': [
+      'gpt-5',
+      'gpt-5.4-pro-2025-03-05',
+      'gpt-5.4-pro',
+      'gpt-5.4-2025-03-05',
+      'gpt-5.3-chat-latest',
       'gpt-5.2-pro-2025-12-11',
       'gpt-5.2-pro',
       'gpt-5.2-chat-latest',
@@ -101,7 +113,6 @@ const MODELS = {
       'gpt-5-pro',
       'gpt-5-nano-2025-08-07',
       'gpt-5-nano',
-      'gpt-5-mini-2025-08-07',
       'gpt-5-mini',
       'gpt-5-chat-latest',
       'gpt-5-2025-08-07'
@@ -431,7 +442,7 @@ class Translation {
                 : []
             ],
             ...isReasoningModel || isReasoningGptFive
-              ? (/^gpt-5\.2(?!-chat-latest)/.test(openaiModelId) && effort === Efforts.NONE
+              ? (/^gpt-5\.[24](?!-chat-latest)/.test(openaiModelId) && effort === Efforts.NONE
                   ? {
                       temperature: temperature === -1 ? 1 : temperature,
                       top_p: topP === -1 ? 0.98 : topP
