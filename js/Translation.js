@@ -90,7 +90,7 @@ const MODELS = {
   OPENAI: {
     'Recommended Models': [
       {
-        modelId: 'gpt-5',
+        modelId: 'gpt-5.4',
         selected: true
       },
       'gpt-5-mini-2025-08-07'
