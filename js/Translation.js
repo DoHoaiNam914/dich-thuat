@@ -387,6 +387,7 @@ class Translation {
           }
           const isReasoningModel = MODELS.OPENAI.Reasoning.includes(openaiModelId)
           const isReasoningGptFive = MODELS.OPENAI['GPT-5'].map(element => element.modelId ?? element).includes(openaiModelId) && !/^gpt-5(?:\.[12])?-chat-latest/.test(openaiModelId)
+          const isReasoningChatGPTModel = /^gpt-5\.\d-chat-latest/.test(openaiModelId)
           const openai = new OpenAI({
             apiKey: 'OPENAI_API_KEY',
             baseURL: 'https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1',
@@ -399,7 +400,7 @@ class Translation {
             model: openaiModelId,
             input: [
               ...await this.getSystemInstructions(options).then(value => value.map(element => ({
-                role: isReasoningModel || isReasoningGptFive ? (openaiModelId.startsWith('o1-mini') ? 'user' : 'developer') : 'system',
+                role: isReasoningModel || isReasoningGptFive ? 'developer' : 'system',
                 content: [
                   {
                     type: 'input_text',
@@ -439,20 +440,20 @@ class Translation {
                   }]
                 : []
             ],
-            ...isReasoningModel || isReasoningGptFive
-              ? (/^gpt-5\.[24](?!-chat-latest)/.test(openaiModelId) && effort === Efforts.NONE
+            ...isReasoningModel || isReasoningGptFive || isReasoningChatGPTModel
+              ? (/^gpt-5\.[24]/.test(openaiModelId) && !isReasoningChatGPTModel && effort === Efforts.NONE
                   ? {
                       temperature: temperature === -1 ? 1 : temperature,
                       top_p: topP === -1 ? 0.98 : topP
                     }
                   : {})
               : {
-                  temperature: /^gpt-5\.\d-chat-latest/.test(openaiModelId) ? 1 : (temperature === -1 ? 1 : temperature),
+                  temperature: temperature === -1 ? 1 : temperature,
                   max_output_tokens: MAX_OUTPUT_TOKEN[openaiModelId],
-                  top_p: /^gpt-5\.\d-chat-latest/.test(openaiModelId) ? (openaiModelId.startsWith('gpt-5.1') ? 1 : 0.85) : (topP === -1 ? 1 : topP)
+                  top_p: topP === -1 ? 1 : topP
                 },
             store: false,
-            include: !(isReasoningModel || isReasoningGptFive) && !/^gpt-5\.\d-chat-latest/.test(openaiModelId)
+            include: !(isReasoningModel || isReasoningGptFive) && !isReasoningChatGPTModel
               ? ["web_search_call.action.sources"]
               : [
                   "reasoning.encrypted_content",
