@@ -358,8 +358,6 @@ class Translation {
         this.translateText = async (resolve) => {
           const { effort, isOpenaiWebSearchEnabled, openaiModelId } = options
           const MAX_OUTPUT_TOKEN = {
-            'gpt-5.2-chat-latest': 16384,
-            'gpt-5.1-chat-latest': 16384,
             'gpt-5-chat-latest': 16384,
             'gpt-4.1': 32768,
             'gpt-4.1-mini': 32768,
@@ -386,7 +384,7 @@ class Translation {
             'gpt-3.5-turbo': 4096,
           }
           const isReasoningModel = MODELS.OPENAI.Reasoning.includes(openaiModelId)
-          const isReasoningGptFive = MODELS.OPENAI['GPT-5'].map(element => element.modelId ?? element).includes(openaiModelId) && !/^gpt-5(?:\.[12])?-chat-latest/.test(openaiModelId)
+          const isReasoningGptFive = (MODELS.OPENAI['GPT-5'].map(element => element.modelId ?? element).includes(openaiModelId) || MODELS.OPENAI['Recommended Models'].map(element => element.modelId ?? element).includes(openaiModelId)) && !/^gpt-5(?:\.\d)?-chat-latest/.test(openaiModelId)
           const isReasoningChatGPTModel = /^gpt-5\.\d-chat-latest/.test(openaiModelId)
           const openai = new OpenAI({
             apiKey: 'OPENAI_API_KEY',
