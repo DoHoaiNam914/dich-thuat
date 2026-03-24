@@ -1015,9 +1015,8 @@ Your output must only contain the translated text and cannot include explanation
         break
       }
       case SystemInstructions.DOCTRANSLATE_IO: {
-        const originalLanguage = this.originalLang ?? detectedLanguage
         const { customDictionary, customPrompt, domain, isCustomDictionaryEnabled, isCustomPromptEnabled, tone } = options
-        systemInstructions.push(this.getDoctranslateIoInstruction(originalLanguage, this.destLang, domain, tone, customDictionary, isCustomDictionaryEnabled, isCustomPromptEnabled, customPrompt))
+        systemInstructions.push(this.getDoctranslateIoInstruction(this.originalLang ?? detectedLanguage, this.destLang, domain, tone, customDictionary, isCustomDictionaryEnabled, isCustomPromptEnabled, customPrompt))
         break
       }
       case SystemInstructions.GPT4OMINI:
