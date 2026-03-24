@@ -278,7 +278,7 @@ $translationTranslators.on('click', function () {
   $targetTextarea.val('Đang dịch...')
   $('#source-text, #target-textarea').prop('readOnly', true)
   $('[data-translation-translator-value], #add-word-button, #delete-button').addClass('disabled')
-  dictionaryTranslation = new Translation(sourceText, $targetTextLanguageSelect.val(), $sourceTextLanguageSelect.val() || null, {
+  dictionaryTranslation = new Translation(sourceText, $targetTextLanguageSelect.val(), JSON.parse($sourceTextLanguageSelect.val()), {
     GEMINI_API_KEY: $geminiApiKeyText.val(),
     GROQ_API_KEY: $groqApiKeyText.val(),
     OPENROUTER_API_KEY: $openrouterApiKeyText.val(),
@@ -449,7 +449,7 @@ $translateButton.on('click', function () {
       $inputTextarea.hide()
       $outputTextarea.show()
       $(this).text('Huỷ')
-      textareaTranslation = new Translation(inputText, $('#destination-language-select').val(), $originalLanguageSelect.val(), {
+      textareaTranslation = new Translation(inputText, $('#destination-language-select').val(), JSON.parse($originalLanguageSelect.val()), {
         translatorId: $translators.filter('.active').data('translator-value'),
         googleGenaiModelId: $('#google-genai-model-select').val(),
         thinkingLevel: $('#thinking-level-select').val(),
