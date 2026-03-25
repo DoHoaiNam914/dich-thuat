@@ -282,7 +282,7 @@ class Translation {
     this.translatedText = ''
     this.text = text
     this.destLang = destLang
-    this.originalLang = JSON.parse(originalLang)
+    this.originalLang = originalLang === 'null' ? JSON.parse(originalLang) : originalLang
     this.abortController = new AbortController()
     options = {
       customDictionary: [],
