@@ -469,7 +469,9 @@ class Translation {
               this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
               if (this.translatedText.length === 0) { continue }
               if (this.abortController.signal.aborted) { break }
-              resolve(this.translatedText, this.text, options)
+              setInterval(() => {
+                resolve(this.translatedText, this.text, options)
+              }, 80)
             }
           } else {
             this.responseText = response.output.filter((element) => element.type === 'message')[0].content[0].text
