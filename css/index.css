@@ -103,12 +103,8 @@
 
 .textarea > .form-control {
   height: 100vh;
+  height: 100dvh;
   font: var(--reader-font-weight) var(--reader-font-size)/var(--reader-line-height) var(--reader-font-family);
-  max-height: -webkit-fill-available;
-  max-height: 100dvh;
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
-  min-height: 100dvh;
   padding: 10px 10px 5.55rem;
   text-align: var(--reader-text-align);
   width: 100vw;
