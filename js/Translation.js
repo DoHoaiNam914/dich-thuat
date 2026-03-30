@@ -1,5 +1,5 @@
 'use strict'
-/* global crypto, fetch, JSON5 */
+/* global crypto, fetch, JSON5, requestAnimationFrame */
 import {
   GoogleGenAI, HarmBlockThreshold, HarmCategory
 // @ts-expect-error @google/genai
@@ -464,15 +464,18 @@ class Translation {
             ...doesStream ? { stream: true } : {}
           })
           if (doesStream) {
+            let isFrameScheduled = false
             for await (const event of response) {
-              setInterval(() => {
-                if (event.type === 'response.output_text.delta') { this.responseText += event.delta } else if (event.type === 'response.completed') { this.responseText = event.response.output.find(({ type }) => type === 'message').content[0].text } else { return }
-                this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
-                if (this.translatedText.length === 0) { return }
-                if (this.abortController.signal.aborted) { return }
-                resolve(this.translatedText, this.text, options)
-              }, 80)
+              if (event.type === 'response.output_text.delta') { this.responseText += event.delta } else if (event.type === 'response.completed') { this.responseText = event.response.output.find(({ type }) => type === 'message').content[0].text } else { continue }
+              this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
+              if (this.translatedText.length === 0) { continue }
               if (this.abortController.signal.aborted) { break }
+              if (isFrameScheduled) { continue }
+              isFrameScheduled = true
+              requestAnimationFrame(() => {
+                isFrameScheduled = false
+                resolve(this.translatedText, this.text, options)
+              })
             }
           } else {
             this.responseText = response.output.filter((element) => element.type === 'message')[0].content[0].text
