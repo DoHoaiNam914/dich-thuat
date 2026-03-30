@@ -10,7 +10,7 @@ import { Groq } from 'https://esm.run/groq-sdk'
 import OpenAI from 'https://esm.run/openai'
 // // @ts-expect-error @tavily/core
 // import { tavily } from 'https://esm.run/@tavily/core';
-import Utils from './Utils.js?raw'
+import Utils from './Utils.js'
 const MODELS = {
   GOOGLE_GENAI: {
     'Gemini': [
