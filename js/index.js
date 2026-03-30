@@ -1,8 +1,8 @@
 'use strict'
 /* global $, confirm, fetch, getSelection, localStorage, open, Papa, sessionStorage */
-import Reader from './Reader.js'
-import { MODELS, Translation } from './Translation.js'
-import Utils from './Utils.js'
+import Reader from './Reader.js?raw'
+import { MODELS, Translation } from './Translation.js?raw'
+import Utils from './Utils.js?raw'
 const $addWordButton = $('#add-word-button')
 const $apiKeyTexts = $('.api-key-text')
 const $boldTextSwitch = $('#bold-text-switch')
