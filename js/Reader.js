@@ -1,6 +1,6 @@
 'use strict'
 /* global $ */
-import Utils from './Utils.js'
+import Utils from './Utils.js?raw'
 class Reader {
   static getCssFontFamily (fontFamily) {
     return fontFamily.split(/, */).map((element) => /[ .]/.test(element) ? `'${element}'` : (element.startsWith('--') ? `var(${element})` : element)).join(', ')
