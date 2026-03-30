@@ -26,6 +26,12 @@
   --reader-font-weight: normal;
   --reader-line-height: 1.2;
   --viewport-width: 1000px;
+  height: 100vh;
+  height: 100svh;
+  max-height: 100vh;
+  max-height: 100svh;
+  min-height: 100vh;
+  min-height: 100svh;
   overflow: hidden;
   overscroll-behavior: none;
 }
