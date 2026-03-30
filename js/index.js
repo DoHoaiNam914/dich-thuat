@@ -1,8 +1,8 @@
 'use strict'
 /* global $, confirm, fetch, getSelection, localStorage, open, Papa, sessionStorage */
-import Reader from 'https://cdn.jsdelivr.net/gh/DoHoaiNam914/dich-thuat@gh-pages/js/Reader.js'
-import { MODELS, Translation } from 'https://cdn.jsdelivr.net/gh/DoHoaiNam914/dich-thuat@gh-pages/js/Translation.js'
-import Utils from 'https://cdn.jsdelivr.net/gh/DoHoaiNam914/dich-thuat@gh-pages/js/Utils.js'
+import Reader from './Reader.js'
+import { MODELS, Translation } from './Translation.js'
+import Utils from './Utils.js'
 const $addWordButton = $('#add-word-button')
 const $apiKeyTexts = $('.api-key-text')
 const $boldTextSwitch = $('#bold-text-switch')
