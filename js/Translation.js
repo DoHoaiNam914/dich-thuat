@@ -15,6 +15,11 @@ const MODELS = {
   GOOGLE_GENAI: {
     'Gemini': [
       {
+        modelId: 'gemini-3-flash-preview',
+        modelName: 'Gemini 3 Flash Preview',
+        selected: true
+      },
+      {
         modelId: 'gemini-3.1-pro-preview',
         modelName: 'Gemini 3.1 Pro Preview'
       },
@@ -23,17 +28,12 @@ const MODELS = {
         modelName: 'Gemini 3.1 Flash Lite Preview'
       },
       {
-        modelId: 'gemini-3-pro-preview',
-        modelName: 'Gemini 3 Pro Preview'
-      },
-      {
-        modelId: 'gemini-3-flash-preview',
-        modelName: 'Gemini 3 Flash Preview',
-        selected: true
-      },
-      {
         modelId: 'gemini-2.5-pro',
         modelName: 'Gemini 2.5 Pro'
+      },
+      {
+        modelId: 'gemini-pro-latest',
+        modelName: 'Gemini Pro Latest'
       },
       {
         modelId: 'gemini-flash-latest',
@@ -84,6 +84,14 @@ const MODELS = {
       {
         modelId: 'gemma-3-27b-it',
         modelName: 'Gemma 3 27B'
+      },
+      {
+        modelId: 'gemma-4-26b-a4b-it',
+        modelName: 'Gemma 4 26B A4B IT'
+      },
+      {
+        modelId: 'gemma-4-31b-it',
+        modelName: 'Gemma 4 31B IT'
       }
     ]
   },
