@@ -523,13 +523,19 @@ class Translation {
             ...doesStream ? { stream: true } : {}
           }, { signal: this.abortController.signal })
           if (doesStream) {
+            let isFrameScheduled = false
             for await (const chunk of completion) {
               this.responseText += chunk.choices[0].delta.content ?? ''
               if (/^<think>/.test(this.responseText) && !/<\/think>\n+(?!$)/.test(this.responseText)) { continue } else { this.responseText = this.responseText.replace(/^<think>.+<\/think>\n+/s, '') }
               this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATE_IO ? this.doctranslateIoPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
               if (this.translatedText.length === 0) { continue }
               if (this.abortController.signal.aborted) { break }
-              resolve(this.translatedText, this.text, options)
+              if (isFrameScheduled) { continue }
+              isFrameScheduled = true
+              requestAnimationFrame(() => {
+                isFrameScheduled = false
+                resolve(this.translatedText, this.text, options)
+              })
             }
           } else {
             this.responseText = completion.choices[0].message.content.replace(/^<think>.+<\/think>\n+/s, '')
@@ -559,7 +565,7 @@ class Translation {
             ...temperature > -1 ? { temperature } : {},
             ...topP > -1 ? { topP } : {},
             ...topK > -1 ? { topK } : {},
-            ...googleGenaiModelId.startsWith('gemini-3') 
+            ...googleGenaiModelId.startsWith('gemini-3') || googleGenaiModelId.startsWith('gemma-4')
               ? {
                   thinkingConfig: {
                     includeThoughts: true,
@@ -575,7 +581,7 @@ class Translation {
                 }
               : {}),
             ...tools.length > 0 ? { tools } : {},
-            ...googleGenaiModelId.startsWith('gemma')
+            .../^gemma-(?!4)/.test(googleGenaiModelId)
               ? {}
               : {
                   systemInstruction: await this.getSystemInstructions(options).then(value => value.map(element => ({
@@ -585,7 +591,7 @@ class Translation {
           }
           const model = googleGenaiModelId
           const contents = [
-            ...googleGenaiModelId.startsWith('gemma')
+            .../^gemma-(?!4)/.test(googleGenaiModelId)
               ? await this.getSystemInstructions(options).then(value => value.map(element => ({
                     role: 'user',
                     parts: [
