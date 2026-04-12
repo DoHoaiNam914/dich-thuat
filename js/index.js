@@ -286,6 +286,7 @@ $translationTranslators.on('click', function () {
     TVLY_API_KEY: $('#tvly-api-key-text').val(),
     isCustomDictionaryEnabled: $customDictionarySwitch.prop('checked'),
     translatorId: $(this).data('translation-translator-value'),
+    customDictionary,
     googleGenaiModelId: $('#dictionary-google-genai-model-select').val(),
     thinkingLevel: $('#dictionary-thinking-level-select').val(),
     isThinkingModeEnabled: $('#dictionary-thinking-mode-switch').prop('checked'),
@@ -306,8 +307,7 @@ $translationTranslators.on('click', function () {
     isCustomPromptEnabled: $('#dictionary-custom-prompt-switch').prop('checked'),
     customPrompt: $('#dictionary-text-custom-prompt-textarea').val().replace(/{$CONTEXT}/g, $inputTextarea.val()),
     tone: $('#dictionary-tone-select').val(),
-    domain: $(`#dictionary-${$domainSelect.prop('id')}`).val(),
-    customDictionary
+    domain: $(`#dictionary-${$domainSelect.prop('id')}`).val()
   })
   dictionaryTranslation.translateText(translatedText => {
     $targetTextarea.val(translatedText).trigger('input')
@@ -453,6 +453,7 @@ $translateButton.on('click', function () {
       textareaTranslation = new Translation(inputText, $('#destination-language-select').val(), $originalLanguageSelect.val(), {
         translatorId: $translators.filter('.active').data('translator-value'),
         B2B_AUTH_TOKEN: b2bAuthToken,
+        customDictionary,
         googleGenaiModelId: $('#google-genai-model-select').val(),
         thinkingLevel: $('#thinking-level-select').val(),
         isThinkingModeEnabled: $('#thinking-mode-switch').prop('checked'),
@@ -474,7 +475,6 @@ $translateButton.on('click', function () {
         customPrompt: $('#text-custom-prompt-textarea').val(),
         tone: $('#tone-select').val(),
         domain: $domainSelect.val(),
-        customDictionary,
         isCustomDictionaryEnabled: $customDictionarySwitch.prop('checked')
       })
       textareaTranslation.translateText(appendTranslatedTextIntoOutputTextarea).catch(reason => {
