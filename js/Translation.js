@@ -261,7 +261,7 @@ let SystemInstructions;
   SystemInstructions.OPENAI_TRANSLATION = 'openaiTranslation'
   SystemInstructions.POLYGLOT_SUPERPOWERS = 'polyglotSuperpowers'
   SystemInstructions.VERTEXAI_TRANSLATION = 'vertexaiTranslation'
-  SystemInstructions.CHATGPT_TRANSLATE = 'chatgptTranslation'
+  SystemInstructions.CHATGPT_TRANSLATE = 'chatgptTranslate'
   SystemInstructions.TRANSLATE_GEMMA = 'translateGemma'
   SystemInstructions.COCCOC_EDU = 'coccocEdu'
   SystemInstructions.DOCTRANSLATEIO = 'doctranslateio'
@@ -1102,7 +1102,7 @@ uuid: ${upperCaseDestinationLanguage} translation of the sentence when using rul
         if (isCustomPromptEnabled) { developerInstructions.push(customPrompt.replace(/{\$DICTIONARY}/g, customDictionaryInstruction)) }
         break
       }
-      case SystemInstructions.VERTEX_TRANSLATION: {
+      case SystemInstructions.VERTEXAI_TRANSLATION: {
         const SOURCE_LANGUAGE_CODE_MAP = {
           'zh-cn': 'zh',
           'zh-tw': 'zh',
@@ -1789,7 +1789,7 @@ ${this.text}`
         }
         let sourceLangCode = this.originalLang ?? detectedLanguage
         sourceLangCode = SOURCE_LANGUAGE_CODE_MAP[sourceLangCode] ?? sourceLangCode
-        const targetLangCode = SOURCE_LANGUAGE_CODE_MAP[this.destLang] ?? this.destLang
+        const targetLangCode = TARGET_LANGUAGE_CODE_MAP[this.destLang] ?? this.destLang
         const sourceLang = LANGUAGE_LABEL_MAP[sourceLangCode] ?? LANGUAGE_MAP.en
         const targetLang = LANGUAGE_LABEL_MAP[targetLangCode]
         userMessage = `You are a professional ${sourceLang} (${sourceLangCode}) to ${targetLang} (${targetLangCode}) translator. Your goal is to accurately convey the meaning and nuances of the original ${sourceLang} text while adhering to ${targetLang} grammar, vocabulary, and cultural sensitivities.\nProduce only the ${targetLang} translation, without any additional explanations or commentary. Please translate the following ${sourceLang} text into ${targetLang}:\n\n\n${this.text.trim()}`
@@ -1845,7 +1845,8 @@ ${this.text}`
           return `'${uuidParts[0]}#${uuidParts[2].substring(1)}': ${element.includes("'") && !element.includes('"') ? `"${element.replace(/^\s+|\s+$/g, '').replace(/\\/g, '\\\\')}"` : `'${element.replace(/^\s+|\s+$/g, '').replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`}`
         }).join(', ')}}\n### TRANSLATED TEXT WITH UUID:`
       }
-      // no default
+      default:
+        developerInstructions.push(customPrompt.replace(/{\$DICTIONARY}/g, customDictionaryInstruction))
     }
     return { systemInstructions, userMessage, developerInstructions }
   }
