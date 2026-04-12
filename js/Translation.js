@@ -1793,7 +1793,7 @@ ${this.text}`
         const sourceLang = LANGUAGE_LABEL_MAP[sourceLangCode] ?? LANGUAGE_MAP.en
         const targetLang = LANGUAGE_LABEL_MAP[targetLangCode]
         userMessage = `You are a professional ${sourceLang} (${sourceLangCode}) to ${targetLang} (${targetLangCode}) translator. Your goal is to accurately convey the meaning and nuances of the original ${sourceLang} text while adhering to ${targetLang} grammar, vocabulary, and cultural sensitivities.\nProduce only the ${targetLang} translation, without any additional explanations or commentary. Please translate the following ${sourceLang} text into ${targetLang}:\n\n\n${this.text.trim()}`
-        if (isCustomPromptEnabled) { developerInstructions.push(customPrompt.replace(/{\$CUSTOM_DICTIONARY}/g, customDictionaryInstruction) }
+        if (isCustomPromptEnabled) { developerInstructions.push(customPrompt.replace(/{\$CUSTOM_DICTIONARY}/g, customDictionaryInstruction)) }
         break
       }
       case SystemInstructions.COCCOC_EDU: {
