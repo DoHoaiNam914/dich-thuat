@@ -1,7 +1,7 @@
 'use strict'
 /* global $, confirm, fetch, getSelection, localStorage, open, Papa, sessionStorage */
 import Reader from './Reader.js'
-import { MODELS, Translation } from './Translation.js'
+import { MODELS, SystemInstructions, Translation } from './Translation.js'
 import Utils from './Utils.js'
 const $addWordButton = $('#add-word-button')
 const $apiKeyTexts = $('.api-key-text')
@@ -26,6 +26,7 @@ const $outputTextarea = $('#output-textarea')
 const $retranslateButton = $('#retranslate-button')
 const $sourceText = $('#source-text')
 const $sourceTextLanguageSelect = $('#source-text-language-select')
+const $systemInstructionSelect = $('#system-instruction-select')
 const $targetTextarea = $('#target-textarea')
 const $targetTextLanguageSelect = $('#target-text-language-select')
 const $translateButton = $('#translate-button')
@@ -92,7 +93,7 @@ function setStoredCustomDictionaryAndReloadCounter (customDictionary) {
 function appendTranslatedTextIntoOutputTextarea (translatedText, text, options) {
   const $outputTextarea = $('#output-textarea')
   $outputTextarea.empty()
-  if (options.isBilingualEnabled) {
+  if ($systemInstructionSelect.val() === SystemInstructions.DOCTRANSLATEIO && options.isBilingualEnabled) {
     const translatedLines = translatedText.split('\n')
     text.split('\n').forEach((element, index) => {
       const paragraph = document.createElement('p')
@@ -464,7 +465,7 @@ $translateButton.on('click', function () {
         OPENROUTER_API_KEY: $openrouterApiKeyText.val(),
         doesStream: $('#stream-switch').prop('checked'),
         isBilingualEnabled: $('#bilingual-switch').prop('checked'),
-        systemInstruction: $('#system-instruction-select').val(),
+        systemInstruction: $systemInstructionSelect.val(),
         temperature: parseFloat($('#temperature-text').val()),
         topP: parseFloat($('#top-p-text').val()),
         topK: parseFloat($('#top-k-text').val()),
