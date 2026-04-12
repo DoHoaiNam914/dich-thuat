@@ -303,11 +303,11 @@ $translationTranslators.on('click', function () {
     temperature: parseFloat($('#dictionary-temperature-text').val()),
     topP: parseFloat($('#dictionary-top-p-text').val()),
     topK: parseFloat($('#dictionary-top-k-text').val()),
+    isCustomPromptEnabled: $('#dictionary-custom-prompt-switch').prop('checked'),
+    customPrompt: $('#dictionary-text-custom-prompt-textarea').val(),
     tone: $('#dictionary-tone-select').val(),
     domain: $(`#dictionary-${$domainSelect.prop('id')}`).val(),
-    customDictionary,
-    isCustomPromptEnabled: $('#dictionary-custom-prompt-switch').prop('checked'),
-    customPrompt: $('#dictionary-text-custom-prompt-textarea').val()
+    customDictionary
   })
   dictionaryTranslation.translateText(translatedText => {
     $targetTextarea.val(translatedText).trigger('input')
@@ -452,6 +452,7 @@ $translateButton.on('click', function () {
       $(this).text('Huỷ')
       textareaTranslation = new Translation(inputText, $('#destination-language-select').val(), $originalLanguageSelect.val(), {
         translatorId: $translators.filter('.active').data('translator-value'),
+        B2B_AUTH_TOKEN: b2bAuthToken,
         googleGenaiModelId: $('#google-genai-model-select').val(),
         thinkingLevel: $('#thinking-level-select').val(),
         isThinkingModeEnabled: $('#thinking-mode-switch').prop('checked'),
@@ -469,13 +470,12 @@ $translateButton.on('click', function () {
         temperature: parseFloat($('#temperature-text').val()),
         topP: parseFloat($('#top-p-text').val()),
         topK: parseFloat($('#top-k-text').val()),
+        isCustomPromptEnabled: $('#text-custom-prompt-switch').prop('checked'),
+        customPrompt: $('#text-custom-prompt-textarea').val(),
         tone: $('#tone-select').val(),
         domain: $domainSelect.val(),
         customDictionary,
-        isCustomPromptEnabled: $('#text-custom-prompt-switch').prop('checked'),
-        customPrompt: $('#text-custom-prompt-textarea').val(),
-        isCustomDictionaryEnabled: $customDictionarySwitch.prop('checked'),
-        B2B_AUTH_TOKEN: b2bAuthToken
+        isCustomDictionaryEnabled: $customDictionarySwitch.prop('checked')
       })
       textareaTranslation.translateText(appendTranslatedTextIntoOutputTextarea).catch(reason => {
         if (textareaTranslation.abortController.signal.aborted) { return }
