@@ -305,7 +305,7 @@ $translationTranslators.on('click', function () {
     topP: parseFloat($('#dictionary-top-p-text').val()),
     topK: parseFloat($('#dictionary-top-k-text').val()),
     isCustomPromptEnabled: $('#dictionary-custom-prompt-switch').prop('checked'),
-    customPrompt: $('#dictionary-text-custom-prompt-textarea').val().replace(/{$CONTEXT}/g, $inputTextarea.val()),
+    customPrompt: $('#dictionary-text-custom-prompt-textarea').val().replace(/{\$CONTEXT}/g, $inputTextarea.val()),
     tone: $('#dictionary-tone-select').val(),
     domain: $(`#dictionary-${$domainSelect.prop('id')}`).val()
   })
