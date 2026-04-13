@@ -316,7 +316,7 @@ class Translation {
       openaiModelId: Object.values(MODELS.OPENAI).flat().filter(element => typeof element === 'object').find((element) => element.selected)?.modelId,
       openrouterModelId: 'openai/gpt-4o',
       openrouterWebSearch: OpenrouterWebSearchs.DISABLED,
-      systemInstruction: SystemInstructions.POLYGLOT_SUPERPOWERS,
+      systemInstruction: SystemInstructions.CHATGPT_TRANSLATE,
       temperature: 0.1,
       thinkingLevel: ThinkingLevels.HIGH,
       tone: Tones.SERIOUS,
