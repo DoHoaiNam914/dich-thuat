@@ -265,6 +265,7 @@ let SystemInstructions;
   SystemInstructions.TRANSLATE_GEMMA = 'translateGemma'
   SystemInstructions.COCCOC_EDU = 'coccocEdu'
   SystemInstructions.DOCTRANSLATEIO = 'doctranslateio'
+  SystemInstructions.CUSTOM_INSTRUCTION = 'customInstruction'
 })(SystemInstructions || (SystemInstructions = {}))
 let Tones;
 (function (Tones) {
