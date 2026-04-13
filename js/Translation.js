@@ -366,7 +366,7 @@ class Translation {
               resolve(`${this.responseText}${!this.responseText.includes('</think>') ? '</think>' : ''}`.match(/^<think>(.+)(?:<\/think>)?/s)[1], this.text, { ...options, isBilingualEnabled: false })
             } else {
               if (!/^<think>/.test(this.responseText) || /<\/think>\n+(?!$)/.test(this.responseText)) { this.responseText = this.responseText.replace(/^<think>.+<\/think>\n+/s, '') }
-              this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATEIO ? this.doctranslateioPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
+              this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATEIO ? this.postprocessForDoctranslateio(this.responseText, textSentenceWithUuid) : this.responseText
               if (this.translatedText.length === 0) { continue }
               if (this.abortController.signal.aborted) { break }
               resolve(this.translatedText, this.text, options)
@@ -498,7 +498,7 @@ class Translation {
             let isFrameScheduled = false
             for await (const event of response) {
               if (event.type === 'response.output_text.delta') { this.responseText += event.delta } else if (event.type === 'response.completed') { this.responseText = event.response.output.find(({ type }) => type === 'message').content[0].text } else { continue }
-              this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATEIO ? this.doctranslateioPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
+              this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATEIO ? this.postprocessForDoctranslateio(this.responseText, textSentenceWithUuid) : this.responseText
               if (this.translatedText.length === 0) { continue }
               if (this.abortController.signal.aborted) { break }
               if (isFrameScheduled) { continue }
@@ -510,7 +510,7 @@ class Translation {
             }
           } else {
             this.responseText = response.output.filter((element) => element.type === 'message')[0].content[0].text
-            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATEIO ? this.doctranslateioPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
+            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATEIO ? this.postprocessForDoctranslateio(this.responseText, textSentenceWithUuid) : this.responseText
             if (this.abortController.signal.aborted) { return }
             resolve(this.translatedText, this.text, options)
           }
@@ -559,7 +559,7 @@ class Translation {
             for await (const chunk of completion) {
               this.responseText += chunk.choices[0].delta.content ?? ''
               if (/^<think>/.test(this.responseText) && !/<\/think>\n+(?!$)/.test(this.responseText)) { continue } else { this.responseText = this.responseText.replace(/^<think>.+<\/think>\n+/s, '') }
-              this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATEIO ? this.doctranslateioPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
+              this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATEIO ? this.postprocessForDoctranslateio(this.responseText, textSentenceWithUuid) : this.responseText
               if (this.translatedText.length === 0) { continue }
               if (this.abortController.signal.aborted) { break }
               if (isFrameScheduled) { continue }
@@ -571,7 +571,7 @@ class Translation {
             }
           } else {
             this.responseText = completion.choices[0].message.content.replace(/^<think>.+<\/think>\n+/s, '')
-            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATEIO ? this.doctranslateioPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
+            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATEIO ? this.postprocessForDoctranslateio(this.responseText, textSentenceWithUuid) : this.responseText
             if (this.abortController.signal.aborted) { return }
             resolve(this.translatedText, this.text, options)
           }
@@ -664,7 +664,7 @@ class Translation {
           for await (const chunk of response) {
             if (chunk.text == null) { continue }
             this.responseText += chunk.text
-            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATEIO ? this.doctranslateioPostprocess(this.responseText, textSentenceWithUuid) : this.responseText
+            this.translatedText = systemInstruction === SystemInstructions.DOCTRANSLATEIO ? this.postprocessForDoctranslateio(this.responseText, textSentenceWithUuid) : this.responseText
             if (this.translatedText.length === 0) { continue }
             if (this.abortController.signal.aborted) { break }
             resolve(this.translatedText, this.text, options)
@@ -1832,14 +1832,142 @@ ${this.text}`
         }
         const toLanguage = LANGUAGE_MAP[this.destLang]
         const fromLanguage = LANGUAGE_MAP[this.originalLang ?? detectedLanguage]
-        systemInstructions.push(`I want you to act as a ${toLanguage} translator.\nYou are trained on data up to October 2023.`)
-        systemInstructions.push(`I will speak to you in ${fromLanguage != null ? `${fromLanguage} and you will ` : 'any language and you will detect the language, '}translate it and answer in the corrected version of my text, exclusively in ${toLanguage}, while keeping the format.\nYour translations must convey all the content in the original text and cannot involve explanations or other unnecessary information.\nPlease ensure that the translated text is natural for native speakers with correct grammar and proper word choices.\nYour output must only contain the translated text and cannot include explanations or other information.`)
+        systemInstructions.push(`I want you to act as a ${toLanguage} translator.
+You are trained on data up to October 2023.`)
+        systemInstructions.push(`I will speak to you in ${fromLanguage != null ? `${fromLanguage} and you will ` : 'any language and you will detect the language, '}translate it and answer in the corrected version of my text, exclusively in ${toLanguage}, while keeping the format.
+Your translations must convey all the content in the original text and cannot involve explanations or other unnecessary information.
+Please ensure that the translated text is natural for native speakers with correct grammar and proper word choices.\nYour output must only contain the translated text and cannot include explanations or other information.`)
         if (isCustomPromptEnabled) { developerInstructions.push(customPrompt.replace(/{\$DICTIONARY}/g, customDictionaryInstruction)) }
         break
       }
       case SystemInstructions.DOCTRANSLATEIO: {
-        const { domain, tone } = options
-        systemInstructions.push(this.getDoctranslateIoInstruction(this.originalLang ?? detectedLanguage, this.destLang, domain, tone, customDictionary, isCustomDictionaryEnabled, isCustomPromptEnabled, customPrompt))
+        const { tone } = options
+        const LANGUAGE_MAP = {
+          en: 'English',
+          vi: 'Vietnamese',
+          ja: 'Japanese',
+          'zh-cn': 'Chinese (simplified)',
+          'zh-tw': 'Chinese (traditional)',
+          ko: 'Korean',
+          es: 'Spanish',
+          pt: 'Portuguese',
+          ru: 'Russian',
+          fr: 'French',
+          de: 'German',
+          it: 'Italian',
+          hi: 'Hindi',
+          th: 'Thai',
+          tr: 'Turkish',
+          el: 'Greek',
+          ar: 'Arabic',
+          nl: 'Dutch',
+          pl: 'Polish',
+          uk: 'Ukrainian',
+          sv: 'Swedish',
+          da: 'Danish',
+          no: 'Norwegian',
+          fi: 'Finnish',
+          hu: 'Hungarian',
+          id: 'Indonesian',
+          'ms-MY': 'Malaysian',
+          fil: 'Tagalog (Filipino)',
+          bn: 'Bengali (Bangladesh)',
+          lo: 'Lao',
+          'cs-CZ': 'Czech'
+        }
+        const STYLE_INSTRUCTION_MAP = {
+          Serious: `
+    - Language should be neutral, precise and technical, avoiding emotional elements.
+    - Make everything clear and logical.
+    `,
+          Friendly: `
+    - Use language that is warm, approachable, and conversational.
+    - Ensure the language feels natural and relaxed.
+    `,
+          Humorous: `
+    - Language must be fun, light and humorous. Use jokes or creative expressions.
+    - Must use entertaining words, wordplay, trendy words, words that young people often use.
+    `,
+          Formal: `
+    - Utilize language that is formal, respectful, and professional. Employ complex sentence structures and maintain a formal register.
+    - Choose polite, precise, and refined vocabulary.
+    - Incorporate metaphors, idioms, parallel structures, and couplets where appropriate. Ensure that dialogue between characters is formal and well-ordered.
+    - When relevant, use selectively chosen archaic or classical words, especially if the context pertains to historical or ancient settings.
+    `,
+          Romantic: `
+    - Language must be emotional, poetic and artistic.
+    - Choose flowery, sentimental, and erotic words.
+    - The writing is gentle, focusing on subtle feelings about love and deep character emotions.
+    `
+        }
+        const originalLangLabel = LANGUAGE_MAP[originalLang] ?? originalLang
+        const destLangLabel = LANGUAGE_MAP[destLang] ?? destLang
+        systemInstructions.push(`### ROLE:
+You are a world-class ${destLangLabel} translator who produces translations indistinguishable from text originally written in ${destLangLabel}. You think in ${destLangLabel}, not in ${originalLangLabel}. Your translations read as if a native ${destLangLabel} expert wrote the content from scratch.
+
+### CORE PRINCIPLES:
+1. **Sound native**: Every sentence must read naturally in ${destLangLabel}. If a native speaker would never phrase it that way, rephrase it.
+2. **Preserve meaning precisely**: Capture the exact meaning, intent, and nuance - no additions, no omissions, no interpretation.
+3. **Match register**: Mirror the formality, tone, and style of the source text in ${destLangLabel} conventions.
+4. **UUID integrity**: Each UUID maps 1:1. Never merge, split, skip, or fabricate UUIDs.
+
+### ANTI-TRANSLATIONESE RULES:
+- Do NOT follow ${originalLangLabel} sentence structure when ${destLangLabel} has a more natural word order
+- Do NOT calque idioms - find the ${destLangLabel} equivalent or rephrase naturally
+- Do NOT keep ${originalLangLabel} punctuation conventions if ${destLangLabel} differs (e.g., quotation marks, comma usage)
+- Do NOT produce awkward literal translations that technically correct but sound unnatural
+- If the source is poorly written, translate the intended meaning clearly - do not reproduce bad writing
+
+### STRUCTURE PRESERVATION (CRITICAL):
+- **HTML/XML tags**: Preserve ALL markup tags exactly as they appear. Only translate the text BETWEEN tags. Example: `<h1>Hello</h1>` → `<h1>Xin chào</h1>`. NEVER alter tag names, attributes, or nesting structure.
+- **Markdown formatting**: Preserve all markdown syntax (**, *, #, [], (), etc.). Only translate the text content.
+- **Formulas & equations**: Keep ALL mathematical expressions EXACTLY as-is — whether in LaTeX (`$...$`, \frac, \sum), Unicode (x² + y² = r², ∑, ∫, ±, ×), or plain text format (E = mc², a² + b² = c²). If a formula contains translatable labels/descriptions around it, translate ONLY the surrounding text. NEVER convert formula format (e.g., do not change `x²` to `x^2` or vice versa). Output the formula in the EXACT same format as input.
+- **Geometric notation & diagrams**: Keep ALL geometric expressions intact — symbols (∠, △, ⊥, ∥, →, ≅, °), vertex labels (ABC, DEF), coordinate pairs ((3, 4)), measurement values (r = 5cm), and notation (SAS, ASA, SSS). If there is translatable text around geometry, translate only the text. NEVER rewrite geometric expressions into a different format.
+- **Code blocks & technical syntax**: Keep code, commands, file paths, URLs, and variable names unchanged.
+- **Special characters & symbols**: Preserve all special characters, escape sequences, and Unicode symbols exactly.
+
+### SPECIAL HANDLING:
+- **Numbers**: Keep values, adapt format to ${destLangLabel} locale (decimal/thousands separators)
+- **Dates**: Convert to ${destLangLabel} date format conventions
+- **Currencies**: Keep the value and currency code; convert symbol to ${destLangLabel} convention if needed
+- **Proper nouns**: Keep original unless a standard ${destLangLabel} equivalent exists
+- **Units**: Convert to ${destLangLabel} measurement system if conventions differ, with precise calculations
+- **Abbreviations**: Understand the ${originalLangLabel} abbreviation in context, then use the correct ${destLangLabel} equivalent. NEVER mistake a ${originalLangLabel} abbreviation for a ${destLangLabel} word
+- **Empty UUID**: Return empty string ""
+- **Profanity & sensitive content**: Replace vulgar, obscene, and sexually crude words with non-vulgar synonyms or euphemisms that preserve the SAME meaning in ${destLangLabel}. NEVER use asterisks or symbols to censor — always find a real ${destLangLabel} word/phrase that conveys the intent without being crude. Mild swearing and informal expressions may remain as-is. The goal is a translation that any audience can read comfortably while fully understanding the original meaning
+
+### STYLE:
+
+        The style of the output must be ${tone}:
+        - ${STYLE_INSTRUCTION_MAP[tone]}
+    
+
+### DICTIONARY (HIGHEST PRIORITY - these exact translations MUST be used):
+${customDictionaryInstruction}
+
+### CUSTOM INSTRUCTIONS:
+- Follow the instruction below when translate:
+${isCustomPromptEnabled ? customPrompt : 'None'}
+
+### TRANSLATION PROCESS (internal, do not output steps):
+1. **Understand**: Read the full text. Identify domain, context, register, and any tricky elements.
+2. **Draft**: Translate each UUID segment, thinking in ${destLangLabel} from the start.
+3. **Self-critique**: Re-read your draft as a ${destLangLabel} reader. Flag anything that sounds translated rather than native. Fix it.
+4. **Final verification** (MUST pass ALL checks before outputting):
+   - UUID mapping is exactly 1:1 — no missing, no extra, no duplicated UUIDs
+   - All HTML/XML tags preserved with identical structure (tag names, attributes, nesting)
+   - All formulas, equations, and mathematical notation unchanged
+   - All geometric notation and symbols preserved
+   - Dictionary terms used exactly as specified
+   - No content added or removed
+   - Output is 100% in ${destLangLabel} (except preserved technical content)
+
+### OUTPUT FORMAT (JSON with exactly 3 fields):
+{
+  "insight": ["Key understanding of the source text that informed translation choices"],
+  "rule": ["Specific rules applied during this translation"],
+  "translated_string": "uuid: ${destLangLabel} translation\nuuid: ${destLangLabel} translation\n..."
+}`)
         userMessage = `### TEXT SENTENCE WITH UUID:\n{${this.text.split('\n').map(element => {
           const uuidParts = crypto.randomUUID().split('-')
           return `'${uuidParts[0]}#${uuidParts[2].substring(1)}': ${element.includes("'") && !element.includes('"') ? `"${element.replace(/^\s+|\s+$/g, '').replace(/\\/g, '\\\\')}"` : `'${element.replace(/^\s+|\s+$/g, '').replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`}`
@@ -1850,35 +1978,29 @@ ${this.text}`
     }
     return { systemInstructions, userMessage, developerInstructions }
   }
-
-  doctranslateioPostprocess (translatedTextWithUuid, textSentenceWithUuid) {
+  postprocessForDoctranslateio(translatedTextWithUuid, textSentenceWithUuid) {
     const UUID_PATTERN = '(?:[a-z0-9]{8}#[a-z0-9]{3})'
-    const translateText = translatedTextWithUuid.replace(/^\}$.+/ms, '').replace(new RegExp(UUID_PATTERN, 'gi'), (match) => match.toLowerCase()).replace(new RegExp(`(?<=${UUID_PATTERN})(?:>|')`, 'g'), '')
+    const translateText = translatedTextWithUuid.replace(/^}$.+/ms, '').replace(new RegExp(UUID_PATTERN, 'gi'), (match) => match.toLowerCase()).replace(new RegExp(`(?<=${UUID_PATTERN})(?:>|')`, 'g'), '')
     if (!/"translated_string": ?"/.test(translateText)) { return '' }
-    const potentialJsonString = translateText.replace(/\\$/, '').replace(/(\\")?(?:",?)?(?:\n?\})?(\n?(?:`{3})?)?$/, '$1"\n}$2').replace(new RegExp(`\\n(?=  ${UUID_PATTERN}: |"(?:\\n\\}|${UUID_PATTERN}: |\\})|${UUID_PATTERN}: )|\\\\\\n(?=${UUID_PATTERN}: )`, 'g'), '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s)[0].replace(/insight": .+(?=translated_string": ")/s, '')
-    if (Utils.isValidJson(potentialJsonString)) {
+    const potentialJsonString = translateText.replace(/\$/, '').replace(/(\")?(?:",?)?(?:\n?})?(\n?(?:{3})?)?$/, '$1"\n}$2').replace(new RegExp(`\n(?= ${UUID_PATTERN}: |"(?:\n\\}|${UUID_PATTERN}: |\\})|${UUID_PATTERN}: )|\\\\\\n(?=${UUID_PATTERN}: )`, 'g'), '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s)?.[0].replace(/insight": .+(?=translated_string": ")/s, '') ?? ''
+    if (!Utils.isValidJson(potentialJsonString)) { return '' }
+    // @ts-expect-error JSON5
+    const parsedResult = JSON5.parse(potentialJsonString)
+    const textSentenceWithUuids = Object.entries(textSentenceWithUuid)
+    let translatedStringMap = {}
+    if (typeof parsedResult.translated_string !== 'string') {
+      translatedStringMap = parsedResult.translated_string
+    } else if (Utils.isValidJson(parsedResult.translated_string)) {
       // @ts-expect-error JSON5
-      const parsedResult = JSON5.parse(potentialJsonString)
-      const textSentenceWithUuids = Object.entries(textSentenceWithUuid)
-      let translatedStringMap = {}
-      if (typeof parsedResult.translated_string !== 'string') {
-        translatedStringMap = parsedResult.translated_string
-      } else if (Utils.isValidJson(parsedResult.translated_string)) {
-        // @ts-expect-error JSON5
-        translatedStringMap = JSON5.parse(parsedResult.translated_string)
-      } else {
-        /* eslint-disable camelcase */
-        const { translated_string } = parsedResult
-        const uuidAmount = [...translated_string.matchAll(new RegExp(`(?<!^)(?:${UUID_PATTERN}: )`, 'g'))].length
-        const translatedString = uuidAmount === [...translated_string.matchAll(new RegExp(`, ?${UUID_PATTERN}: `, 'g'))].length ? translated_string.replace(new RegExp(`(?:, ?)(?=${UUID_PATTERN}: )`, 'g'), '\n') : translated_string
-        /* eslint-enable camelcase */
-        const COMMA_PATTERN = '(?: , |,)'
-        const mayIncludesComma = uuidAmount === [...translatedString.matchAll(new RegExp(`${COMMA_PATTERN}\\n${UUID_PATTERN}: `, 'g'))].length
-        translatedStringMap = Object.fromEntries([...translatedString.matchAll(new RegExp(`(${UUID_PATTERN}): (.+(?=${mayIncludesComma ? COMMA_PATTERN : ''}\\n(?: |\\n|" +\\n")?${UUID_PATTERN}: |\\n?$)(?:\\n(?!(?: |\\n|" +\\n")?${UUID_PATTERN}: ))?)+`, 'g'))].map(element => element.slice(1)))
-      }
-      if (Object.keys(translatedStringMap ?? {}).length > 0) {
-        return textSentenceWithUuids.map(([first, second]) => parsedResult[first] ?? translatedStringMap[first] ?? (second.replace(/^\s+/, '').length > 0 ? '' : second)).join('\n')
-      }
+      translatedStringMap = JSON5.parse(parsedResult.translated_string)
+    } else {
+      /* eslint-disable camelcase */
+      const { translated_string } = parsedResult
+      translatedStringMap = Object.fromEntries([...translated_string.matchAll(new RegExp(`(${UUID_PATTERN}): (.+(?=\n(?: |\n|" +\n")?${UUID_PATTERN}: |\n?$)(?:\n(?!(?: |\n|" +\n")?${UUID_PATTERN}: ))?)+`, 'g'))].map(element => element.slice(1)))
+      /* eslint-enable camelcase */
+    }
+    if (Object.keys(translatedStringMap ?? {}).length > 0) {
+      return textSentenceWithUuids.map(([first, second]) => parsedResult[first] ?? translatedStringMap[first] ?? (second.replace(/^\s+/, '').length > 0 ? '' : second)).join('\n')
     }
     return ''
   }
