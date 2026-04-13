@@ -424,7 +424,7 @@ class Translation {
           const response = await openai.responses.create({
             model: openaiModelId,
             input: [
-              ...systemInstructions.map(element => ({
+              ...[...systemInstructions, ...systemInstruction === SystemInstructions.CHATGPT_TRANSLATE ? developerInstructions : []].map(element => ({
                 role: systemInstruction !== SystemInstructions.CHATGPT_TRANSLATE && (isReasoningModel || isReasoningGptFive) ? 'developer' : 'system',
                 content: [
                   {
@@ -442,15 +442,17 @@ class Translation {
                   }
                 ]
               },
-              ...developerInstructions.map(element => ({
-                role: systemInstruction === SystemInstructions.CHATGPT_TRANSLATE ? (isReasoningModel || isReasoningGptFive ? 'developer' : 'system') : 'user',
-                content: [
-                  {
-                    type: 'input_text',
-                    text: element
-                  }
-                ]
-              }))
+              ...systemInstruction === SystemInstructions.CHATGPT_TRAÁNLATE
+                ? developerInstructions.map(element => ({
+                  role: isReasoningModel || isReasoningGptFive ? 'developer' : 'system',
+                  content: [
+                    {
+                      type: 'input_text',
+                      text: element
+                    }
+                  ]
+                }))
+              : []
             ],
             text: {
               format: {
@@ -622,7 +624,7 @@ class Translation {
             .../^gemma-(?!4)/.test(googleGenaiModelId)
               ? {}
               : {
-                  systemInstruction: systemInstructions.map(element => ({
+                  systemInstruction: [...systemInstructions, ...developerInstructions].map(element => ({
                     text: `${element}`
                   }))
                 }
@@ -630,7 +632,7 @@ class Translation {
           const model = googleGenaiModelId
           const contents = [
             .../^gemma-(?!4)/.test(googleGenaiModelId)
-              ? systemInstructions.map(element => ({
+              ? [...systemInstructions, ...developerInstructions].map(element => ({
                     role: 'user',
                     parts: [
                       {
@@ -646,15 +648,7 @@ class Translation {
                   text: `${message}`
                 }
               ]
-            },
-            ...developerInstructions.map(element => ({
-              role: 'user',
-              parts: [
-                {
-                  text: `${element}`
-                }
-              ]
-            }))
+            }
           ]
           const response = await ai.models.generateContentStream({
             model,
