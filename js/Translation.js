@@ -1647,9 +1647,9 @@ You are a world-class ${destLangLabel} translator who produces translations indi
 - If the source is poorly written, translate the intended meaning clearly - do not reproduce bad writing
 
 ### STRUCTURE PRESERVATION (CRITICAL):
-- **HTML/XML tags**: Preserve ALL markup tags exactly as they appear. Only translate the text BETWEEN tags. Example: `<h1>Hello</h1>` → `<h1>Xin chào</h1>`. NEVER alter tag names, attributes, or nesting structure.
+- **HTML/XML tags**: Preserve ALL markup tags exactly as they appear. Only translate the text BETWEEN tags. Example: \`<h1>Hello</h1>\` → \`<h1>Xin chào</h1>\`. NEVER alter tag names, attributes, or nesting structure.
 - **Markdown formatting**: Preserve all markdown syntax (**, *, #, [], (), etc.). Only translate the text content.
-- **Formulas & equations**: Keep ALL mathematical expressions EXACTLY as-is — whether in LaTeX (`$...$`, \frac, \sum), Unicode (x² + y² = r², ∑, ∫, ±, ×), or plain text format (E = mc², a² + b² = c²). If a formula contains translatable labels/descriptions around it, translate ONLY the surrounding text. NEVER convert formula format (e.g., do not change `x²` to `x^2` or vice versa). Output the formula in the EXACT same format as input.
+- **Formulas & equations**: Keep ALL mathematical expressions EXACTLY as-is — whether in LaTeX (\`$...$\`, \frac, \sum), Unicode (x² + y² = r², ∑, ∫, ±, ×), or plain text format (E = mc², a² + b² = c²). If a formula contains translatable labels/descriptions around it, translate ONLY the surrounding text. NEVER convert formula format (e.g., do not change \`x²\` to \`x^2\` or vice versa). Output the formula in the EXACT same format as input.
 - **Geometric notation & diagrams**: Keep ALL geometric expressions intact — symbols (∠, △, ⊥, ∥, →, ≅, °), vertex labels (ABC, DEF), coordinate pairs ((3, 4)), measurement values (r = 5cm), and notation (SAS, ASA, SSS). If there is translatable text around geometry, translate only the text. NEVER rewrite geometric expressions into a different format.
 - **Code blocks & technical syntax**: Keep code, commands, file paths, URLs, and variable names unchanged.
 - **Special characters & symbols**: Preserve all special characters, escape sequences, and Unicode symbols exactly.
@@ -1710,7 +1710,8 @@ ${isCustomPromptEnabled ? customPrompt : 'None'}
     const UUID_PATTERN = '(?:[a-z0-9]{8}#[a-z0-9]{3})'
     const translateText = translatedTextWithUuid.replace(/^}$.+/ms, '').replace(new RegExp(UUID_PATTERN, 'gi'), (match) => match.toLowerCase()).replace(new RegExp(`(?<=${UUID_PATTERN})(?:>|')`, 'g'), '')
     if (!/"translated_string": ?"/.test(translateText)) { return '' }
-    const potentialJsonString = translateText.replace(/\$/, '').replace(/(\")?(?:",?)?(?:\n?})?(\n?(?:{3})?)?$/, '$1"\n}$2').replace(new RegExp(`\n(?= ${UUID_PATTERN}: |"(?:\n\\}|${UUID_PATTERN}: |\\})|${UUID_PATTERN}: )|\\\\\\n(?=${UUID_PATTERN}: )`, 'g'), '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s)?.[0].replace(/insight": .+(?=translated_string": ")/s, '') ?? ''
+    const potentialJsonString = translateText.replace(/\$/, '').replace(/(\\")?(?:",?)?(?:\n?\})?(\n?(?:`{3})?)?$/, '$1"\n}$2'
+).replace(new RegExp(`\n(?= ${UUID_PATTERN}: |"(?:\n\\}|${UUID_PATTERN}: |\\})|${UUID_PATTERN}: )|\\\\\\n(?=${UUID_PATTERN}: )`, 'g'), '\\n').replace(/("translated_string": ")(.+)(?=")/, (match, p1, p2) => `${p1}${p2.replace(/([^\\])"/g, '$1\\"')}`).match(/(\{.+\})/s)?.[0].replace(/insight": .+(?=translated_string": ")/s, '') ?? ''
     if (!Utils.isValidJson(potentialJsonString)) { return '' }
     // @ts-expect-error JSON5
     const parsedResult = JSON5.parse(potentialJsonString)
