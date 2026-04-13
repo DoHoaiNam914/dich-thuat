@@ -1650,7 +1650,7 @@ You are a world-class ${destLangLabel} translator who produces translations indi
 ### STRUCTURE PRESERVATION (CRITICAL):
 - **HTML/XML tags**: Preserve ALL markup tags exactly as they appear. Only translate the text BETWEEN tags. Example: \`<h1>Hello</h1>\` → \`<h1>Xin chào</h1>\`. NEVER alter tag names, attributes, or nesting structure.
 - **Markdown formatting**: Preserve all markdown syntax (**, *, #, [], (), etc.). Only translate the text content.
-- **Formulas & equations**: Keep ALL mathematical expressions EXACTLY as-is — whether in LaTeX (\`$...$\`, \frac, \sum), Unicode (x² + y² = r², ∑, ∫, ±, ×), or plain text format (E = mc², a² + b² = c²). If a formula contains translatable labels/descriptions around it, translate ONLY the surrounding text. NEVER convert formula format (e.g., do not change \`x²\` to \`x^2\` or vice versa). Output the formula in the EXACT same format as input.
+- **Formulas & equations**: Keep ALL mathematical expressions EXACTLY as-is — whether in LaTeX (\`$...$\`, \\frac, \\sum), Unicode (x² + y² = r², ∑, ∫, ±, ×), or plain text format (E = mc², a² + b² = c²). If a formula contains translatable labels/descriptions around it, translate ONLY the surrounding text. NEVER convert formula format (e.g., do not change \`x²\` to \`x^2\` or vice versa). Output the formula in the EXACT same format as input.
 - **Geometric notation & diagrams**: Keep ALL geometric expressions intact — symbols (∠, △, ⊥, ∥, →, ≅, °), vertex labels (ABC, DEF), coordinate pairs ((3, 4)), measurement values (r = 5cm), and notation (SAS, ASA, SSS). If there is translatable text around geometry, translate only the text. NEVER rewrite geometric expressions into a different format.
 - **Code blocks & technical syntax**: Keep code, commands, file paths, URLs, and variable names unchanged.
 - **Special characters & symbols**: Preserve all special characters, escape sequences, and Unicode symbols exactly.
@@ -1695,12 +1695,14 @@ ${isCustomPromptEnabled ? customPrompt : 'None'}
 {
   "insight": ["Key understanding of the source text that informed translation choices"],
   "rule": ["Specific rules applied during this translation"],
-  "translated_string": "uuid: ${destLangLabel} translation\nuuid: ${destLangLabel} translation\n..."
+  "translated_string": "uuid: ${destLangLabel} translation\\nuuid: ${destLangLabel} translation\\n..."
 }`)
-        userMessage = `### TEXT SENTENCE WITH UUID:\n{${this.text.split('\n').map(element => {
+        userMessage = `### TEXT SENTENCE WITH UUID:
+{${this.text.split('\n').map(element => {
           const uuidParts = crypto.randomUUID().split('-')
           return `'${uuidParts[0]}#${uuidParts[2].substring(1)}': ${element.includes("'") && !element.includes('"') ? `"${element.replace(/^\s+|\s+$/g, '').replace(/\\/g, '\\\\')}"` : `'${element.replace(/^\s+|\s+$/g, '').replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`}`
-        }).join(', ')}}\n### TRANSLATED TEXT WITH UUID:`
+        }).join(', ')}}
+### TRANSLATED TEXT WITH UUID:`
       }
       default:
         developerInstructions.push(customPrompt.replace(/{\$DICTIONARY}/g, customDictionaryInstruction))
