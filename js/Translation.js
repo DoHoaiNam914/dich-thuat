@@ -819,7 +819,7 @@ ${question}`
           pt: 'Português',
           ru: 'Ру́сский язы́к',
           es: 'Español',
-          sv: 'Español',
+          sv: 'Svenska',
           fil: 'Tagalog',
           th: 'ภาษาไทย',
           tr: 'Türkçe',
@@ -883,7 +883,7 @@ ${this.text}`
           pt: 'Português',
           ru: 'Ру́сский язы́к',
           es: 'Español',
-          sv: 'Español',
+          sv: 'Svenska',
           fil: 'Tagalog',
           th: 'ภาษาไทย',
           tr: 'Türkçe',
@@ -930,7 +930,7 @@ ${this.text}`
           fil: 'tl',
           th: 'th-TH',
           tr: 'tr-TR',
-          uk: 'uk-US',
+          uk: 'uk-UA',
           vi: 'vi-VN'
         }
         const LANGUAGE_LABEL_MAP = {
