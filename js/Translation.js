@@ -1519,7 +1519,7 @@ ${this.text}`
         let sourceLangCode = this.originalLang ?? detectedLanguage
         sourceLangCode = SOURCE_LANGUAGE_CODE_MAP[sourceLangCode] ?? sourceLangCode
         const targetLangCode = TARGET_LANGUAGE_CODE_MAP[this.destLang] ?? this.destLang
-        const sourceLang = LANGUAGE_LABEL_MAP[sourceLangCode] ?? LANGUAGE_MAP.en
+        const sourceLang = LANGUAGE_LABEL_MAP[sourceLangCode]
         const targetLang = LANGUAGE_LABEL_MAP[targetLangCode]
         userMessage = `You are a professional ${sourceLang} (${sourceLangCode}) to ${targetLang} (${targetLangCode}) translator. Your goal is to accurately convey the meaning and nuances of the original ${sourceLang} text while adhering to ${targetLang} grammar, vocabulary, and cultural sensitivities.\nProduce only the ${targetLang} translation, without any additional explanations or commentary. Please translate the following ${sourceLang} text into ${targetLang}:\n\n\n${this.text.trim()}`
         if (isCustomPromptEnabled) { developerInstructions.push(customPrompt.replace(/{\$DICTIONARY}/g, customDictionaryInstruction)) }
@@ -1560,7 +1560,8 @@ ${this.text}`
           it: 'Italian'
         }
         const toLanguage = LANGUAGE_MAP[this.destLang]
-        const fromLanguage = LANGUAGE_MAP[this.originalLang ?? detectedLanguage]
+        let fromLanguage = this.originalLang ?? detectedLanguage
+        fromLanguage = LANGUAGE_MAP[fromLanguage] ?? fromLanguage
         systemInstructions.push(`I want you to act as a ${toLanguage} translator.
 You are trained on data up to October 2023.`)
         systemInstructions.push(`I will speak to you in ${fromLanguage != null ? `${fromLanguage} and you will ` : 'any language and you will detect the language, '}translate it and answer in the corrected version of my text, exclusively in ${toLanguage}, while keeping the format.
@@ -1629,8 +1630,9 @@ Please ensure that the translated text is natural for native speakers with corre
     - The writing is gentle, focusing on subtle feelings about love and deep character emotions.
     `
         }
+        const originalLang = this.originalLang ?? detectedLanguage
         const originalLangLabel = LANGUAGE_MAP[originalLang] ?? originalLang
-        const destLangLabel = LANGUAGE_MAP[destLang] ?? destLang
+        const destLangLabel = LANGUAGE_MAP[this.destLang] ?? this.destLang
         systemInstructions.push(`### ROLE:
 You are a world-class ${destLangLabel} translator who produces translations indistinguishable from text originally written in ${destLangLabel}. You think in ${destLangLabel}, not in ${originalLangLabel}. Your translations read as if a native ${destLangLabel} expert wrote the content from scratch.
 
