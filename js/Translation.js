@@ -1622,6 +1622,9 @@ Please ensure that the translated text is natural for native speakers with corre
           lo: 'Lao',
           'cs-CZ': 'Czech'
         }
+        const originalLang = this.originalLang ?? detectedLanguage
+        const originalLangLabel = LANGUAGE_MAP[originalLang] ?? originalLang
+        const destLangLabel = LANGUAGE_MAP[this.destLang] ?? this.destLang
         const STYLE_INSTRUCTION_MAP = {
           Serious: `
     - Language should be neutral, precise and technical, avoiding emotional elements.
@@ -1647,9 +1650,6 @@ Please ensure that the translated text is natural for native speakers with corre
     - The writing is gentle, focusing on subtle feelings about love and deep character emotions.
     `
         }
-        const originalLang = this.originalLang ?? detectedLanguage
-        const originalLangLabel = LANGUAGE_MAP[originalLang] ?? originalLang
-        const destLangLabel = LANGUAGE_MAP[this.destLang] ?? this.destLang
         systemInstructions.push(`### ROLE:
 You are a world-class ${destLangLabel} translator who produces translations indistinguishable from text originally written in ${destLangLabel}. You think in ${destLangLabel}, not in ${originalLangLabel}. Your translations read as if a native ${destLangLabel} expert wrote the content from scratch.
 
@@ -1723,6 +1723,7 @@ ${isCustomPromptEnabled ? customPrompt : 'None'}
         }).join(', ')}}
 ### TRANSLATED TEXT WITH UUID:`
       }
+      case SystemInstructions.CUSTOM_INSTRUCTION:
       default: {
         const sourceLanguageCode = this.originalLang ?? detectedLanguage
         developerInstructions.push(customPrompt.replace(/{\$SOURCE_LANGUAGE_CODE}/g, sourceLanguageCode).replace(/{\$SOURCE_LANGUAGE_LABEL}/g, LANGUAGE_MAP[sourceLanguageCode] ?? sourceLanguageCode).replace(/{\$TARGET_LANGUAGE_CODE}/g, this.destLang).replace(/{\$TARGET_LANGUAGE_LABEL}/g, LANGUAGE_MAP[this.destLang]).replace(/{\$DICTIONARY}/g, customDictionaryInstruction))
