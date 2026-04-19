@@ -1725,8 +1725,50 @@ ${isCustomPromptEnabled ? customPrompt : 'None'}
       }
       case SystemInstructions.CUSTOM_INSTRUCTION:
       default: {
-        const sourceLanguageCode = this.originalLang ?? detectedLanguage
-        developerInstructions.push(customPrompt.replace(/{\$SOURCE_LANGUAGE_CODE}/g, sourceLanguageCode).replace(/{\$SOURCE_LANGUAGE_LABEL}/g, LANGUAGE_MAP[sourceLanguageCode] ?? sourceLanguageCode).replace(/{\$TARGET_LANGUAGE_CODE}/g, this.destLang).replace(/{\$TARGET_LANGUAGE_LABEL}/g, LANGUAGE_MAP[this.destLang]).replace(/{\$DICTIONARY}/g, customDictionaryInstruction))
+        const LANGUAGE_CODE_MAP = {
+          'zh-cn': 'zh-CN',
+          'zh-tw': 'zh-TW',
+          'cs-CZ': 'cs',
+          'ms-MY': 'ms',
+          pt: 'pt-PT'
+        }
+        const LANGUAGE_MAP = {
+          ar: 'عربي',
+          bn: 'বাংলা',
+          'zh-CN': '简体中文（中国）',
+          'zh-TW': '繁體中文（台灣）',
+          cs: 'Čeština',
+          da: 'Dansk',
+          nl: 'Nederlands',
+          en: 'English',
+          fi: 'Suomi',
+          fr: 'Français',
+          de: 'Deutsch',
+          el: 'ελληνικά',
+          hi: 'हिन्दी',
+          hu: 'Magyar',
+          id: 'Bahasa Indonesia',
+          it: 'Italiano',
+          ja: '日本語',
+          ko: '한국어',
+          lo: 'ພາສາລາວ',
+          ms: 'بهاس ملايو',
+          no: 'Norsk',
+          pl: 'Polski',
+          'pt-PT': 'Português',
+          ru: 'Ру́сский язы́к',
+          es: 'Español',
+          sv: 'Svenska',
+          fil: 'Tagalog',
+          th: 'ภาษาไทย',
+          tr: 'Türkçe',
+          uk: 'Yкраїнська мова',
+          vi: 'Tiếng Việt'
+        }
+        let sourceLanguageCode = this.originalLang ?? detectedLanguage
+        sourceLanguageCode = LANGUAGE_CODE_MAP[sourceLanguageCode] ?? sourceLanguageCode
+        const targetLanguageCode = LANGUAGE_CODE_MAP[this.destLang] ?? this.destLang
+        developerInstructions.push(customPrompt.replace(/{\$SOURCE_LANGUAGE_CODE}/g, sourceLanguageCode).replace(/{\$SOURCE_LANGUAGE_LABEL}/g, LANGUAGE_MAP[sourceLanguageCode] ?? sourceLanguageCode).replace(/{\$TARGET_LANGUAGE_CODE}/g, targetLanguageCode).replace(/{\$TARGET_LANGUAGE_LABEL}/g, LANGUAGE_MAP[targetLanguageCode]).replace(/{\$DICTIONARY}/g, customDictionaryInstruction))
       }
     }
     return { systemInstructions, userMessage, developerInstructions }
