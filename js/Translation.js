@@ -749,7 +749,7 @@ ${question}`
     const developerInstructions = []
     const detectedLanguage = this.originalLang == null ? await this.detectLanguage() : ''
     const { customPrompt, customDictionary, isCustomDictionaryEnabled, isCustomPromptEnabled } = options
-    const customDictionaryInstruction = isCustomDictionaryEnabled ? customDictionary.filter(element => element.ori_lang === this.originalLang && element.des_lang === this.destLang && this.text.includes(element.ori_word)).map(({ ori_word, des_word }) => `Must translate: ${ori_word} into ${des_word}`).join('\n') : '' // eslint-disable-line camelcase
+    const customDictionaryInstruction = isCustomDictionaryEnabled ? customDictionary.filter(element => element.ori_lang === (this.originalLang ?? detectedLanguage) && element.des_lang === this.destLang && this.text.includes(element.ori_word)).map(({ ori_word, des_word }) => `Must translate: ${ori_word} into ${des_word}`).join('\n') : '' // eslint-disable-line camelcase
     let userMessage = this.text
     switch (options.systemInstruction) {
       case SystemInstructions.OPENAI_TRANSLATION: {
