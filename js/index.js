@@ -93,7 +93,7 @@ function setStoredCustomDictionaryAndReloadCounter (customDictionary) {
 function appendTranslatedTextIntoOutputTextarea (translatedText, text, options) {
   const $outputTextarea = $('#output-textarea')
   $outputTextarea.empty()
-  if ($systemInstructionSelect.val() === SystemInstructions.DOCTRANSLATEIO && options.isBilingualEnabled) {
+  if (($systemInstructionSelect.val() === SystemInstructions.DOCTRANSLATEIO || text.replace(/^\s+/m, '').trim().match(/\n/) == null) && options.isBilingualEnabled) {
     const translatedLines = translatedText.split('\n')
     text.split('\n').forEach((element, index) => {
       const paragraph = document.createElement('p')
