@@ -616,11 +616,11 @@ class Translation {
                     thinkingLevel
                   }
                 }
-              : (/^gemini-(2\.5|flash)-/.test(googleGenaiModelId)
+              : (/^gemini-(?:2\.5|flash-lite-latest)/.test(googleGenaiModelId)
               ? {
                   thinkingConfig: {
                     includeThoughts: true,
-                    thinkingBudget: /^gemini(-2\.5)?-flash-(?:lite)?/.test(googleGenaiModelId) && !isThinkingModeEnabled ? 0 : -1
+                    thinkingBudget: /^gemini-(?:2\.5-flash|flash-lite-latest)/.test(googleGenaiModelId) && !isThinkingModeEnabled ? 0 : -1
                   }
                 }
               : {}),
