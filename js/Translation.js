@@ -392,8 +392,8 @@ class Translation {
             'gpt-3.5-turbo': 4096,
           }
           const isReasoningModel = MODELS.OPENAI.Reasoning.includes(openaiModelId)
-          const isReasoningGptFive = (MODELS.OPENAI['GPT-5'].map(element => element.modelId ?? element).includes(openaiModelId) || MODELS.OPENAI['Recommended Models'].map(element => element.modelId ?? element).includes(openaiModelId)) && !/^gpt-5(?:\.\d)?-chat-latest/.test(openaiModelId)
-          const isReasoningChatGPTModel = /^gpt-5\.\d-chat-latest/.test(openaiModelId)
+          const isReasoningGptFive = (MODELS.OPENAI['GPT-5'].map(element => element.modelId ?? element).includes(openaiModelId) || MODELS.OPENAI['Recommended Models'].map(element => element.modelId ?? element).includes(openaiModelId)) && !/^(?:gpt-5(?:\.\d)?-)?chat-latest/.test(openaiModelId)
+          const isReasoningChatGPTModel = /^(?:gpt-5\.\d-)?chat-latest/.test(openaiModelId)
           const openai = new OpenAI({
             apiKey: 'OPENAI_API_KEY',
             baseURL: 'https://gateway.api.airapps.co/aa_service=server5/aa_apikey=5N3NR9SDGLS7VLUWSEN9J30P//v3/proxy/open-ai/v1',
