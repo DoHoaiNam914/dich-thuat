@@ -62,30 +62,6 @@ const MODELS = {
     ],
     Gemma: [
       {
-        modelId: 'gemma-3n-e2b-it',
-        modelName: 'Gemma 3n E2B'
-      },
-      {
-        modelId: 'gemma-3n-e4b-it',
-        modelName: 'Gemma 3n E4B'
-      },
-      {
-        modelId: 'gemma-3-1b-it',
-        modelName: 'Gemma 3 1B'
-      },
-      {
-        modelId: 'gemma-3-4b-it',
-        modelName: 'Gemma 3 4B'
-      },
-      {
-        modelId: 'gemma-3-12b-it',
-        modelName: 'Gemma 3 12B'
-      },
-      {
-        modelId: 'gemma-3-27b-it',
-        modelName: 'Gemma 3 27B'
-      },
-      {
         modelId: 'gemma-4-26b-a4b-it',
         modelName: 'Gemma 4 26B A4B IT'
       },
@@ -102,7 +78,8 @@ const MODELS = {
         selected: true
       },
       'gpt-5.4',
-      'gpt-5.4-mini'
+      'gpt-5.4-mini',
+      'chat-latest'
     ],
     'GPT-5': [
       'gpt-5.4-nano',
