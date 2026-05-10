@@ -1,26 +1,40 @@
 :root {
   --system-font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantrell, "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 
+  --sans-serif-ja-v:'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Hiragino Kaku Gothic Pro', 'ヒラギノ角ゴ W3', 'YuGothic', 'Yu Gothic Medium', 'BIZ UDGothic', 'Yu Gothic', 'ＭＳゴシック', 'MS Gothic', sans-serif;
+
+  --serif-ja-v:'Hiragino Mincho ProN', 'Hiragino Mincho Pro', 'YuMincho', 'BIZ UDMincho', 'Yu Mincho', 'ＭＳ明朝', 'MS Mincho', serif;
+
+  --sans-serif-ja:'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Hiragino Kaku Gothic Pro', 'ヒラギノ角ゴ W3', 'YuGothic', 'Yu Gothic Medium', 'BIZ UDPGothic', 'Yu Gothic', 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif;
+
+  --serif-ja:'Hiragino Mincho ProN', 'Hiragino Mincho Pro', 'YuMincho', 'BIZ UDPMincho', 'Yu Mincho', 'ＭＳ Ｐ明朝', 'MS PMincho', serif;
+
   --monospaceTf:ui-monospace, 'Andale Mono', 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+
   --humanistTf:Seravek, Calibri, 'Gill Sans Nova', Roboto, Ubuntu, 'DejaVu Sans', source-sans-pro, sans-serif;
+
   --sansTf:-ui-sans-serif, -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI Variable', 'Segoe UI', Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Liberation Sans', Arial, sans-serif;
+
   --modernTf:Athelas, Constantia, Charter, 'Bitstream Charter', Cambria, 'Georgia Pro', Georgia, serif;
+
   --oldStyleTf:'Iowan Old Style', Sitka, 'Sitka Text', Palatino, 'Book Antiqua', 'URW Palladio L', P052, serif;
 
-  --japaneseFontFamily:yugothic, "Hiragino Maru Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Meiryo UI", "MS Gothic", roboto, noto, "Noto Sans CJK JP", sans-serif;
-  --serif-ja:"Hiragino Mincho ProN", "Hiragino Mincho Pro", "YuMincho", "BIZ UDPMincho", "Yu Mincho", "ＭＳ Ｐ明朝", "MS PMincho", serif;
-  --sans-serif-ja:"Hiragino Sans", "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ W3", "YuGothic", "Yu Gothic Medium", "BIZ UDPGothic", "Yu Gothic", "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-  --serif-ja-v:"Hiragino Mincho ProN", "Hiragino Mincho Pro", "YuMincho", "BIZ UDMincho", "Yu Mincho", "ＭＳ明朝", "MS Mincho", serif;
-  --sans-serif-ja-v:"Hiragino Sans", "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ W3", "YuGothic", "Yu Gothic Medium", "BIZ UDGothic", "Yu Gothic", "ＭＳゴシック", "MS Gothic", sans-serif;
-  
-  --koreanFontFamily:"Nanum Gothic", "Apple SD Gothic Neo", "Malgun Gothic", roboto, noto, "Noto Sans CJK KR", sans-serif;
+  --zh-HK-readiumFontFamily:'方體', 'PingFang HK', '方體', 'PingFang TC', '黑體', 'Heiti TC', 'Microsoft JhengHei UI', 'Microsoft JhengHei', Roboto, Noto, 'Noto Sans CJK TC', sans-serif;
 
-  --chineseFontFamily:"方体", "PingFang SC", "黑体", "Heiti SC", "Microsoft JhengHei UI", "Microsoft JhengHei", roboto, noto, "Noto Sans CJK SC", sans-serif;
-  --taiwanFontFamily:"方體", "PingFang TC", "黑體", "Heiti TC", "Microsoft JhengHei UI", "Microsoft JhengHei", roboto, noto, "Noto Sans CJK TC", sans-serif;
-  --hongkongFontFamily:"方體", "PingFang HK", "方體", "PingFang TC", "黑體", "Heiti TC", "Microsoft JhengHei UI", "Microsoft JhengHei", roboto, noto, "Noto Sans CJK TC", sans-serif;
+  --zh-TW-readiumFontFamily:'方體', 'PingFang TC', '黑體', 'Heiti TC', 'Microsoft JhengHei UI', 'Microsoft JhengHei', Roboto, Noto, 'Noto Sans CJK TC', sans-serif;
 
-  --lineHeightCompensation:1;
-  --readiumLineHeight:calc(1.5 * var(--RS__lineHeightCompensation));
+  --zh-Hant-readiumFontFamily:'方體', 'PingFang TC', '黑體', 'Heiti TC', 'Microsoft JhengHei UI', 'Microsoft JhengHei', Roboto, Noto, 'Noto Sans CJK TC', sans-serif;
+
+  --zh-readiumFontFamily:'方体', 'PingFang SC', '黑体', 'Heiti SC', 'Microsoft JhengHei UI', 'Microsoft JhengHei', Roboto, Noto, 'Noto Sans CJK SC', sans-serif;
+
+  --ko-readiumFontFamily:'Nanum Gothic', 'Apple SD Gothic Neo', 'Malgun Gothic', Roboto, Noto, 'Noto Sans CJK KR', sans-serif;
+
+  --ja-readiumFontFamily:YuGothic, 'Hiragino Maru Gothic ProN', 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo UI', 'MS Gothic', Roboto, Noto, 'Noto Sans CJK JP', sans-serif;
+
+  --default-lineHeightCompensation:1;
+
+  --lineHeightCompensation:var(--default-lineHeightCompensation);
+  --readiumLineHeight:calc(1.5 * var(--lineHeightCompensation));
   --reader-font-family: serif;
   --reader-font-size: 16px;
   --reader-font-weight: normal;
@@ -128,7 +142,7 @@ body:not(.bg-body) .textarea > .form-control::placeholder {
 }
 
 .textarea > .form-control > p > i {
-  font: italic normal var(--reader-font-size)/var(--reader-line-height) var(--oldStyleTf), '方体', 'PingFang SC', '方體', 'PingFang TC', 'PingFang HK', '黑体', 'Heiti SC', '黑體', 'Heiti TC', 'Microsoft JhengHei UI', 'Microsoft JhengHei', yugothic, 'Hiragino Maru Gothic ProN', 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo UI', 'MS Gothic', 'Nanum Gothic', 'Apple SD Gothic Neo', 'Malgun Gothic', roboto, noto, 'Noto Sans CJK SC', 'Noto Sans CJK TC', 'Noto Sans CJK JP', 'Noto Sans CJK KR', sans-serif;
+  font: italic normal var(--reader-font-size)/var(--reader-line-height) var(--oldStyleTf), '方体', 'PingFang SC', '方體', 'PingFang TC', 'PingFang HK', '黑体', 'Heiti SC', '黑體', 'Heiti TC', 'Microsoft JhengHei UI', 'Microsoft JhengHei', YuGothic, 'Hiragino Maru Gothic ProN', 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo UI', 'MS Gothic', 'Nanum Gothic', 'Apple SD Gothic Neo', 'Malgun Gothic', Roboto, Noto, 'Noto Sans CJK SC', 'Noto Sans CJK TC', 'Noto Sans CJK JP', 'Noto Sans CJK KR', sans-serif;
 }
 
 .textarea.bold-text > .form-control {
