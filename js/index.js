@@ -471,7 +471,7 @@ $translateButton.on('click', function () {
         temperature: parseFloat($('#temperature-text').val()),
         topP: parseFloat($('#top-p-text').val()),
         topK: parseFloat($('#top-k-text').val()),
-        isCustomPromptEnabled: $('#text-custom-prompt-switch').prop('checked'),
+        isCustomPromptEnabled: $('#custom-prompt-switch').prop('checked'),
         customPrompt: $('#text-custom-prompt-textarea').val(),
         tone: $('#tone-select').val(),
         domain: $domainSelect.val(),
