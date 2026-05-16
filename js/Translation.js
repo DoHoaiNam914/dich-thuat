@@ -15,6 +15,10 @@ const MODELS = {
   GOOGLE_GENAI: {
     'Gemini': [
       {
+        modelId: 'gemini-3.1-flash-lite',
+        modelName: 'Gemini 3.1 Flash Lite'
+      },
+      {
         modelId: 'gemini-3-flash-preview',
         modelName: 'Gemini 3 Flash Preview',
         selected: true
@@ -22,10 +26,6 @@ const MODELS = {
       {
         modelId: 'gemini-3.1-pro-preview',
         modelName: 'Gemini 3.1 Pro Preview'
-      },
-      {
-        modelId: 'gemini-3.1-flash-lite-preview',
-        modelName: 'Gemini 3.1 Flash Lite Preview'
       },
       {
         modelId: 'gemini-2.5-pro',
@@ -78,8 +78,7 @@ const MODELS = {
         selected: true
       },
       'gpt-5.4',
-      'gpt-5.4-mini',
-      'chat-latest'
+      'gpt-5.4-mini'
     ],
     'GPT-5': [
       'gpt-5.4-nano',
@@ -121,6 +120,7 @@ const MODELS = {
     Reasoning: [
       'o3',
       'o4-mini',
+      'chat-latest',
       'o1-pro',
       'o1',
       'o1-2024-12-17',
