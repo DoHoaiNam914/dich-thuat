@@ -405,7 +405,7 @@ class Translation {
           const response = await openai.responses.create({
             model: openaiModelId,
             input: [
-              ...[...systemInstructions, ...systemInstruction === SystemInstructions.CHATGPT_TRANSLATE ? developerInstructions : []].map(element => ({
+              ...[...systemInstructions, ...systemInstruction !== SystemInstructions.CHATGPT_TRANSLATE ? developerInstructions : []].map(element => ({
                 role: systemInstruction === SystemInstructions.CHATGPT_TRANSLATE || !isReasoningModel || !isReasoningGptFive ? 'system' : 'deceloper',
                 content: [
                   {
@@ -1749,7 +1749,7 @@ ${isCustomPromptEnabled ? customPrompt : 'None'}
         let sourceLanguageCode = this.originalLang ?? detectedLanguage
         sourceLanguageCode = LANGUAGE_CODE_MAP[sourceLanguageCode] ?? sourceLanguageCode
         const targetLanguageCode = LANGUAGE_CODE_MAP[this.destLang] ?? this.destLang
-        developerInstructions.push(customPrompt.replace(/{\$SOURCE_LANGUAGE_CODE}/g, sourceLanguageCode).replace(/{\$SOURCE_LANGUAGE_LABEL}/g, LANGUAGE_MAP[sourceLanguageCode] ?? sourceLanguageCode).replace(/{\$TARGET_LANGUAGE_CODE}/g, targetLanguageCode).replace(/{\$TARGET_LANGUAGE_LABEL}/g, LANGUAGE_MAP[targetLanguageCode]).replace(/{\$DICTIONARY}/g, customDictionaryInstruction))
+        systemInstructions.push(customPrompt.replace(/{\$SOURCE_LANGUAGE_CODE}/g, sourceLanguageCode).replace(/{\$SOURCE_LANGUAGE_LABEL}/g, LANGUAGE_MAP[sourceLanguageCode] ?? sourceLanguageCode).replace(/{\$TARGET_LANGUAGE_CODE}/g, targetLanguageCode).replace(/{\$TARGET_LANGUAGE_LABEL}/g, LANGUAGE_MAP[targetLanguageCode]).replace(/{\$DICTIONARY}/g, customDictionaryInstruction))
       }
     }
     return { systemInstructions, userMessage, developerInstructions }
