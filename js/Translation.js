@@ -442,7 +442,7 @@ class Translation {
             },
             reasoning: isReasoningModel || isReasoningGptFive
               ? {
-                  effort,
+                  effort: isReasoningChatGPTModel ? 'medium' : effort,
                   summary: 'auto'
                 }
               : {},
