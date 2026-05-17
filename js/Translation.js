@@ -406,7 +406,7 @@ class Translation {
             model: openaiModelId,
             input: [
               ...[...systemInstructions, ...systemInstruction !== SystemInstructions.CHATGPT_TRANSLATE ? developerInstructions : []].map(element => ({
-                role: !isReasoningModel && !isReasoningGptFive ? 'system' : 'developer',
+                role: (!isReasoningModel && !isReasoningGptFive) || systemInstruction === SystemInstructions.CHATGPT_TRANSLATE ? 'system' : 'developer',
                 content: [
                   {
                     type: 'input_text',
