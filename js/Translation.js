@@ -406,7 +406,7 @@ class Translation {
             model: openaiModelId,
             input: [
               ...[...systemInstructions, ...systemInstruction !== SystemInstructions.CHATGPT_TRANSLATE ? developerInstructions : []].map(element => ({
-                role: !isReasoningModel || !isReasoningGptFive ? 'system' : 'developer',
+                role: !isReasoningModel && !isReasoningGptFive ? 'system' : 'developer',
                 content: [
                   {
                     type: 'input_text',
@@ -423,7 +423,7 @@ class Translation {
                   }
                 ]
               },
-              ...systemInstruction === SystemInstructions.CHATGPT_TRAÁNLATE
+              ...systemInstruction === SystemInstructions.CHATGPT_TRANSLATE
                 ? developerInstructions.map(element => ({
                   role: isReasoningModel || isReasoningGptFive ? 'developer' : 'system',
                   content: [
