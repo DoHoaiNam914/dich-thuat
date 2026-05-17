@@ -833,7 +833,7 @@ ${question}`
         userMessage = `You are an expert Translator. You are tasked to translate documents from ${sourceLangCode} to ${targetLangCode}. Please provide an accurate translation of this document and return translation text only:
 
 ${this.text}`
-        if (isCustomPromptEnabled) { developerInstructions.push(customPrompt.replace(/{\$SOURCE_LANGUAGE_CODE}/g, sourceLangCode).replace(/{\$TARGET_LANGUAGE_CODE}/g, targetLangCode).replace(/{\$DICTIONARY}/g, customDictionaryInstruction)) }
+        if (isCustomPromptEnabled) { systemInstructions.push(customPrompt.replace(/{\$SOURCE_LANGUAGE_CODE}/g, sourceLangCode).replace(/{\$TARGET_LANGUAGE_CODE}/g, targetLangCode).replace(/{\$DICTIONARY}/g, customDictionaryInstruction)) }
         break
       }
       case SystemInstructions.CHATGPT_TRANSLATE: {
@@ -1512,7 +1512,7 @@ ${this.text}`
         const targetLangCode = TARGET_LANGUAGE_CODE_MAP[this.destLang] ?? this.destLang
         const targetLang = LANGUAGE_MAP[targetLangCode]
         userMessage = `You are a professional ${sourceLang} (${sourceLangCode}) to ${targetLang} (${targetLangCode}) translator. Your goal is to accurately convey the meaning and nuances of the original ${sourceLang} text while adhering to ${targetLang} grammar, vocabulary, and cultural sensitivities.\nProduce only the ${targetLang} translation, without any additional explanations or commentary. Please translate the following ${sourceLang} text into ${targetLang}:\n\n\n${this.text.trim()}`
-        if (isCustomPromptEnabled) { developerInstructions.push(customPrompt.replace(/{\$SOURCE_LANGUAGE_CODE}/g, sourceLangCode).replace(/{\$SOURCE_LANGUAGE_LABEL}/g, sourceLang).replace(/{\$TARGET_LANGUAGE_CODE}/g, targetLangCode).replace(/{\$TARGET_LANGUAGE_LABEL}/g, targetLang).replace(/{\$DICTIONARY}/g, customDictionaryInstruction)) }
+        if (isCustomPromptEnabled) { systemInstructions.push(customPrompt.replace(/{\$SOURCE_LANGUAGE_CODE}/g, sourceLangCode).replace(/{\$SOURCE_LANGUAGE_LABEL}/g, sourceLang).replace(/{\$TARGET_LANGUAGE_CODE}/g, targetLangCode).replace(/{\$TARGET_LANGUAGE_LABEL}/g, targetLang).replace(/{\$DICTIONARY}/g, customDictionaryInstruction)) }
         break
       }
       case SystemInstructions.COCCOC_EDU: {
