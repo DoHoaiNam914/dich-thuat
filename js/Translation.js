@@ -598,7 +598,7 @@ class Translation {
                 }
               : {}),
             ...tools.length > 0 ? { tools } : {},
-            .../^gemma-(?!4)/.test(googleGenaiModelId)
+            .../^gemma-(?!4)/.test(googleGenaiModelId) || (systemInstructions.length === 0 && developerInstructions.length === 0)
               ? {}
               : {
                   systemInstruction: [...systemInstructions, ...developerInstructions].map(element => ({
