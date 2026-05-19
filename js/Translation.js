@@ -15,6 +15,10 @@ const MODELS = {
   GOOGLE_GENAI: {
     'Gemini': [
       {
+        modelId: 'gemini-3.5-flash',
+        modelName: 'Gemini 3.5 Flash'
+      },
+      {
         modelId: 'gemini-3.1-flash-lite',
         modelName: 'Gemini 3.1 Flash Lite'
       },
