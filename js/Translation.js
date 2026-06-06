@@ -24,8 +24,7 @@ const MODELS = {
       },
       {
         modelId: 'gemini-3-flash-preview',
-        modelName: 'Gemini 3 Flash Preview',
-        selected: true
+        modelName: 'Gemini 3 Flash Preview'
       },
       {
         modelId: 'gemini-3.1-pro-preview',
@@ -37,7 +36,8 @@ const MODELS = {
       },
       {
         modelId: 'gemini-pro-latest',
-        modelName: 'Gemini Pro Latest'
+        modelName: 'Gemini Pro Latest',
+        selected: true
       },
       {
         modelId: 'gemini-flash-latest',
