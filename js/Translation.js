@@ -299,7 +299,7 @@ class Translation {
       isOpenaiWebSearchEnabled: false,
       isThinkingModeEnabled: true,
       openaiModelId: Object.values(MODELS.OPENAI).flat().filter(element => typeof element === 'object').find((element) => element.selected)?.modelId,
-      openrouterModelId: 'openai/gpt-4o',
+      openrouterModelId: 'openai/gpt-latest',
       openrouterWebSearch: OpenrouterWebSearchs.DISABLED,
       systemInstruction: SystemInstructions.CHATGPT_TRANSLATE,
       temperature: 0.1,
