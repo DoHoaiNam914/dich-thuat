@@ -830,8 +830,9 @@ ${question}`
         let sourceLangCode = this.originalLang ?? detectedLanguage
         sourceLangCode = SOURCE_LANGUAGE_CODE_MAP[sourceLangCode] ?? sourceLangCode
         const targetLangCode = SOURCE_LANGUAGE_CODE_MAP[this.destLang] ?? this.destLang
+        userMessages.shift()
         if (isCustomPromptEnabled) { userMessages.push(customPrompt.replace(/{\$SOURCE_LANGUAGE_CODE}/g, sourceLangCode).replace(/{\$TARGET_LANGUAGE_CODE}/g, targetLangCode).replace(/{\$DICTIONARY}/g, customDictionaryInstruction)) }
-        userMessages.splice(0, 1, `You are an expert Translator. You are tasked to translate documents from ${sourceLangCode} to ${targetLangCode}. Please provide an accurate translation of this document and return translation text only:
+        userMessages.push(`You are an expert Translator. You are tasked to translate documents from ${sourceLangCode} to ${targetLangCode}. Please provide an accurate translation of this document and return translation text only:
 
 ${this.text}`)
         break
@@ -1511,8 +1512,9 @@ ${this.text}`)
         const sourceLang = LANGUAGE_MAP[sourceLangCode]
         const targetLangCode = TARGET_LANGUAGE_CODE_MAP[this.destLang] ?? this.destLang
         const targetLang = LANGUAGE_MAP[targetLangCode]
+        userMessages.shift()
         if (isCustomPromptEnabled) { userMessages.push(customPrompt.replace(/{\$SOURCE_LANGUAGE_CODE}/g, sourceLangCode).replace(/{\$SOURCE_LANGUAGE_LABEL}/g, sourceLang).replace(/{\$TARGET_LANGUAGE_CODE}/g, targetLangCode).replace(/{\$TARGET_LANGUAGE_LABEL}/g, targetLang).replace(/{\$DICTIONARY}/g, customDictionaryInstruction)) }
-        userMessages.splice(0, 1, `You are a professional ${sourceLang} (${sourceLangCode}) to ${targetLang} (${targetLangCode}) translator. Your goal is to accurately convey the meaning and nuances of the original ${sourceLang} text while adhering to ${targetLang} grammar, vocabulary, and cultural sensitivities.\nProduce only the ${targetLang} translation, without any additional explanations or commentary. Please translate the following ${sourceLang} text into ${targetLang}:\n\n\n${this.text.trim()}`)
+        userMessages.push(`You are a professional ${sourceLang} (${sourceLangCode}) to ${targetLang} (${targetLangCode}) translator. Your goal is to accurately convey the meaning and nuances of the original ${sourceLang} text while adhering to ${targetLang} grammar, vocabulary, and cultural sensitivities.\nProduce only the ${targetLang} translation, without any additional explanations or commentary. Please translate the following ${sourceLang} text into ${targetLang}:\n\n\n${this.text.trim()}`)
         break
       }
       case SystemInstructions.COCCOC_EDU: {
