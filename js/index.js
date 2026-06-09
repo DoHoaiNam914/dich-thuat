@@ -311,8 +311,12 @@ $translationTranslators.on('click', function () {
   })
   dictionaryTranslation.translateText(translatedText => {
     $targetTextarea.val(translatedText).trigger('input')
-  }).catch(() => {
-    if (!textareaTranslation.abortController.signal.aborted) { $targetTextarea.val(previousTargetText) }
+  }).catch(reason => {
+    if (!textareaTranslation.abortController.signal.aborted) {
+      $targetTextarea.val(previousTargetText)
+      return
+    }
+    $targetTextarea.val(reason.replace(/\n+/g, ' '))
   }).finally(() => {
     $('#source-text, #target-textarea').prop('readOnly', false)
     $textLanguageSelects.prop('disabled', false)
