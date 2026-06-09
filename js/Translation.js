@@ -1703,6 +1703,7 @@ ${isCustomPromptEnabled ? customPrompt : 'None'}
           return `'${uuidParts[0]}#${uuidParts[2].substring(1)}': ${element.includes("'") && !element.includes('"') ? `"${element.replace(/^\s+|\s+$/g, '').replace(/\\/g, '\\\\')}"` : `'${element.replace(/^\s+|\s+$/g, '').replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`}`
         }).join(', ')}}
 ### TRANSLATED TEXT WITH UUID:`)
+        break
       }
       case SystemInstructions.CUSTOM_INSTRUCTION:
       default: {
