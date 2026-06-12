@@ -132,16 +132,16 @@ $(window).on('unload', () => {
 $(document).ready(() => {
   Reader.loadReaderThemesOptions($('.reader-theme-toggle .dropdown-menu'))
   const $readerThemes = $('[data-reader-theme-value]')
-  const preferredReaderTheme = sessionStorage.getItem('readerTheme') ?? $readerThemes.filter('.active').data('reader-theme-value')
+  const preferredReaderTheme = localStorage.getItem('readerTheme') ?? $readerThemes.filter('.active').data('reader-theme-value')
   setReaderTheme(preferredReaderTheme)
   showActiveReaderTheme(preferredReaderTheme)
   $readerThemes.on('click', function () {
     const readerTheme = $(this).data('reader-theme-value')
     setReaderTheme(readerTheme, $readerThemes.filter('.active').data('reader-theme-value'))
     showActiveReaderTheme(readerTheme, true)
-    sessionStorage.setItem('readerTheme', readerTheme)
+    localStorage.setItem('readerTheme', readerTheme)
   })
-  showActiveTranslator(sessionStorage.getItem('translator') ?? $translators.filter('.active').data('translator-value'))
+  showActiveTranslator(localStorage.getItem('translator') ?? $translators.filter('.active').data('translator-value'))
   const $modelSelects = $('.model-select')
   $modelSelects.each((index, a) => {
     $(a).empty()
@@ -164,13 +164,13 @@ $(document).ready(() => {
     })
   })
   $('.string-value-option').each((a, element) => {
-    $(element).val(sessionStorage.getItem($(element).prop('id').split('-').slice(0, -1).map((element, b) => b > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')) ?? $(element).val())
+    $(element).val(localStorage.getItem($(element).prop('id').split('-').slice(0, -1).map((element, b) => b > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')) ?? $(element).val())
   })
   $('.number-value-option').each((a, element) => {
-    $(element).val(parseFloat(sessionStorage.getItem($(element).prop('id').split('-').slice(0, -1).map((element, b) => b > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')) ?? $(element).val()))
+    $(element).val(parseFloat(localStorage.getItem($(element).prop('id').split('-').slice(0, -1).map((element, b) => b > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join('')) ?? $(element).val()))
   })
   $checkedOptions.each((a, element) => {
-    const storedCheck = sessionStorage.getItem($(element).prop('id').split('-').slice(0, -1).map((element, b) => b > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join(''))
+    const storedCheck = localStorage.getItem($(element).prop('id').split('-').slice(0, -1).map((element, b) => b > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join(''))
     if (storedCheck == null) return
     $(element).prop('checked', JSON.parse(storedCheck))
   })
@@ -221,13 +221,13 @@ $justifyTextSwitch.on('change', function () {
 $translators.on('click', function () {
   const translator = $(this).data('translator-value')
   showActiveTranslator(translator, true)
-  sessionStorage.setItem('translator', translator)
+  localStorage.setItem('translator', translator)
 })
 $('.value-option').on('change', function () {
-  sessionStorage.setItem($(this).prop('id').split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join(''), $(this).val())
+  localStorage.setItem($(this).prop('id').split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join(''), $(this).val())
 })
 $checkedOptions.on('change', function () {
-  sessionStorage.setItem($(this).prop('id').split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join(''), $(this).prop('checked'))
+  localStorage.setItem($(this).prop('id').split('-').slice(0, -1).map((element, index) => index > 0 ? element.charAt(0).toUpperCase() + element.substring(1) : element).join(''), $(this).prop('checked'))
 })
 $apiKeyTexts.on('change', function () {
   localStorage.setItem($(this).prop('id').split('-').slice(0, -1).join('_').toUpperCase(), $(this).val())
